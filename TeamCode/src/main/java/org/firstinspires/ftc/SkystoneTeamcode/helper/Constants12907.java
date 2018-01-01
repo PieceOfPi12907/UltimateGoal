@@ -28,11 +28,13 @@ public class Constants12907 {
     public static String OUTER_FLAG = "outerFlag";
     public static String TELEMETRY = "telemetry";
 
+
     public static String SKY_POSITION = "skystonePosition";
 
     public static String IMU = "imu";
     public static String QUARRY_DISTANCE_SENSOR = "quarryDistance";
     public static String FRONT_COLOR_SENSOR = "frontColor";
     public static String BACK_COLOR_SENSOR = "backColor";
+
 }
 

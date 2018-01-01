@@ -118,13 +118,13 @@ public class AutoAll extends LinearOpMode{
         //CHOOSE PROGRAM:
         while(true){
             //add delay parameter to gamepads!
-            if(gamepad1.left_stick_button) {
+            if(gamepad2.x) {
                 delay = delay + 5;
                 telemetry.addLine("DELAY: " + delay + " seconds");
                 telemetry.update();
             }
 
-            if (gamepad1.right_stick_button) {
+            if (gamepad2.b) {
                 delay = delay - 5;
                 telemetry.addLine("DELAY: " + delay + " seconds");
                 telemetry.update();
@@ -248,9 +248,9 @@ public class AutoAll extends LinearOpMode{
         colorLeft=hardwareMap.get(ColorSensor.class,"sensor_color_distance_left");
         distanceLeft=hardwareMap.get(DistanceSensor.class,"sensor_color_distance_left");*/
 
-        //frontColor=hardwareMap.get(ColorSensor.class,"frontColor");
-        //backColor=hardwareMap.get(ColorSensor.class,"backColor");
-        //quarryDistance=hardwareMap.get(DistanceSensor.class,"quarryDistance");
+        frontColor=hardwareMap.get(ColorSensor.class,"frontColor");
+        backColor=hardwareMap.get(ColorSensor.class,"backColor");
+        quarryDistance=hardwareMap.get(DistanceSensor.class,"quarryDistance");
 
         //webcam = hardwareMap.get(WebcamName.class, "webcam");
         //int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -370,11 +370,23 @@ public class AutoAll extends LinearOpMode{
 // sets are stored in the 'assets' part of our application.
         VuforiaTrackables targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
 
+        telemetry.addLine("** target stone initialized **");
+        telemetry.update();
+        sleep(1000);
+
         VuforiaTrackable stoneTarget = targetsSkyStone.get(0);
         stoneTarget.setName("Stone Target");
 
+        telemetry.addLine("** target stone fetched **");
+        telemetry.update();
+        sleep(1000);
+
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.add(targetsSkyStone.get(0));
+
+        telemetry.addLine("** all trackables initialized **");
+        telemetry.update();
+        sleep(1000);
 
         stoneTarget.setLocation(OpenGLMatrix
                 .translation(0, 0, stoneZ)
@@ -402,15 +414,28 @@ public class AutoAll extends LinearOpMode{
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
 
+        telemetry.addLine("** BEFORE for loop **");
+        telemetry.update();
+        sleep(1000);
+
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parametersWebcam.cameraDirection);
         }
+
+        telemetry.addLine("** AFTER for loop **");
+        telemetry.update();
+        sleep(1000);
 
         VectorF translation = null;
         targetsSkyStone.activate();
         while (!opModeIsActive()) {
             targetsSkyStone.activate();
             targetVisible = false;
+
+            telemetry.addLine("** 2 BEFORE for loop **");
+            telemetry.update();
+            sleep(1000);
+
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
                     telemetry.addData("Visible Target", trackable.getName());
@@ -427,6 +452,10 @@ public class AutoAll extends LinearOpMode{
                 }
             }//for
 
+            telemetry.addLine("** 2 AFTER for loop **");
+            telemetry.update();
+            sleep(1000);
+
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
                 // express position (translation) of robot in inches.
@@ -441,12 +470,17 @@ public class AutoAll extends LinearOpMode{
             }
             telemetry.update();
         }
+        telemetry.addLine("** OUT of while loop **");
+        telemetry.update();
+        sleep(1000);
+
         return lastLocation;
     }
 
     private void createVariableMap(){
         variableMap.put(Constants12907.BLUE_FLAG, this.isBlue);
         variableMap.put(Constants12907.OUTER_FLAG, this.isOuter);
+
 
         variableMap.put(Constants12907.BACK_LEFT_MOTOR,this.backLeft);
         variableMap.put(Constants12907.FRONT_LEFT_MOTOR,this.frontLeft);
@@ -472,6 +506,7 @@ public class AutoAll extends LinearOpMode{
 
         telemetry.addLine("Auto All entered RunOpMode");
         telemetry.update();
+
 
         initialize();
 
@@ -507,9 +542,22 @@ public class AutoAll extends LinearOpMode{
 
             OpenGLMatrix lastLocation = webcamInitialization();
 
+            sleep(1000);
+            telemetry.addLine("---- webcam intialized");
+            telemetry.update();
+            sleep(1000);
+
             waitForStart();
 
+            telemetry.addLine("!!!! entered wait for start");
+            telemetry.update();
+
             if (opModeIsActive()) {
+
+                telemetry.addLine("**** opMode Is Active");
+                telemetry.update();
+                sleep(1000);
+
 
                 //delay set
                 try {
@@ -540,13 +588,19 @@ public class AutoAll extends LinearOpMode{
                     autoInnerTwoBlocksBlue.playProgram(variableMap);
                     telemetry.addLine("Program Playing: Blue Inner Two Block");
                 }
+
+                if (isRepo == true && isBlue == true && isOuter == true ){
+                    autoOuterRepoBlue.playProgram(variableMap);
+                    telemetry.addLine("Program Playing: Blue Outer Repo");
+                }
             }
 
         }catch (Exception bad){
-            telemetry.addData("EXCEPTION:", bad.toString());
+            telemetry.addData("EXCEPTION!!!:", bad.getMessage());
+            bad.printStackTrace();
             telemetry.update();
             try {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
