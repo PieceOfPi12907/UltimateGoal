@@ -49,7 +49,7 @@ public class Autonomous12907 extends LinearOpMode {
 }
 */
 
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.FTCappTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -67,12 +67,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.helper.MotorHelper;
-import org.firstinspires.ftc.teamcode.helper.SensorHelper;
-import org.firstinspires.ftc.teamcode.utilities.Landing;
-import org.firstinspires.ftc.teamcode.utilities.Marker;
-import org.firstinspires.ftc.teamcode.utilities.Parking;
-import org.firstinspires.ftc.teamcode.utilities.Sampling;
+import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
+import org.firstinspires.ftc.FTCappTeamcode.helper.SensorHelper;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.Landing;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.Marker;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.Parking;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.Sampling;
 
 import java.util.List;
 

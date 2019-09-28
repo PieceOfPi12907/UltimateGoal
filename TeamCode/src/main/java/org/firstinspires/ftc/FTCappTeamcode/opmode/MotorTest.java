@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.FTCappTeamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.helper.MotorHelper;
+import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
 
 @Autonomous(name = "Motor Test", group = "autonomous")
 public class MotorTest extends LinearOpMode {

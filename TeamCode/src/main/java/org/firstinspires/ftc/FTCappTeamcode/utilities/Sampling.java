@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities;
+package org.firstinspires.ftc.FTCappTeamcode.utilities;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.helper.MotorHelper;
-import org.firstinspires.ftc.teamcode.helper.SensorHelper;
+import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
+import org.firstinspires.ftc.FTCappTeamcode.helper.SensorHelper;
 
 
 public class Sampling {

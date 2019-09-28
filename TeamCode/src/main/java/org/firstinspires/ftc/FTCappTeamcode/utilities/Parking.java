@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.utilities;
+package org.firstinspires.ftc.FTCappTeamcode.utilities;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.helper.MotorHelper;
+import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
 
 public class Parking {
 

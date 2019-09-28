@@ -62,13 +62,13 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.helper.MotorHelper;
-import org.firstinspires.ftc.teamcode.helper.SensorHelper;
-import org.firstinspires.ftc.teamcode.utilities.Landing;
-import org.firstinspires.ftc.teamcode.utilities.Marker;
-import org.firstinspires.ftc.teamcode.utilities.MarkerLeft;
-import org.firstinspires.ftc.teamcode.utilities.Parking;
-import org.firstinspires.ftc.teamcode.utilities.Sampling;
+import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
+import org.firstinspires.ftc.FTCappTeamcode.helper.SensorHelper;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.Landing;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.Marker;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.MarkerLeft;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.Parking;
+import org.firstinspires.ftc.FTCappTeamcode.utilities.Sampling;
 
 @Disabled
 @Autonomous(name = "Autonomous 2019 Left", group = "autonomous")
