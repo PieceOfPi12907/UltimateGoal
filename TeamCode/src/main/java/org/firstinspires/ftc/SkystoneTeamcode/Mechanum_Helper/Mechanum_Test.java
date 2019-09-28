@@ -31,16 +31,16 @@ public class Mechanum_Test extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()) {
             if (gamepad1.a) {
-                mh.moveForwardForTime(frontRight, frontLeft, backRight, backLeft, 0.5, 1);
+                mh.moveForward(frontRight, frontLeft, backRight, backLeft, 0.5);
             }
             if (gamepad1.b) {
-                mh.strafeRightForTime(frontRight, frontLeft, backRight, backLeft, 0.5, 1);
+                mh.strafeRight(frontRight, frontLeft, backRight, backLeft, 0.5);
             }
             if (gamepad1.x) {
-                mh.strafeLeftForTime(frontRight, frontLeft, backRight, backLeft, 0.5, 1);
+                mh.strafeLeft(frontRight, frontLeft, backRight, backLeft, 0.5);
             }
             if (gamepad1.y) {
-                mh.moveForwardForTime(frontRight, frontLeft, backRight, backLeft, -0.5, 1);
+                mh.moveForward(frontRight, frontLeft, backRight, backLeft, -0.5);
             }
         }
     }
