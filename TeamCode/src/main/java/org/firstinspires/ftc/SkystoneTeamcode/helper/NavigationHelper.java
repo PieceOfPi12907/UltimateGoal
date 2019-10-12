@@ -1,20 +1,22 @@
 package org.firstinspires.ftc.SkystoneTeamcode.helper;
 
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class NavigationHelper {
 
     public void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry ){
-        if(pDirection.equals(Constants12907.Direction.FWD)){
+        if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
             forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
         }
-        else if(pDirection.equals(Constants12907.Direction.BWD)){
 
-        }
         else if(pDirection.equals(Constants12907.Direction.LEFT)){
             leftStrafe(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
 
@@ -23,6 +25,7 @@ public class NavigationHelper {
 
         }
         else if(pDirection.equals(Constants12907.Direction.TURN)){
+            this.turnWithEncoders(pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
 
         }
 
@@ -148,6 +151,56 @@ public class NavigationHelper {
 
 
     }
+
+
+
+    public void turnWithEncoders(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
+                                 DcMotor pBackLeft, float pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
+        double currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
+
+        pTelemetry.addData("Initial Angle: ", currentAngle);
+        pTelemetry.update();
+
+
+        pFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        if (pRotation > 0) {
+            while (((pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                    AngleUnit.DEGREES)).firstAngle) - currentAngle < pRotation) {
+                pFrontRight.setPower(pSpeed);
+                pBackRight.setPower(pSpeed);
+                pFrontLeft.setPower(-pSpeed);
+                pBackLeft.setPower(-pSpeed);
+            }
+        } else {
+            while (((pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                    AngleUnit.DEGREES)).firstAngle) - currentAngle > pRotation) {
+                pFrontRight.setPower(-pSpeed);
+                pBackRight.setPower(-pSpeed);
+                pFrontLeft.setPower(pSpeed);
+                pBackLeft.setPower(pSpeed);
+
+            }
+
+        }
+        pFrontRight.setPower(0);
+        pBackRight.setPower(0);
+        pFrontLeft.setPower(0);
+        pBackLeft.setPower(0);
+
+        currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
+
+        pTelemetry.addData("Final Angle: ", currentAngle);
+        pTelemetry.update();
+
+
+    }
+
 
 }
 
