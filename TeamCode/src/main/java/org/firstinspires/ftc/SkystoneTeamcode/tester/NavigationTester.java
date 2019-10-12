@@ -36,10 +36,19 @@ public class NavigationTester extends LinearOpMode {
 
         if(opModeIsActive()) {
             NavigationHelper navigateTest = new NavigationHelper();
-            navigateTest.navigate(50, Constants12907.Direction.FWD, 0, 0.25, backLeft, backRight, frontRight, frontLeft, telemetry);
+            //navigateTest.navigate(50, Constants12907.Direction.FWD, 0, 0.25, backLeft, backRight, frontRight, frontLeft, telemetry);
+            navigateTest.navigate(50, Constants12907.Direction.LEFT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, telemetry);
 
+            telemetry.addData("Path1", "Running to %7d :%7d", 0,0);
+            telemetry.addData("Path2", "Running at %7d :%7d",
+                    backLeft.getCurrentPosition(),
+                    backRight.getCurrentPosition());
+
+            telemetry.update();
         }
 
 
     }
+
+
 }
