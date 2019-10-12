@@ -33,10 +33,13 @@ public class NavigationTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         waitForStart();
-        while(opModeIsActive()) {
+
+        if(opModeIsActive()) {
             NavigationHelper navigateTest = new NavigationHelper();
-            navigateTest.navigate(10, Constants12907.Direction.FWD, 0, 0.5, backLeft, backRight, frontRight, frontLeft, telemetry);
+            navigateTest.navigate(50, Constants12907.Direction.FWD, 0, 0.25, backLeft, backRight, frontRight, frontLeft, telemetry);
+
         }
+
 
     }
 }
