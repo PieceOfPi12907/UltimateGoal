@@ -25,7 +25,7 @@ public class NavigationHelper {
 
         }
         else if(pDirection.equals(Constants12907.Direction.TURN)){
-            this.turnWithEncoders(pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
+            //this.turnWithEncoders(pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
 
         }
 
@@ -46,36 +46,48 @@ public class NavigationHelper {
 
         pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            /* Testing Encoders on all 4 motors
         pFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        pFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
 
         // Determine new target position, and pass to motor controller
         newTargetPositionLeft = pBackLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
         newTargetPositionRight = pBackRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionLeft = pFrontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionRight = pFrontRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
         pBackLeft.setTargetPosition(newTargetPositionLeft);
         pBackRight.setTargetPosition(newTargetPositionRight);
+        pFrontLeft.setTargetPosition(newTargetPositionLeft);
+        pFrontRight.setTargetPosition(newTargetPositionRight);
         runtime.reset();
 
         telemetry.addData("Initial Value", "Running at %7d :%7d",
                 pBackLeft.getCurrentPosition(), pBackRight.getCurrentPosition());
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                pFrontLeft.getCurrentPosition(), pFrontRight.getCurrentPosition());
         telemetry.update();
 
         pBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         pBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pFrontLeft.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+        pFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         pFrontRight.setPower((pSpeed));
         pBackRight.setPower((pSpeed));
         pFrontLeft.setPower((pSpeed));
         pBackLeft.setPower((pSpeed));
 
-        while ((pBackLeft.isBusy() && pBackRight.isBusy())) {
+        while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
 
             // Display it for the driver.
             telemetry.addData("Path1", "Running to %7d :%7d", newTargetPositionLeft, newTargetPositionRight);
             telemetry.addData("Path2", "Running at %7d :%7d",
                     pBackLeft.getCurrentPosition(),
                     pBackRight.getCurrentPosition());
+                    pFrontLeft.getCurrentPosition();
+                    pFrontRight.getCurrentPosition();
             telemetry.update();
         }
 
@@ -88,6 +100,8 @@ public class NavigationHelper {
         telemetry.addData("Final Position", "Running at %7d :%7d",
                  pBackLeft.getCurrentPosition(),
                  pBackRight.getCurrentPosition());
+                 pFrontLeft.getCurrentPosition();
+                 pFrontRight.getCurrentPosition();
         telemetry.update();
     }
 

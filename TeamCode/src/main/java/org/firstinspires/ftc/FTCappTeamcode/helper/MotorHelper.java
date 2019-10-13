@@ -229,6 +229,39 @@ public class MotorHelper {
         backLeft.setPower(0);
         backRight.setPower(0);
     }
+    public void motorMovingWithEncoders(DcMotor motor1,double motorPower, int targetpos, Telemetry telemetry) {
+        ElapsedTime runtime = new ElapsedTime();
+
+        final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
+        final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
+        final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+        final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
+                (WHEEL_DIAMETER_INCHES * 3.1415);
+
+        int newTargetPosition;
+
+        motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor1.setTargetPosition(targetpos);
+        motor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Determine new target position, and pass to motor controller
+        newTargetPosition = motor1.getCurrentPosition() + (int) (targetpos * COUNTS_PER_INCH);
+
+        runtime.reset();
+        motor1.setPower((motorPower));
+
+        while ((motor1.isBusy())) {
+
+            // Display it for the driver.
+           /* telemetry.addData("Path1", "Running to %7d :%7d", newTargetPosition);
+            telemetry.addData("Path2", "Running at %7d :%7d",
+                    motor1.getCurrentPosition());
+            telemetry.update();*/
+        }
+        //stop motors
+        motor1.setPower(0);
+    }
+
 
 
 
