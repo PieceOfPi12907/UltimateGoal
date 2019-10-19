@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.FTCappTeamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
-
+@Disabled
 @Autonomous(name = "Motor Test", group = "autonomous")
 public class MotorTest extends LinearOpMode {
 //this program tests the drive train motors to go in a straight line

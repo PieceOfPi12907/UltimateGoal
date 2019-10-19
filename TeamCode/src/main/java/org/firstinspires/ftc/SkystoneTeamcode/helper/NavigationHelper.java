@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class NavigationHelper {
-
-    public void navigate (double pTgtDistance, Constants12907.Direction pDirection, float pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry ){
+        // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
+    public void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry ){
         if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
             forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
         }
@@ -29,7 +29,7 @@ public class NavigationHelper {
 
         }
         else if(pDirection.equals(Constants12907.Direction.TURN)){
-            this.turnWithEncoders(pFrontRight, pFrontLeft, pBackRight, pBackLeft, pRotation, pSpeed, pImu, telemetry);
+            this.turnWithEncodersWithCorrection(pFrontRight, pFrontLeft, pBackRight, pBackLeft, pRotation, pSpeed, pImu, telemetry);
 
         }
 
@@ -38,25 +38,25 @@ public class NavigationHelper {
 
 
 
-
+    // This is the method that gets called if constant is STRAIGHT
     private void forwardDrive (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
-
+        //Variables used for converting inches to Encoder dounts
         final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
         final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
         final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
         final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
                 (WHEEL_DIAMETER_INCHES * 3.1415);
-
+        // newTargetPosition is the target position after it has been converted
         int newTargetPositionRight;
         int newTargetPositionLeft;
-
+        // Sets all encoder values to 0 as we are moving robot with all 4 encoders
         pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // Determine new target position, and pass to motor controller
+        // Determine new target position, converts it, and pass to motor controller
         newTargetPositionLeft = pBackLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
         newTargetPositionRight = pBackRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
         newTargetPositionLeft = pFrontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
@@ -244,12 +244,19 @@ public class NavigationHelper {
 
 
     public void turnWithEncoders(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
-                                 DcMotor pBackLeft, float pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
+                                 DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
+        double computedAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
         double currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                 AngleUnit.DEGREES).firstAngle;
-
-        pTelemetry.addData("Initial Angle: ", currentAngle);
+        double previousAngle = 0.0;
+        pTelemetry.addData("Initial Angle: ", computedAngle);
         pTelemetry.update();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
         pFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -258,21 +265,24 @@ public class NavigationHelper {
         pBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         if (pRotation > 0) {
-            while (((pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
-                    AngleUnit.DEGREES)).firstAngle) - currentAngle < pRotation) {
+            while (computedAngle < pRotation) {
+                previousAngle = computedAngle;
                 pFrontRight.setPower(pSpeed);
                 pBackRight.setPower(pSpeed);
                 pFrontLeft.setPower(-pSpeed);
                 pBackLeft.setPower(-pSpeed);
+                computedAngle = ((pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                        AngleUnit.DEGREES)).firstAngle) - currentAngle;
             }
         } else {
-            while (((pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
-                    AngleUnit.DEGREES)).firstAngle) - currentAngle > pRotation) {
+            while (computedAngle > pRotation) {
+                previousAngle = computedAngle;
                 pFrontRight.setPower(-pSpeed);
                 pBackRight.setPower(-pSpeed);
                 pFrontLeft.setPower(pSpeed);
                 pBackLeft.setPower(pSpeed);
-
+                computedAngle = ((pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                        AngleUnit.DEGREES)).firstAngle) - currentAngle;
             }
 
         }
@@ -280,12 +290,36 @@ public class NavigationHelper {
         pBackRight.setPower(0);
         pFrontLeft.setPower(0);
         pBackLeft.setPower(0);
-
         currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                 AngleUnit.DEGREES).firstAngle;
+        pTelemetry.addData("Previous Angle: ",previousAngle);
+        pTelemetry.addData("Computed Angle: ",computedAngle);
 
-        pTelemetry.addData("Final Angle: ", currentAngle);
+        pTelemetry.addData("Current Angle: ",currentAngle);
         pTelemetry.update();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    public void turnWithEncodersWithCorrection(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
+                                 DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
+        turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, pRotation,pSpeed,pImu,pTelemetry);
+        double currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
+        double correction = pRotation-currentAngle;
+        if(Math.abs(correction)>=5){
+            pTelemetry.addData("Correction value: ",correction);
+            pTelemetry.update();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, correction,0.15,pImu,pTelemetry);
+
+        }
     }
 }
 

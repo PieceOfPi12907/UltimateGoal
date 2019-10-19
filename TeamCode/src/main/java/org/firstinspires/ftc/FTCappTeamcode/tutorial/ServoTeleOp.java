@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.FTCappTeamcode.tutorial;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 //program to test the servos for a backup sweeper box
-
+@Disabled
 @TeleOp(name = "Servo Test", group = "Test")
 public class ServoTeleOp extends LinearOpMode {
 

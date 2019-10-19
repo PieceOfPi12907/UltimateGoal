@@ -14,12 +14,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class MotorTester extends LinearOpMode {
 
     //name
-    DcMotor motor1;
+    DcMotor frontLeft;
 
     public void initializeMotor() {
         //configuring motor
-        motor1 = hardwareMap.get(DcMotor.class,"Andymark 40");
-        motor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft = hardwareMap.get(DcMotor.class,"frontLeft");
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     //@Override
@@ -28,9 +28,9 @@ public class MotorTester extends LinearOpMode {
         MotorHelper motorHelper = new MotorHelper();
         waitForStart();
         if(opModeIsActive()){
-            double motorPower = 0.5;
-            int targetPos = 200;
-            motorHelper.motorMovingWithEncoders(motor1, motorPower, targetPos, telemetry);
+            double motorPower = 0.25;
+            int targetPos = 10000;
+            motorHelper.motorMovingWithEncoders(frontLeft, motorPower, targetPos, telemetry);
         }
     }
 }
