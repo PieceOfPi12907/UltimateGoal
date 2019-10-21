@@ -95,6 +95,10 @@ public class Autonomous12907 extends LinearOpMode {
     BNO055IMU imu;
     SkystoneDetection skystoneDetection;
     NavigationHelper navigationHelper;
+    ColorSensor colorRight;
+    DistanceSensor distanceRight;
+    ColorSensor colorLeft;
+    DistanceSensor distanceLeft;
     //Initializes motors from the hardware map
 
     public void initialize() {
@@ -109,6 +113,12 @@ public class Autonomous12907 extends LinearOpMode {
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        //Initializing color and distance sensors
+        colorRight=hardwareMap.get(ColorSensor.class,"sensor_color_distance");
+        distanceRight=hardwareMap.get(DistanceSensor.class,"sensor_color_distance");
+        colorLeft=hardwareMap.get(ColorSensor.class,"sensor_color_distance");
+        distanceLeft=hardwareMap.get(DistanceSensor.class,"sensor_color_distance");
         //Initializing the IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -129,7 +139,7 @@ public class Autonomous12907 extends LinearOpMode {
             waitForStart();
 
             if (opModeIsActive()) {
-                skystoneDetection.moveToSkystoneInner(frontLeft,frontRight,backLeft,backRight,navigationHelper,telemetry);
+                skystoneDetection.moveToSkystoneOuter(frontLeft,frontRight,backLeft,backRight,navigationHelper,imu,telemetry,colorRight,colorLeft,distanceRight,distanceLeft);
 
             }
         }catch (Exception bad){

@@ -18,16 +18,13 @@ public class NavigationHelper {
         }
 
         else if(pDirection.equals(Constants12907.Direction.LEFT)){
-            leftStrafe(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
+            leftStrafe(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu,telemetry);
 
         }
         else if(pDirection.equals(Constants12907.Direction.RIGHT)){
-            rightStrafe(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
+            rightStrafe(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, telemetry);
         }
-        
-        else if(pDirection.equals(Constants12907.Direction.RIGHT)){
 
-        }
         else if(pDirection.equals(Constants12907.Direction.TURN)){
             this.turnWithEncodersWithCorrection(pFrontRight, pFrontLeft, pBackRight, pBackLeft, pRotation, pSpeed, pImu, telemetry);
 
@@ -102,7 +99,7 @@ public class NavigationHelper {
         pFrontRight.getCurrentPosition());
         telemetry.update();
     }
-    private void leftStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry) {
+    private void leftStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
 
         final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
@@ -114,6 +111,9 @@ public class NavigationHelper {
         int newTargetPositionFrontLeft;
         int newTargetPositionBackRight;
         int newTargetPositionBackLeft;
+
+        double startingAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
 
         pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -169,9 +169,31 @@ public class NavigationHelper {
                 pFrontLeft.getCurrentPosition(),
                 pFrontRight.getCurrentPosition());
         telemetry.update();
+
+        this.strafeCorrection(pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, telemetry, startingAngle);
     }
 
-    private void rightStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry) {
+    private void strafeCorrection (DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry pTelemetry, double pStartAngle) {
+
+        double currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
+
+        double correction = pStartAngle-currentAngle;
+        if(Math.abs(correction)>5){
+            pTelemetry.addData("Correction value: ",correction);
+            pTelemetry.update();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, correction,0.15,pImu,pTelemetry);
+
+        }
+
+    }
+
+    private void rightStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
 
         final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
@@ -183,6 +205,9 @@ public class NavigationHelper {
         int newTargetPositionFrontLeft;
         int newTargetPositionBackRight;
         int newTargetPositionBackLeft;
+
+        double startingAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
 
         pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -238,6 +263,8 @@ public class NavigationHelper {
                 pFrontLeft.getCurrentPosition(),
                 pFrontRight.getCurrentPosition());
         telemetry.update();
+
+        this.strafeCorrection(pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, telemetry, startingAngle);
 
 
     }
@@ -313,7 +340,7 @@ public class NavigationHelper {
             pTelemetry.addData("Correction value: ",correction);
             pTelemetry.update();
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
