@@ -16,10 +16,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
 
 //Version 10.19.18 (fixed switching & made dif drive ways into methods)
-@TeleOp(name = "TeleOp 12907", group = "teleop")
+//@TeleOp(name = "TeleOp 12907", group = "teleop")
 public class TeleOp12907 extends LinearOpMode {
     //Naming the motors
-   DcMotor backLeft;
+    DcMotor backLeft;
     DcMotor frontRight;
     DcMotor backRight;
     DcMotor frontLeft;
