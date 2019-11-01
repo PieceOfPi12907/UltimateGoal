@@ -25,5 +25,25 @@ public class SensorHelper {
             return false;
         }
     }
+    public int getBlackBlock (ColorSensor colorLeft, ColorSensor colorRight){
+        float hsvValues[] = {0F, 0F, 0F};
+
+        final float values[] = hsvValues;
+
+        int redR = (int)(colorRight.red());
+        int greenR = (int) (colorRight.green());
+        int redL = (int)(colorLeft.red());
+        int greenL = (int)(colorLeft.green());
+        if((redL > 1000) && (redR > 1000) && (greenL > 1000) && (greenR > 1000)){
+            return 3;
+
+        }else if((redR>redL) && (greenR>greenL)){
+            return 1;
+
+        }else{
+            return 2;
+        }
+
+    }
 
 }

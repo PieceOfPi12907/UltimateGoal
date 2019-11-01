@@ -121,10 +121,10 @@ public class Autonomous12907 extends LinearOpMode {
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //Initializing color and distance sensors
-        colorRight=hardwareMap.get(ColorSensor.class,"sensor_color_distance");
-        distanceRight=hardwareMap.get(DistanceSensor.class,"sensor_color_distance");
-        colorLeft=hardwareMap.get(ColorSensor.class,"sensor_color_distance");
-        distanceLeft=hardwareMap.get(DistanceSensor.class,"sensor_color_distance");
+        colorRight=hardwareMap.get(ColorSensor.class,"sensor_color_distance_right");
+        distanceRight=hardwareMap.get(DistanceSensor.class,"sensor_color_distance_right");
+        colorLeft=hardwareMap.get(ColorSensor.class,"sensor_color_distance_left");
+        distanceLeft=hardwareMap.get(DistanceSensor.class,"sensor_color_distance_left");
         //Initializing the IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -150,7 +150,7 @@ public class Autonomous12907 extends LinearOpMode {
 
                 }
                 else if(isBlue==false){
-                    skystoneDetection.moveToSkystoneOuterRed(frontLeft,frontRight,backLeft,backRight,navigationHelper,imu,telemetry,colorRight,colorLeft,distanceRight,distanceLeft,pivotGrabber,blockClamper);
+                  //  skystoneDetection.moveToSkystoneOuterRed(frontLeft,frontRight,backLeft,backRight,navigationHelper,imu,telemetry,colorRight,colorLeft,distanceRight,distanceLeft,pivotGrabber,blockClamper);
 
                 }
 
