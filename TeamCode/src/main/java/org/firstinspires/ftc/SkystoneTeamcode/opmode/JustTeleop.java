@@ -21,6 +21,7 @@ public class JustTeleop extends LinearOpMode {
     Servo dumperRotate;
     Servo leftIntake;
     Servo rightIntake;
+    Servo repositioning;
 
 
     boolean threadStarted = false;
@@ -34,12 +35,12 @@ public class JustTeleop extends LinearOpMode {
     final double PIVOT_RAISED = 0.8;
     final double AUTO_CLAMP_OPENED = 0.5;
     final double AUTO_CLAMP_CLOSED = 0.8;
-    final double INTAKE_LEFT_CLOSE = 0.66;
-    final double INTAKE_RIGHT_CLOSE = 0.15;
+    final double INTAKE_LEFT_CLOSE = 0.71;
+    final double INTAKE_RIGHT_CLOSE = 0.1;
    // final double INTAKE_LEFT_OPEN = 0;
     //final double INTAKE_RIGHT_OPEN = 0;
     final double DUMPER_ARM_TOP = 0.96;
-    final double DUMPER_ARM_BOTTOM = 0.4;
+    final double DUMPER_ARM_BOTTOM = 0.25;
     final double DUMPER_CLAMP_DOWN = 0.9;
     final double DUMPER_CLAMP_UP = 0.3;
     final double DUMPER_ROTATE_IN = 0.8;
@@ -59,9 +60,13 @@ public class JustTeleop extends LinearOpMode {
 
         intakeLeft = hardwareMap.get(DcMotor.class,"intakeLeft");
         intakeRight = hardwareMap.get(DcMotor.class,"intakeRight");
+
+        rightIntake = hardwareMap.get(Servo.class, "rightIntakeServo");
+        leftIntake = hardwareMap.get(Servo.class, "leftIntakeServo");
         dumperArm = hardwareMap.get(Servo.class,"dumperArm");
         dumperClamp = hardwareMap.get(Servo.class,"dumperClamp");
         dumperRotate = hardwareMap.get(Servo.class,"dumperRotate");
+        repositioning = hardwareMap.get(Servo.class, "repositioningServo");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -156,10 +161,24 @@ public class JustTeleop extends LinearOpMode {
         Thread ourDrive = new test();
         while(opModeIsActive()){
             deadZoneTest(scaleFactor);
+            if(gamepad1.a){
+                scaleFactor=0.5;
+            }
+            if(gamepad1.b){
+                scaleFactor=0.75;
+            }
             if(gamepad2.a){
-                if(threadStarted==false){
+                /*if(threadStarted==false){
                     ourDrive.run();
                 }
+
+                 */
+                intakeLeft.setPower(-0.4);
+                intakeRight.setPower(0.4);
+            }
+            if(gamepad2.left_bumper){
+                intakeLeft.setPower(0);
+                intakeRight.setPower(0);
             }
             if(gamepad2.right_bumper){
                 leftIntake.setPosition(INTAKE_LEFT_CLOSE);
@@ -170,7 +189,7 @@ public class JustTeleop extends LinearOpMode {
                     dumperClamp.setPosition(DUMPER_CLAMP_DOWN);
                     isClamped = true;
                 }
-                if(isClamped){
+                else if(isClamped){
                     dumperClamp.setPosition(DUMPER_CLAMP_UP);
                     isClamped = false;
                 }
@@ -180,7 +199,7 @@ public class JustTeleop extends LinearOpMode {
                     dumperArm.setPosition(DUMPER_ARM_BOTTOM);
                     isArmDown = true;
                 }
-                if(isArmDown){
+                else if(isArmDown){
                     dumperArm.setPosition(DUMPER_ARM_TOP);
                     isArmDown = false;
                 }
@@ -190,7 +209,7 @@ public class JustTeleop extends LinearOpMode {
                     dumperRotate.setPosition(DUMPER_ROTATE_OUT);
                     isArmStraight = true;
                 }
-                if(isArmStraight){
+                else if(isArmStraight){
                     dumperRotate.setPosition(DUMPER_ROTATE_IN);
                     isArmStraight = false;
                 }
