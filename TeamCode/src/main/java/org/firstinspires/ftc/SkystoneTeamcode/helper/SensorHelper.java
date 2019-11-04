@@ -35,10 +35,10 @@ public class SensorHelper {
         int redL = (int)(colorLeft.red());
         int greenL = (int)(colorLeft.green());
         if((redL > 1000) && (redR > 1000) && (greenL > 1000) && (greenR > 1000)){
-            return 3;
+            return 1;
 
         }else if((redR>redL) && (greenR>greenL)){
-            return 1;
+            return 3;
 
         }else{
             return 2;
