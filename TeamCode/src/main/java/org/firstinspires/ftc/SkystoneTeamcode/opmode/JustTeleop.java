@@ -36,11 +36,11 @@ public class JustTeleop extends LinearOpMode {
     final double AUTO_CLAMP_OPENED = 0.5;
     final double AUTO_CLAMP_CLOSED = 0.8;
     final double INTAKE_LEFT_CLOSE = 0.71;
-    final double INTAKE_RIGHT_CLOSE = 0.1;
+    final double INTAKE_RIGHT_CLOSE = 0.8;
    // final double INTAKE_LEFT_OPEN = 0;
     //final double INTAKE_RIGHT_OPEN = 0;
-    final double DUMPER_ARM_TOP = 0.96;
-    final double DUMPER_ARM_BOTTOM = 0.25;
+    final double DUMPER_ARM_OUT = 0.2;
+    final double DUMPER_ARM_IN = 1;
     final double DUMPER_CLAMP_DOWN = 0.9;
     final double DUMPER_CLAMP_UP = 0.3;
     final double DUMPER_ROTATE_IN = 0.8;
@@ -73,7 +73,11 @@ public class JustTeleop extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        //pivotGrabber.setPosition(PIVOT_RAISED);
+        leftIntake.setPosition(INTAKE_LEFT_CLOSE);
+        rightIntake.setPosition(INTAKE_RIGHT_CLOSE);
+       // dumperArm.setPosition(DUMPER_ARM_IN);
+        dumperClamp.setPosition(DUMPER_CLAMP_UP);
+
         //blockClamper.setPosition(CLAMP_CLOSED);
 
     }
@@ -179,6 +183,20 @@ public class JustTeleop extends LinearOpMode {
             if(gamepad2.left_bumper){
                 intakeLeft.setPower(0);
                 intakeRight.setPower(0);
+                rightIntake.setPosition(0.50);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                dumperClamp.setPosition(DUMPER_CLAMP_DOWN);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+               // rightIntake.setPosition(INTAKE_RIGHT_CLOSE);
+
             }
             if(gamepad2.right_bumper){
                 leftIntake.setPosition(INTAKE_LEFT_CLOSE);
@@ -196,11 +214,11 @@ public class JustTeleop extends LinearOpMode {
             }
             if(gamepad2.y){
                 if(!isArmDown){
-                    dumperArm.setPosition(DUMPER_ARM_BOTTOM);
+                    dumperArm.setPosition(DUMPER_ARM_IN);
                     isArmDown = true;
                 }
                 else if(isArmDown){
-                    dumperArm.setPosition(DUMPER_ARM_TOP);
+                    dumperArm.setPosition(DUMPER_ARM_OUT);
                     isArmDown = false;
                 }
             }
