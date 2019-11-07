@@ -65,18 +65,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
+import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
+import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
-import org.firstinspires.ftc.FTCappTeamcode.helper.SensorHelper;
-import org.firstinspires.ftc.FTCappTeamcode.utilities.Landing;
-import org.firstinspires.ftc.FTCappTeamcode.utilities.Marker;
-import org.firstinspires.ftc.FTCappTeamcode.utilities.Parking;
-import org.firstinspires.ftc.FTCappTeamcode.utilities.Sampling;
+import java.util.Scanner;
 
 import java.util.List;
 //@Disabled
@@ -85,7 +83,10 @@ import java.util.List;
 @Autonomous(name = "Autonomous 2019", group = "autonomous")
 public class Autonomous12907 extends LinearOpMode {
 
-    boolean isBlue = true;
+    boolean isBlue = false;
+    boolean isOuter = false;
+    boolean isPos2 = false;
+
     final long SLEEP_TIME_250 = 250;
 
     //Naming the motors
@@ -106,6 +107,13 @@ public class Autonomous12907 extends LinearOpMode {
     //Initializes motors from the hardware map
 
     public void initialize() {
+
+        Scanner scanner = new Scanner(System.in);
+
+        isBlue = scanner.nextBoolean();
+        isOuter = scanner.nextBoolean();
+        isPos2 = scanner.nextBoolean();
+
         //Configuration of the Motors/Servos
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -141,18 +149,48 @@ public class Autonomous12907 extends LinearOpMode {
             initialize();
             navigationHelper = new NavigationHelper();
             skystoneDetection = new SkystoneDetection();
+           SkystoneDelivery skystoneDelivery = new SkystoneDelivery();
+            Parking parking = new Parking();
 
             waitForStart();
 
             if (opModeIsActive()) {
-                if(isBlue==true){
-                    skystoneDetection.moveToSkystoneOuterBlue(frontLeft,frontRight,backLeft,backRight,navigationHelper,imu,telemetry,colorRight,colorLeft,distanceRight,distanceLeft,pivotGrabber,blockClamper);
+                if (isOuter==true) {
+                    skystoneDetection.moveToSkystoneOuter(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper, isBlue, isPos2);
+                    skystoneDelivery.placeSkystoneOuter(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber, isBlue);
+                    parking.parkSkystone(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue);
+                }else {
+                    skystoneDetection.moveToSkystoneInner(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper, isBlue, isPos2);
+                    skystoneDelivery.placeSkystoneInner(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber, isBlue);
+                    parking.parkSkystone(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue);
 
+                }
+
+
+               /* if(isBlue==true){
+                    if (isOuter==true) {
+                        skystoneDetection.moveToSkystoneOuterBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
+                        skystoneDelivery.placeSkystoneOuterBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
+                        parking.parkSkystoneOuterBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry);
+                    }
+                    if (isOuter==false) {
+                        skystoneDetection.moveToSkystoneInnerBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
+                        skystoneDelivery.placeSkystoneInnerBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
+                        parking.parkSkystoneInnerBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry);
+                    }
                 }
                 else if(isBlue==false){
-                  //  skystoneDetection.moveToSkystoneOuterRed(frontLeft,frontRight,backLeft,backRight,navigationHelper,imu,telemetry,colorRight,colorLeft,distanceRight,distanceLeft,pivotGrabber,blockClamper);
-
-                }
+                    if (isOuter==true) {
+                        skystoneDetection.moveToSkystoneOuterRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
+                        skystoneDelivery.placeSkystoneOuterRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
+                        parking.parkSkystoneOuterRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry);
+                    }
+                    if (isOuter==false) {
+                        skystoneDetection.moveToSkystoneInnerRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
+                        skystoneDelivery.placeSkystoneInnerRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
+                        parking.parkSkystoneInnerRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry);
+                    }
+                } */
 
             }
         }catch (Exception bad){
@@ -167,3 +205,5 @@ public class Autonomous12907 extends LinearOpMode {
 
     }
 }
+
+

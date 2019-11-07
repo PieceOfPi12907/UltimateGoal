@@ -14,131 +14,257 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class SkystoneDetection {
 
     final double PIVOT_LOWERED = 0.15;
+    //CHANGE VALUE FOR UPDATED ROBOT
     final double PIVOT_RAISED = 0.8;
     final double CLAMP_OPENED = 0.5;
     final double CLAMP_CLOSED = 0.8;
+    int negative;
+
 
 
     SensorHelper sensorHelper = new SensorHelper();
 
-    public void moveToSkystoneOuterBlue(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, ColorSensor colorRight, ColorSensor colorLeft, DistanceSensor distanceRight, DistanceSensor distanceLeft, Servo pivotGrabber, Servo blockClamper) {
-        //Moving to the wall
-        //pNavigate.navigate(-25, Constants12907.Direction.STRAIGHT,0,-0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        //Strafing to the Skystone - sped up complete: 0.25 --> 0.5, 0.2 --> 0.4, 0.4 --> 0.7
-       // pNavigate.navigate(29.5, Constants12907.Direction.RIGHT, 0, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        //Color Sensing Code
+    public void moveToSkystoneOuter(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, ColorSensor colorRight, ColorSensor colorLeft, DistanceSensor distanceRight, DistanceSensor distanceLeft, Servo pivotGrabber, Servo blockClamper, Boolean isBlue, Boolean isPos2) {
+        if (isBlue==false) {
+            negative = -1;
+        } else {
+            negative = 1;
+        }
+        if(isPos2==true) {
+            pNavigate.navigate(22.75*negative, Constants12907.Direction.STRAIGHT, 0, 0.5*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-        boolean is2Yellow = sensorHelper.isYellow(colorLeft);
-        boolean is1Yellow = sensorHelper.isYellow(colorRight);
+        }
+
+        //Strafing to the Skystone - sped up complete: 0.25 --> 0.5, 0.2 --> 0.4, 0.4 --> 0.7
+         pNavigate.navigate(29.5, Constants12907.Direction.RIGHT, 0, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        //Moving to the wall
+      //  pNavigate.navigate(-25, Constants12907.Direction.STRAIGHT,0,-0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        //Color Sensing Code - includes method getBlackBlock
+        boolean isLYellow = sensorHelper.isYellow(colorLeft);
+        boolean isRYellow = sensorHelper.isYellow(colorRight);
+        int getBlackBlock = sensorHelper.getBlackBlock(colorLeft,colorRight);
+
+        //telemetry for reading the color sensor values
+        /*pTelemetry.addData("Red Right:  ", colorRight.red());
+        pTelemetry.addData("Green Right: ", colorRight.green());
+        pTelemetry.addData("Blue Right: ", colorRight.blue());
         pTelemetry.addData("Red Left:  ", colorLeft.red());
         pTelemetry.addData("Green Left: ", colorLeft.green());
         pTelemetry.addData("Blue Left: ", colorLeft.blue());
+        pTelemetry.update();*/
 
-
-        pTelemetry.addData("Red Right:  ", colorRight.red());
-        pTelemetry.addData("Green Right: ", colorRight.green());
-        pTelemetry.addData("Blue Right: ", colorRight.blue());
-
-        pTelemetry.update();
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (is1Yellow && is2Yellow) {
+        //OLD CODE THAT USES 'isYellow' METHOD TO DETERMINE SKYSTONE POSITION
+        /*if (isRYellow && isLYellow) {
             pTelemetry.addData("position: ", 3);
-        } else if (is1Yellow && is2Yellow == false) {
+
+        } else if (isLYellow && (isRYellow == false)) {
             pTelemetry.addData("position: ", 2);
         } else {
             pTelemetry.addData("position: ", 1);
         }
+        pTelemetry.update();*/
+
+        //RETURNS POSITION 1, 2, OR 3 FROM 'getBlackBlock' METHOD IN SensorHelper
+        pTelemetry.addData("position from getBlackBlock",getBlackBlock);
         pTelemetry.update();
-        //Move to Intake position (not necessary, initial position is fine)
-        //Intake Code
-       /* blockClamper.setPosition(CLAMP_OPENED);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        pivotGrabber.setPosition(PIVOT_LOWERED);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        blockClamper.setPosition(CLAMP_CLOSED);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        pivotGrabber.setPosition(PIVOT_RAISED);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+            //robot moves to pick up skystone based on what position it is in:
+            if (getBlackBlock == 3) {
+                pNavigate.navigate(5*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+                intakeSkystone(blockClamper, pivotGrabber);
+                pNavigate.navigate(-5*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            } else if (getBlackBlock == 2) {
+                pNavigate.navigate(2*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+                intakeSkystone(blockClamper, pivotGrabber);
+                pNavigate.navigate(-2*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            } else {
+                intakeSkystone(blockClamper, pivotGrabber);
+                //does not move because the robot does not have to move anywhere for position 1
+            }
+
+
         //sped up complete: 0.25 --> 0.5, 0.2 --> 0.4, 0.4 --> 0.7
+     //   pNavigate.navigate(25, Constants12907.Direction.STRAIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
         pNavigate.navigate(29, Constants12907.Direction.LEFT,0,0.5,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        pNavigate.navigate(80, Constants12907.Direction.STRAIGHT,0,0.7,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        pNavigate.navigate(5, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        pNavigate.navigate(28, Constants12907.Direction.RIGHT,0,0.5,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-
-        //"Extake" Code
-        pivotGrabber.setPosition(PIVOT_LOWERED);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        blockClamper.setPosition(CLAMP_OPENED);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        pivotGrabber.setPosition(PIVOT_RAISED);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        blockClamper.setPosition(CLAMP_CLOSED);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        pNavigate.navigate(31, Constants12907.Direction.LEFT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        pNavigate.navigate(-30, Constants12907.Direction.STRAIGHT,0,-0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        pNavigate.navigate(3, Constants12907.Direction.RIGHT,0,0.5,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
     }
 
 
+    public void moveToSkystoneInner(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, ColorSensor colorRight, ColorSensor colorLeft, DistanceSensor distanceRight, DistanceSensor distanceLeft, Servo pivotGrabber, Servo blockClamper, Boolean isBlue, Boolean isPos2) {
+        if (isBlue==false) {
+            negative = -1;
+        } else {
+            negative = 1;
+        }
+
+        //Strafing to the Skystone - sped up complete: 0.25 --> 0.5, 0.2 --> 0.4, 0.4 --> 0.7
+        pNavigate.navigate(29.5, Constants12907.Direction.RIGHT, 0, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        if(isPos2==true) {
+            pNavigate.navigate(22.75*negative, Constants12907.Direction.STRAIGHT, 0, 0.5*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        }
+
+        //Color Sensing Code - includes method getBlackBlock
+        boolean isLYellow = sensorHelper.isYellow(colorLeft);
+        boolean isRYellow = sensorHelper.isYellow(colorRight);
+        int getBlackBlock = sensorHelper.getBlackBlock(colorLeft,colorRight);
+
+        //telemetry for reading the color sensor values
+        /*pTelemetry.addData("Red Right:  ", colorRight.red());
+        pTelemetry.addData("Green Right: ", colorRight.green());
+        pTelemetry.addData("Blue Right: ", colorRight.blue());
+        pTelemetry.addData("Red Left:  ", colorLeft.red());
+        pTelemetry.addData("Green Left: ", colorLeft.green());
+        pTelemetry.addData("Blue Left: ", colorLeft.blue());
+        pTelemetry.update();*/
+
+        //OLD CODE THAT USES 'isYellow' METHOD TO DETERMINE SKYSTONE POSITION
+        /*if (isRYellow && isLYellow) {
+            pTelemetry.addData("position: ", 3);
+
+        } else if (isLYellow && (isRYellow == false)) {
+            pTelemetry.addData("position: ", 2);
+        } else {
+            pTelemetry.addData("position: ", 1);
+        }
+        pTelemetry.update();*/
+
+        //RETURNS POSITION 1, 2, OR 3 FROM 'getBlackBlock' METHOD IN SensorHelper
+        pTelemetry.addData("position from getBlackBlock",getBlackBlock);
+        pTelemetry.update();
 
 
-   public void moveToSkystoneOuterRed (DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, ColorSensor colorRight, ColorSensor colorLeft, DistanceSensor distanceRight, DistanceSensor distanceLeft, Servo pivotGrabber, Servo blockClamper ){
+        //robot moves to pick up skystone based on what position it is in:
+        if(getBlackBlock == 3){
+            pNavigate.navigate(5*negative, Constants12907.Direction.STRAIGHT,0,0.25*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate(-5*negative, Constants12907.Direction.STRAIGHT,0,-0.25*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        } else if(getBlackBlock == 2 ){
+            pNavigate.navigate(2*negative, Constants12907.Direction.STRAIGHT,0,0.25*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate(-2*negative, Constants12907.Direction.STRAIGHT,0,-0.25*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        } else {
+            intakeSkystone(blockClamper, pivotGrabber);
+            //does not move because the robot does not have to move anywhere for position 1
+        }
+    }
+
+/*
+
+    public void moveToSkystoneOuterRed(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, ColorSensor colorRight, ColorSensor colorLeft, DistanceSensor distanceRight, DistanceSensor distanceLeft, Servo pivotGrabber, Servo blockClamper) {
+        //Strafing to the Skystone - sped up complete: 0.25 --> 0.5, 0.2 --> 0.4, 0.4 --> 0.7
+        pNavigate.navigate(29.5, Constants12907.Direction.RIGHT, 0, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
         //Moving to the wall
-        //pNavigate.navigate(25, Constants12907.Direction.STRAIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        //Strafing to the Skystone
-        pNavigate.navigate(29, Constants12907.Direction.RIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        //Insert Color Sensing Code
-        boolean is2Yellow = sensorHelper.isYellow(colorLeft);
-        boolean is1Yellow = sensorHelper.isYellow(colorRight);
-        if(is1Yellow&&is2Yellow){
-            pTelemetry.addData("position: ",3);
-        }else if(is1Yellow&&!(is2Yellow)){
-            pTelemetry.addData("position: ",2);
-        }else{
-            pTelemetry.addData("position: ",1);
+        //pNavigate.navigate(-25, Constants12907.Direction.STRAIGHT,0,-0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        //Color Sensing Code - includes method getBlackBlock
+        boolean isLYellow = sensorHelper.isYellow(colorLeft);
+        boolean isRYellow = sensorHelper.isYellow(colorRight);
+        int getBlackBlock = sensorHelper.getBlackBlock(colorLeft,colorRight);
+
+        //telemetry for reading the color sensor values
+        /*pTelemetry.addData("Red Right:  ", colorRight.red());
+        pTelemetry.addData("Green Right: ", colorRight.green());
+        pTelemetry.addData("Blue Right: ", colorRight.blue());
+        pTelemetry.addData("Red Left:  ", colorLeft.red());
+        pTelemetry.addData("Green Left: ", colorLeft.green());
+        pTelemetry.addData("Blue Left: ", colorLeft.blue());
+        pTelemetry.update();*/
+
+        //OLD CODE THAT USES 'isYellow' METHOD TO DETERMINE SKYSTONE POSITION
+        /*if (isRYellow && isLYellow) {
+            pTelemetry.addData("position: ", 3);
+
+        } else if (isLYellow && (isRYellow == false)) {
+            pTelemetry.addData("position: ", 2);
+        } else {
+            pTelemetry.addData("position: ", 1);
         }
+        pTelemetry.update();*/
+/*
+        //RETURNS POSITION 1, 2, OR 3 FROM 'getBlackBlock' METHOD IN SensorHelper
+        pTelemetry.addData("position from getBlackBlock",getBlackBlock);
         pTelemetry.update();
-        //Move to Intake position (not necessary, initial position is fine)
-        //Intake Code
+
+        //robot moves to pick up skystone based on what position it is in:
+        if(getBlackBlock == 3){
+            pNavigate.navigate(-5, Constants12907.Direction.STRAIGHT,0,-0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate(5, Constants12907.Direction.STRAIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        } else if(getBlackBlock == 2 ){
+            pNavigate.navigate(-2, Constants12907.Direction.STRAIGHT,0,-0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate(2, Constants12907.Direction.STRAIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        } else {
+            intakeSkystone(blockClamper, pivotGrabber);
+            //does not move because the robot does not have to move anywhere for position 1
+        }
+
+        //sped up complete: 0.25 --> 0.5, 0.2 --> 0.4, 0.4 --> 0.7
+        //   pNavigate.navigate(25, Constants12907.Direction.STRAIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        pNavigate.navigate(29, Constants12907.Direction.LEFT,0,0.5,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        pNavigate.navigate(3, Constants12907.Direction.RIGHT,0,0.5,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+    }
+
+    public void moveToSkystoneInnerRed(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, ColorSensor colorRight, ColorSensor colorLeft, DistanceSensor distanceRight, DistanceSensor distanceLeft, Servo pivotGrabber, Servo blockClamper) {
+        //Strafing to the Skystone - sped up complete: 0.25 --> 0.5, 0.2 --> 0.4, 0.4 --> 0.7
+        pNavigate.navigate(29.5, Constants12907.Direction.RIGHT, 0, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        //Moving to the wall
+        //pNavigate.navigate(-25, Constants12907.Direction.STRAIGHT,0,-0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        //Color Sensing Code - includes method getBlackBlock
+        boolean isLYellow = sensorHelper.isYellow(colorLeft);
+        boolean isRYellow = sensorHelper.isYellow(colorRight);
+        int getBlackBlock = sensorHelper.getBlackBlock(colorLeft,colorRight);
+
+        //telemetry for reading the color sensor values
+        /*pTelemetry.addData("Red Right:  ", colorRight.red());
+        pTelemetry.addData("Green Right: ", colorRight.green());
+        pTelemetry.addData("Blue Right: ", colorRight.blue());
+        pTelemetry.addData("Red Left:  ", colorLeft.red());
+        pTelemetry.addData("Green Left: ", colorLeft.green());
+        pTelemetry.addData("Blue Left: ", colorLeft.blue());
+        pTelemetry.update();*/
+
+        //OLD CODE THAT USES 'isYellow' METHOD TO DETERMINE SKYSTONE POSITION
+        /*if (isRYellow && isLYellow) {
+            pTelemetry.addData("position: ", 3);
+
+        } else if (isLYellow && (isRYellow == false)) {
+            pTelemetry.addData("position: ", 2);
+        } else {
+            pTelemetry.addData("position: ", 1);
+        }
+        pTelemetry.update();*/
+/*
+        //RETURNS POSITION 1, 2, OR 3 FROM 'getBlackBlock' METHOD IN SensorHelper
+        pTelemetry.addData("position from getBlackBlock",getBlackBlock);
+        pTelemetry.update();
+
+        //robot moves to pick up skystone based on what position it is in:
+        if(getBlackBlock == 3){
+            pNavigate.navigate(-5, Constants12907.Direction.STRAIGHT,0,-0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate(5, Constants12907.Direction.STRAIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        } else if(getBlackBlock == 2 ){
+            pNavigate.navigate(-2, Constants12907.Direction.STRAIGHT,0,-0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate(2, Constants12907.Direction.STRAIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        } else {
+            intakeSkystone(blockClamper, pivotGrabber);
+            //does not move because the robot does not have to move anywhere for position 1
+        }
+    }
+ */
+
+
+    public void intakeSkystone(Servo blockClamper, Servo pivotGrabber) {
+        //Intake skystone  Code
         blockClamper.setPosition(CLAMP_OPENED);
         try {
             Thread.sleep(750);
@@ -163,48 +289,9 @@ public class SkystoneDetection {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        pNavigate.navigate(29, Constants12907.Direction.LEFT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        //pNavigate.navigate(-100, Constants12907.Direction.STRAIGHT,0,-0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-       pNavigate.navigate(-80, Constants12907.Direction.STRAIGHT,0,-0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-       pNavigate.navigate(5, Constants12907.Direction.LEFT,0,0.2,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        pNavigate.navigate(28, Constants12907.Direction.RIGHT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-
-        //"Extake" Code
-        pivotGrabber.setPosition(PIVOT_LOWERED);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        blockClamper.setPosition(CLAMP_OPENED);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        pivotGrabber.setPosition(PIVOT_RAISED);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-       blockClamper.setPosition(CLAMP_CLOSED);
-       try {
-           Thread.sleep(1000);
-       } catch (InterruptedException e) {
-           e.printStackTrace();
-       }
-
-
-       pNavigate.navigate(31, Constants12907.Direction.LEFT,0,0.25,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        pNavigate.navigate(32, Constants12907.Direction.STRAIGHT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
     }
 
-        */
-
-
-    }
 }
+
 
 
