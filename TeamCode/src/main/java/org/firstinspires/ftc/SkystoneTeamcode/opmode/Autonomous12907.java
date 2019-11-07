@@ -74,7 +74,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import java.util.Scanner;
+//import java.util.Scanner;
 
 import java.util.List;
 //@Disabled
@@ -83,11 +83,11 @@ import java.util.List;
 @Autonomous(name = "Autonomous 2019", group = "autonomous")
 public class Autonomous12907 extends LinearOpMode {
 
-    boolean isBlue = false;
-    boolean isOuter = false;
+    boolean isBlue = true;
+    boolean isOuter = true;
     boolean isPos2 = false;
 
-    final long SLEEP_TIME_250 = 250;
+    //final long SLEEP_TIME_250 = 250;
 
     //Naming the motors
     DcMotor frontLeft;
@@ -108,11 +108,13 @@ public class Autonomous12907 extends LinearOpMode {
 
     public void initialize() {
 
-        Scanner scanner = new Scanner(System.in);
+        /*Scanner scanner = new Scanner(System.in);
 
         isBlue = scanner.nextBoolean();
         isOuter = scanner.nextBoolean();
         isPos2 = scanner.nextBoolean();
+
+         */
 
         //Configuration of the Motors/Servos
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -141,6 +143,9 @@ public class Autonomous12907 extends LinearOpMode {
         parameters.mode = BNO055IMU.SensorMode.IMU;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+        imu = hardwareMap.get(BNO055IMU.class, "imu 1");
+        imu.initialize(parameters);
+
     }
     @Override
     public void runOpMode() throws InterruptedException {

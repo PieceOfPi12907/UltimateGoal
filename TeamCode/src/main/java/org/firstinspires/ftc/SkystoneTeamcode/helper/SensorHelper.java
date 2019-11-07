@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class SensorHelper {
 
-    public boolean isYellow (ColorSensor color){
+    /*public boolean isYellow (ColorSensor color){
         float hsvValues[] = {0F, 0F, 0F};
 
         final float values[] = hsvValues;
@@ -24,24 +24,25 @@ public class SensorHelper {
         else{
             return false;
         }
-    }
-    public int getBlackBlock (ColorSensor colorLeft, ColorSensor colorRight){
+    }*/
+
+    public Constants12907.SkystonePosition getBlackBlock (ColorSensor colorLeft, ColorSensor colorRight){
         float hsvValues[] = {0F, 0F, 0F};
 
         final float values[] = hsvValues;
 
-        int redR = (int)(colorRight.red());
-        int greenR = (int) (colorRight.green());
-        int redL = (int)(colorLeft.red());
-        int greenL = (int)(colorLeft.green());
-        if((redL > 1000) && (redR > 1000) && (greenL > 1000) && (greenR > 1000)){
-            return 1;
+        int rightSensorRed = (int)(colorRight.red());
+        int rightSensorGreen = (int) (colorRight.green());
+        int leftSensorRed = (int)(colorLeft.red());
+        int leftSensorGreen = (int)(colorLeft.green());
+        if((leftSensorRed > 1000) && (leftSensorGreen> 1000) && (rightSensorRed > 1000) && (rightSensorGreen > 1000)){
+            return Constants12907.SkystonePosition.LEFT;
 
-        }else if((redR>redL) && (greenR>greenL)){
-            return 3;
+        }else if((rightSensorRed>leftSensorRed) && (rightSensorGreen>leftSensorGreen)){
+            return Constants12907.SkystonePosition.CENTER;
 
         }else{
-            return 2;
+            return Constants12907.SkystonePosition.RIGHT;
         }
 
     }

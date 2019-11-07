@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class SkystoneDelivery {
 
-    final double PIVOT_LOWERED = 0.15;
+    final double PIVOT_LOWERED = 0.9;
     //CHANGE VALUE FOR UPDATED ROBOT
-    final double PIVOT_RAISED = 0.8;
+    final double PIVOT_RAISED = 0.4;
     final double CLAMP_OPENED = 0.5;
     final double CLAMP_CLOSED = 0.8;
     int negative;
@@ -23,10 +23,10 @@ public class SkystoneDelivery {
         } else {
             negative = 1;
         }
-        pNavigate.navigate(90*negative, Constants12907.Direction.STRAIGHT,0,0.7*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        pNavigate.navigate(80*negative, Constants12907.Direction.STRAIGHT,0,0.7*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
         //below line is commented out so the robot doesn't move to the wall after moving to the building zone
         //pNavigate.navigate(5, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        pNavigate.navigate(28, Constants12907.Direction.RIGHT,0,0.5,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        pNavigate.navigate(29, Constants12907.Direction.RIGHT,0,0.5,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
         extakeSkystone(blockClamper, pivotGrabber);
 

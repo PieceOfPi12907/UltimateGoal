@@ -4,5 +4,8 @@ public class Constants12907 {
     public static enum Direction{
         STRAIGHT, LEFT, RIGHT, TURN;
     }
+    public static enum SkystonePosition{
+        LEFT, CENTER, RIGHT;
+    }
 
 }
