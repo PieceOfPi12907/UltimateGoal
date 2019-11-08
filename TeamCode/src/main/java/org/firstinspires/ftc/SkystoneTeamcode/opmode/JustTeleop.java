@@ -250,10 +250,12 @@ public class JustTeleop extends LinearOpMode {
            }
             */
 
-            frontLeft.setPower(0);
+            /*frontLeft.setPower(0);
             backLeft.setPower(0);
             frontRight.setPower(0);
             backRight.setPower(0);
+            */
+
 
         }
     }

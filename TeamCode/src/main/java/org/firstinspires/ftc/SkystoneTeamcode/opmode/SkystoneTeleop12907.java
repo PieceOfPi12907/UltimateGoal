@@ -94,7 +94,7 @@ public class SkystoneTeleop12907 extends LinearOpMode {
     }
 
     public void forwardBackwards(){
-        double power = 0.7*(gamepad1.left_stick_y);
+        double power = 1*(gamepad1.left_stick_y);
         frontLeft.setPower(power);
         backLeft.setPower(power);
         frontRight.setPower(power);
