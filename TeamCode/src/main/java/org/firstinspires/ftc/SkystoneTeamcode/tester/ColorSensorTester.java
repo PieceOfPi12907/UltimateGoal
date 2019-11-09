@@ -91,8 +91,8 @@ public class ColorSensorTester extends LinearOpMode {
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
-            //telemetry.addData("Distance (cm)",
-                    //String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Distance (cm)",
+                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
             //telemetry.addData("Alpha", sensorColor.alpha());
             telemetry.addData("Red  ", sensorColor.red());
             telemetry.addData("Green", sensorColor.green());

@@ -12,6 +12,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class NavigationHelper {
         // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
+
+
+
     public void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry ){
         if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
             forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
@@ -145,16 +148,14 @@ public class NavigationHelper {
         pFrontLeft.setPower(-(pSpeed));
         pBackLeft.setPower((pSpeed));
 
+        telemetry.addData("Path1", "Target Position %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
+
+        telemetry.update();
+
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
 
             // Display it for the driver.
-            telemetry.addData("Path1", "Running to %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
-            telemetry.addData("Path2", "Running at %7d :%7d",
-                    pBackLeft.getCurrentPosition(),
-                    pBackRight.getCurrentPosition(),
-                    pFrontLeft.getCurrentPosition(),
-                    pFrontRight.getCurrentPosition());
-            telemetry.update();
+
         }
 
         //stop motors
@@ -182,11 +183,6 @@ public class NavigationHelper {
         if(Math.abs(correction)>5){
             pTelemetry.addData("Correction value: ",correction);
             pTelemetry.update();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, correction,0.15,pImu,pTelemetry);
 
         }
@@ -239,16 +235,19 @@ public class NavigationHelper {
         pFrontLeft.setPower((pSpeed));
         pBackLeft.setPower(-(pSpeed));
 
+        telemetry.addData("Path1", "Target Position %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
+        telemetry.update();
+
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
 
             // Display it for the driver.
-            telemetry.addData("Path1", "Running to %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
+            /*telemetry.addData("Path1", "Running to %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
             telemetry.addData("Path2", "Running at %7d :%7d",
                     pBackLeft.getCurrentPosition(),
                     pBackRight.getCurrentPosition(),
                     pFrontLeft.getCurrentPosition(),
                     pFrontRight.getCurrentPosition());
-            telemetry.update();
+            telemetry.update();*/
         }
 
         //stop motors

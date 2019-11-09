@@ -53,37 +53,27 @@ package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
+import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
+import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 //import java.util.Scanner;
 
-import java.util.List;
 //@Disabled
 //Adding Source Code to GitHub
 
-@Autonomous(name = "Autonomous: OUTER BLUE", group = "autonomous")
-public class Autonomous12907 extends LinearOpMode {
+@Autonomous(name = "Autonomous: OUTER RED", group = "autonomous")
+public class Autonomous12907OuterRed extends LinearOpMode {
 
-    boolean isBlue = true;
+    boolean isBlue = false;
     boolean isOuter = true;
     boolean isPos2 = false;
 
