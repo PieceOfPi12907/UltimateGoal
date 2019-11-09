@@ -97,12 +97,12 @@ public class SkystoneDelivery {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        /*blockClamper.setPosition(CLAMP_CLOSED);
+        blockClamper.setPosition(CLAMP_CLOSED);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
 
