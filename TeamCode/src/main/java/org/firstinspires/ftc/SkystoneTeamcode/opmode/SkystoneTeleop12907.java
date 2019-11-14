@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name= "teleop 12907", group = "teleop")
+@TeleOp(name= "FINAL teleop 12907", group = "teleop")
 public class SkystoneTeleop12907 extends LinearOpMode {
     DcMotor backLeft;
     DcMotor frontRight;
@@ -15,8 +15,8 @@ public class SkystoneTeleop12907 extends LinearOpMode {
     DcMotor frontLeft;
     DcMotor intakeLeft;
     DcMotor intakeRight;
-    Servo pivotGrabber;
-    Servo blockClamper;
+    Servo autoArm;
+    Servo autoClamper;
     Servo dumperArm;
     Servo dumperClamp;
     Servo dumperRotate;
@@ -29,11 +29,13 @@ public class SkystoneTeleop12907 extends LinearOpMode {
     boolean isClamped = false;
     boolean isArmDown = false;
     boolean isArmStraight = false;
-    double scaleFactor = 0.75;
+    boolean isAutoArmDown = false;
+    boolean isAutoArmClamped = false;
+    double scaleFactor = 0.7;
     double intakeSpeed = 0;
 
-    final double PIVOT_LOWERED = 0.15;
-    final double PIVOT_RAISED = 0.8;
+    final double AUTO_ARM_LOWERED = 0.9;
+    final double AUTO_ARM_RAISED = 0.4;
     final double AUTO_CLAMP_OPENED = 0.5;
     final double AUTO_CLAMP_CLOSED = 0.8;
     final double INTAKE_LEFT_CLOSE = 0.71;
@@ -53,6 +55,7 @@ public class SkystoneTeleop12907 extends LinearOpMode {
     ElapsedTime b_time = new ElapsedTime();
     ElapsedTime y_time = new ElapsedTime();
     ElapsedTime x_time = new ElapsedTime();
+    ElapsedTime a_time = new ElapsedTime();
 
 
 
@@ -74,6 +77,8 @@ public class SkystoneTeleop12907 extends LinearOpMode {
         dumperClamp = hardwareMap.get(Servo.class,"dumperClamp");
         dumperRotate = hardwareMap.get(Servo.class,"dumperRotate");
         repositioning = hardwareMap.get(Servo.class, "repositioningServo");
+        autoArm = hardwareMap.get(Servo.class, "pivotGrabber");
+        autoClamper = hardwareMap.get(Servo.class, "blockClamper");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -175,10 +180,10 @@ public class SkystoneTeleop12907 extends LinearOpMode {
         y_time.reset();
         while(opModeIsActive()){
             deadZoneTest(scaleFactor);
-            if(gamepad1.a){
+            if(gamepad1.x){
                 scaleFactor=0.5;
             }
-            if(gamepad1.b){
+            if(gamepad1.y){
                 scaleFactor=0.75;
             }
             if(gamepad2.a){
@@ -256,6 +261,30 @@ public class SkystoneTeleop12907 extends LinearOpMode {
             }
             if(gamepad1.left_bumper){
                 repositioning.setPosition(REPOSITIONING_UP);
+            }
+
+
+            if(gamepad1.a && a_time.seconds() >= 0.5){
+                a_time.reset();
+                if(!isAutoArmDown){
+                    autoArm.setPosition(AUTO_ARM_LOWERED);
+                    isAutoArmDown = true;
+                }
+                else if(isAutoArmDown){
+                    autoArm.setPosition(AUTO_ARM_RAISED);
+                    isAutoArmDown = false;
+                }
+            }
+            if(gamepad1.b && b_time.seconds() >= 0.5){
+                b_time.reset();
+                if(!isAutoArmClamped){
+                    autoClamper.setPosition(AUTO_CLAMP_CLOSED);
+                    isAutoArmClamped = true;
+                }
+                else if(isAutoArmClamped){
+                    autoClamper.setPosition(AUTO_CLAMP_OPENED);
+                    isAutoArmClamped = false;
+                }
             }
 
 
