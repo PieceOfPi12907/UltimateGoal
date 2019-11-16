@@ -51,21 +51,21 @@ public class JustTeleop extends LinearOpMode {
 
     public void initialize(){
 
-        frontRight=hardwareMap.get(DcMotor.class,"frontRight");
-        frontLeft=hardwareMap.get(DcMotor.class, "frontLeft");
-        backRight=hardwareMap.get(DcMotor.class,"backRight");
-        backLeft=hardwareMap.get(DcMotor.class,"backLeft");
+        frontRight=hardwareMap.get(DcMotor.class,"frontRightMotor");
+        frontLeft=hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        backRight=hardwareMap.get(DcMotor.class,"backRightMotor");
+        backLeft=hardwareMap.get(DcMotor.class,"backLeftMotor");
         //pivotGrabber=hardwareMap.get(Servo.class, "pivotGrabber");
         //blockClamper=hardwareMap.get(Servo.class, "blockClamper");
 
-        intakeLeft = hardwareMap.get(DcMotor.class,"intakeLeft");
-        intakeRight = hardwareMap.get(DcMotor.class,"intakeRight");
+        intakeLeft = hardwareMap.get(DcMotor.class,"leftIntakeMotor");
+        intakeRight = hardwareMap.get(DcMotor.class,"rightIntakeMotor");
 
         rightIntake = hardwareMap.get(Servo.class, "rightIntakeServo");
         leftIntake = hardwareMap.get(Servo.class, "leftIntakeServo");
-        dumperArm = hardwareMap.get(Servo.class,"dumperArm");
-        dumperClamp = hardwareMap.get(Servo.class,"dumperClamp");
-        dumperRotate = hardwareMap.get(Servo.class,"dumperRotate");
+        dumperArm = hardwareMap.get(Servo.class,"dumperArmServo");
+        dumperClamp = hardwareMap.get(Servo.class,"dumperClampServo");
+        dumperRotate = hardwareMap.get(Servo.class,"dumperPivotServo");
         repositioning = hardwareMap.get(Servo.class, "repositioningServo");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);

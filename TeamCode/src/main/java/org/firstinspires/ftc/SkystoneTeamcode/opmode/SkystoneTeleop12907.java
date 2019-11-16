@@ -61,21 +61,21 @@ public class SkystoneTeleop12907 extends LinearOpMode {
 
 
     public void initialize(){
-        frontRight=hardwareMap.get(DcMotor.class,"frontRight");
-        frontLeft=hardwareMap.get(DcMotor.class, "frontLeft");
-        backRight=hardwareMap.get(DcMotor.class,"backRight");
-        backLeft=hardwareMap.get(DcMotor.class,"backLeft");
+        frontRight=hardwareMap.get(DcMotor.class,"frontRightMotor");
+        frontLeft=hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        backRight=hardwareMap.get(DcMotor.class,"backRightMotor");
+        backLeft=hardwareMap.get(DcMotor.class,"backLeftMotor");
         //pivotGrabber=hardwareMap.get(Servo.class, "pivotGrabber");
         //blockClamper=hardwareMap.get(Servo.class, "blockClamper");
 
-        intakeLeft = hardwareMap.get(DcMotor.class,"intakeLeft");
-        intakeRight = hardwareMap.get(DcMotor.class,"intakeRight");
+        intakeLeft = hardwareMap.get(DcMotor.class,"leftIntakeMotor");
+        intakeRight = hardwareMap.get(DcMotor.class,"rightIntakeMotor");
 
         rightIntake = hardwareMap.get(Servo.class, "rightIntakeServo");
         leftIntake = hardwareMap.get(Servo.class, "leftIntakeServo");
-        dumperArm = hardwareMap.get(Servo.class,"dumperArm");
-        dumperClamp = hardwareMap.get(Servo.class,"dumperClamp");
-        dumperRotate = hardwareMap.get(Servo.class,"dumperRotate");
+        dumperArm = hardwareMap.get(Servo.class,"dumperArmServo");
+        dumperClamp = hardwareMap.get(Servo.class,"dumperClampServo");
+        dumperRotate = hardwareMap.get(Servo.class,"dumperPivotServo");
         repositioning = hardwareMap.get(Servo.class, "repositioningServo");
         autoArm = hardwareMap.get(Servo.class, "pivotGrabber");
         autoClamper = hardwareMap.get(Servo.class, "blockClamper");
@@ -87,7 +87,7 @@ public class SkystoneTeleop12907 extends LinearOpMode {
 
         leftIntake.setPosition(INTAKE_LEFT_CLOSE);
         rightIntake.setPosition(INTAKE_RIGHT_CLOSE);
-        // dumperArm.setPosition(DUMPER_ARM_IN);
+        // dumperArmServo.setPosition(DUMPER_ARM_IN);
         dumperClamp.setPosition(DUMPER_CLAMP_UP);
         repositioning.setPosition(REPOSITIONING_UP);
 
@@ -210,7 +210,7 @@ public class SkystoneTeleop12907 extends LinearOpMode {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                // rightIntake.setPosition(INTAKE_RIGHT_CLOSE);
+                // rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
 
             }
             if(gamepad2.right_bumper){
@@ -304,10 +304,10 @@ public class SkystoneTeleop12907 extends LinearOpMode {
            }
             */
 
-            /*frontLeft.setPower(0);
-            backLeft.setPower(0);
-            frontRight.setPower(0);
-            backRight.setPower(0);
+            /*frontLeftMotor.setPower(0);
+            backLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backRightMotor.setPower(0);
             */
 
 

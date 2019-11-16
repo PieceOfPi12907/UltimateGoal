@@ -10,23 +10,23 @@ import org.firstinspires.ftc.teamcode.helper.MotorHelper;
 @Autonomous(name = "AutonomousTest_Encoders", group = "autonomous")
 public class Autonomous12907 extends LinearOpMode {
     //Naming the motors
-    DcMotor frontRight;
-    DcMotor frontLeft;
-    DcMotor backRight;
-    DcMotor backLeft;
+    DcMotor frontRightMotor;
+    DcMotor frontLeftMotor;
+    DcMotor backRightMotor;
+    DcMotor backLeftMotor;
     MotorHelper motorHelper;
 
     public void initialize() {
         //Configuration of the motors
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
+        backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
         //setting the directions of the motors
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class Autonomous12907 extends LinearOpMode {
         double targetPositionRight = 12;
         double timeoutS = 5;
         if (opModeIsActive()) {
-            motorHelper.movingWithEncoders(frontRight, frontLeft, backRight, backLeft,
+            motorHelper.movingWithEncoders(frontRightMotor, frontLeftMotor, backRightMotor, backLeftMotor,
                     powerRight, powerLeft,
                     targetPositionRight, targetPositionLeft,
                     timeoutS, telemetry);
@@ -108,10 +108,10 @@ public class Autonomous12907InnerRed extends LinearOpMode {
          */
 
         //Configuration of the Motors/Servos
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
         pivotGrabber = hardwareMap.get(Servo.class, "pivotGrabber");
         blockClamper = hardwareMap.get(Servo.class, "blockClamper");
 
@@ -167,26 +167,26 @@ public class Autonomous12907InnerRed extends LinearOpMode {
 
                /* if(isBlue==true){
                     if (isOuter==true) {
-                        skystoneDetection.moveToSkystoneOuterBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
-                        skystoneDelivery.placeSkystoneOuterBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
-                        parking.parkSkystoneOuterBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry);
+                        skystoneDetection.moveToSkystoneOuterBlue(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
+                        skystoneDelivery.placeSkystoneOuterBlue(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
+                        parking.parkSkystoneOuterBlue(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry);
                     }
                     if (isOuter==false) {
-                        skystoneDetection.moveToSkystoneInnerBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
-                        skystoneDelivery.placeSkystoneInnerBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
-                        parking.parkSkystoneInnerBlue(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry);
+                        skystoneDetection.moveToSkystoneInnerBlue(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
+                        skystoneDelivery.placeSkystoneInnerBlue(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
+                        parking.parkSkystoneInnerBlue(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry);
                     }
                 }
                 else if(isBlue==false){
                     if (isOuter==true) {
-                        skystoneDetection.moveToSkystoneOuterRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
-                        skystoneDelivery.placeSkystoneOuterRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
-                        parking.parkSkystoneOuterRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry);
+                        skystoneDetection.moveToSkystoneOuterRed(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
+                        skystoneDelivery.placeSkystoneOuterRed(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
+                        parking.parkSkystoneOuterRed(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry);
                     }
                     if (isOuter==false) {
-                        skystoneDetection.moveToSkystoneInnerRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
-                        skystoneDelivery.placeSkystoneInnerRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
-                        parking.parkSkystoneInnerRed(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry);
+                        skystoneDetection.moveToSkystoneInnerRed(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, pivotGrabber, blockClamper);
+                        skystoneDelivery.placeSkystoneInnerRed(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry, blockClamper, pivotGrabber);
+                        parking.parkSkystoneInnerRed(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, navigationHelper, imu, telemetry);
                     }
                 } */
 
