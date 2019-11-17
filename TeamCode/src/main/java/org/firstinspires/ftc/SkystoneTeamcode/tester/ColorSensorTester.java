@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
 
-@Autonomous(name = "Sensor: REVColorDistance", group = "Sensor")
+@Autonomous(name = "Color Sensor Test", group = "Sensor")
 
 public class ColorSensorTester extends LinearOpMode {
 
@@ -69,7 +69,7 @@ public class ColorSensorTester extends LinearOpMode {
 
         // sometimes it helps to multiply the raw RGB values with a scale factor
         // to amplify/attentuate the measured values.
-        final double SCALE_FACTOR = 255;
+        final double SCALE_FACTOR = 1;
 
         // get a reference to the RelativeLayout so we can change the background
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
@@ -81,7 +81,7 @@ public class ColorSensorTester extends LinearOpMode {
 
         // loop and read the RGB and distance data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-        while (opModeIsActive()) {
+        if (opModeIsActive()) {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
@@ -94,10 +94,38 @@ public class ColorSensorTester extends LinearOpMode {
             telemetry.addData("Distance (cm)",
                     String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
             //telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
-            //telemetry.addData("Hue", hsvValues[0]);
+            telemetry.addData("Red: ", sensorColor.red());
+            telemetry.addData("Green: ", sensorColor.green());
+            telemetry.addData("Blue:  ", sensorColor.blue());
+
+            telemetry.addData("HUE: ", hsvValues[0]);
+            telemetry.addData("SATURATION: ", hsvValues[1]);
+            telemetry.addData("VALUE: ", hsvValues[2]);
+
+            telemetry.update();
+            try {
+                Thread.sleep(7000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            /*if (hsvValues[0] > 35) {
+                telemetry.addLine("STONE COLOR: YELLOW");
+                telemetry.update();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                telemetry.addLine("STONE COLOR: BLACK");
+                telemetry.update();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }*/
 
             // change the background color to match the color detected by the RGB sensor.
             // pass a reference to the hue, saturation, and value array as an argument
@@ -108,13 +136,6 @@ public class ColorSensorTester extends LinearOpMode {
                 }
             });
 
-            telemetry.update();
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
 
         // Set the panel back to the default color

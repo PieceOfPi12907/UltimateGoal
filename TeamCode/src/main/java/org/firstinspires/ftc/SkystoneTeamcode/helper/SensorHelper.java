@@ -9,6 +9,44 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class SensorHelper {
 
+    public Constants12907.SkystonePosition getBlackBlock (ColorSensor colorLeft, ColorSensor colorRight, Telemetry telemetry){
+        float hsvValuesLeft[] = {0F, 0F, 0F};
+        float hsvValuesRight[] = {0F, 0F, 0F};
+
+        //final float values[] = hsvValues;
+
+        final double SCALE_FACTOR = 1;
+
+        Color.RGBToHSV((int) (colorLeft.red() * SCALE_FACTOR),
+                (int) (colorLeft.green() * SCALE_FACTOR),
+                (int) (colorLeft.blue() * SCALE_FACTOR),
+                hsvValuesLeft);
+
+        Color.RGBToHSV((int) (colorRight.red() * SCALE_FACTOR),
+                (int) (colorRight.green() * SCALE_FACTOR),
+                (int) (colorRight.blue() * SCALE_FACTOR),
+                hsvValuesRight);
+
+        float leftSensorHue = hsvValuesLeft[0];
+        float rightSensorHue = hsvValuesRight[0];
+
+        telemetry.addData("RIGHT hue value:", rightSensorHue);
+        telemetry.addData("LEFT hue value:", leftSensorHue);
+        telemetry.update();
+
+
+        if((leftSensorHue > 30 && leftSensorHue < 50) && (rightSensorHue > 30 && rightSensorHue < 50)){
+            return Constants12907.SkystonePosition.LEFT;
+
+        }else if((leftSensorHue > 60 && leftSensorHue < 150) && (rightSensorHue > 30 && rightSensorHue < 50)){
+            return Constants12907.SkystonePosition.CENTER;
+
+        }else{
+            return Constants12907.SkystonePosition.RIGHT;
+        }
+
+    }
+
     /*public boolean isYellow (ColorSensor color){
         float hsvValues[] = {0F, 0F, 0F};
 
@@ -38,7 +76,11 @@ public class SensorHelper {
         }
         pTelemetry.update();*/
 
-    public Constants12907.SkystonePosition getBlackBlock (ColorSensor colorLeft, ColorSensor colorRight){
+
+
+
+
+    /*public Constants12907.SkystonePosition getBlackBlock (ColorSensor colorLeft, ColorSensor colorRight){
         float hsvValues[] = {0F, 0F, 0F};
 
         final float values[] = hsvValues;
@@ -57,6 +99,6 @@ public class SensorHelper {
             return Constants12907.SkystonePosition.RIGHT;
         }
 
-    }
+    }*/
 
 }

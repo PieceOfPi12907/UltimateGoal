@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class NavigationHelper {
-        // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
+    // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
 
 
 
@@ -98,8 +98,8 @@ public class NavigationHelper {
         telemetry.addData("Final Position", "Running at %7d :%7d : %7d: %7d",
                 pBackLeft.getCurrentPosition(),
                 pBackRight.getCurrentPosition(),
-        pFrontLeft.getCurrentPosition(),
-        pFrontRight.getCurrentPosition());
+                pFrontLeft.getCurrentPosition(),
+                pFrontRight.getCurrentPosition());
         telemetry.update();
     }
     private void leftStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
@@ -330,7 +330,7 @@ public class NavigationHelper {
         }
     }
     public void turnWithEncodersWithCorrection(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
-                                 DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
+                                               DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
         turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, pRotation,pSpeed,pImu,pTelemetry);
         double currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                 AngleUnit.DEGREES).firstAngle;
@@ -348,5 +348,3 @@ public class NavigationHelper {
         }
     }
 }
-
-

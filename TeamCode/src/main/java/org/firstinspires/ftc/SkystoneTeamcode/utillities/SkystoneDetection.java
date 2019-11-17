@@ -46,7 +46,7 @@ public class SkystoneDetection {
 
 
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
-        double targetDistance = 1.5;
+        double targetDistance = 3;
 
 
         pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
@@ -59,95 +59,59 @@ public class SkystoneDetection {
         }
 
 
-
         pNavigate.navigate(currentDistance - targetDistance, Constants12907.Direction.RIGHT, 0, 0.2, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
 
-        /*try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        double targetDistance=5;
-
-        double distanceFromSkystone=distanceRight.getDistance(DistanceUnit.CM);
-        if (distanceFromSkystone > 6){
-            pNavigate.navigate(distanceFromSkystone-targetDistance, Constants12907.Direction.RIGHT, 0, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        }
-
-
-        pTelemetry.addData("Distance to Stone: ", distanceRight.getDistance(DistanceUnit.CM));
-        pTelemetry.addData("MOVING DISTANCE: ", distanceFromSkystone-targetDistance);
-        pTelemetry.update();
-
         try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-
-
-        //Color Sensing Code - includes method getBlackBlock
-        //boolean isLYellow = sensorHelper.isYellow(colorLeft);
-        //boolean isRYellow = sensorHelper.isYellow(colorRight);
-
-        try {
-            Thread.sleep(500);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        Constants12907.SkystonePosition blackBlockPosition = sensorHelper.getBlackBlock(colorLeft,colorRight);
+        Constants12907.SkystonePosition blackBlockPosition = sensorHelper.getBlackBlock(colorLeft,colorRight, pTelemetry);
 
         //telemetry for reading the color sensor values
-        pTelemetry.addData("Red Right:  ", colorRight.red());
+        /*pTelemetry.addData("Red Right:  ", colorRight.red());
         pTelemetry.addData("Green Right: ", colorRight.green());
         pTelemetry.addData("Red Left:  ", colorLeft.red());
-        pTelemetry.addData("Green Left: ", colorLeft.green());
-        pTelemetry.update();
+        pTelemetry.addData("Green Left: ", colorLeft.green());*/
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        /*try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        /*double distanceUntilSensing = distanceLeft.getDistance(DistanceUnit.CM);
+
+        while(distanceUntilSensing > 6){
+            pBackLeft.setPower(0.3);
+            pBackRight.setPower(0.3);
+            pFrontLeft.setPower(0.3);
+            pFrontRight.setPower(0.3);
+            distanceUntilSensing = distanceLeft.getDistance(DistanceUnit.CM);
+            pTelemetry.addData("Distance Until Sensing: ", distanceUntilSensing);
+            pTelemetry.update();
         }*/
-
-        /*if (distanceFromSkystone > 6) {
-            pNavigate.navigate(distanceFromSkystone-targetDistance, Constants12907.Direction.LEFT, 0, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        }*/
-
-        double currentCloseDistance = quarryDistance.getDistance(DistanceUnit.INCH);
-
-        pTelemetry.addData("CLOSE DISTANCE TO QUARRY: ", currentCloseDistance);
-        pTelemetry.update();
-
-        pNavigate.navigate(3 - currentCloseDistance, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
 
         //RETURNS POSITION 1, 2, OR 3 FROM 'getBlackBlock' METHOD IN SensorHelper
         pTelemetry.addData("SKYSTONE POSITION from getBlackBlock",blackBlockPosition.toString());
 
-            //robot moves to pick up skystone based on what position it is in:
-            if (blackBlockPosition.equals(Constants12907.SkystonePosition.LEFT)) {
-                pNavigate.navigate((15-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-                intakeSkystone(blockClamper, pivotGrabber);
-                pNavigate.navigate(-(13-correction)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            } else if (blackBlockPosition.equals(Constants12907.SkystonePosition.CENTER) ) {
-                pNavigate.navigate((8-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-                intakeSkystone(blockClamper, pivotGrabber);
-                pNavigate.navigate(-(6-correction)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            } else {
-                intakeSkystone(blockClamper, pivotGrabber);
-                pNavigate.navigate((2-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        //robot moves to pick up skystone based on what position it is in:
+        if (blackBlockPosition.equals(Constants12907.SkystonePosition.LEFT)) {
+            pNavigate.navigate((15-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate(-(13-correction)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        } else if (blackBlockPosition.equals(Constants12907.SkystonePosition.CENTER) ) {
+            pNavigate.navigate((8-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate(-(6-correction)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        } else {
+            intakeSkystone(blockClamper, pivotGrabber);
+            pNavigate.navigate((2-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-            }
+        }
 
 
         //sped up complete: 0.25 --> 0.5, 0.2 --> 0.4, 0.4 --> 0.7
@@ -186,14 +150,14 @@ public class SkystoneDetection {
 
 
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
-        double targetDistance = 1.5;
+        double targetDistance = 2.25;
 
 
         pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
         pTelemetry.update();
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -232,13 +196,8 @@ public class SkystoneDetection {
         //boolean isLYellow = sensorHelper.isYellow(colorLeft);
         //boolean isRYellow = sensorHelper.isYellow(colorRight);
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        Constants12907.SkystonePosition blackBlockPosition = sensorHelper.getBlackBlock(colorLeft,colorRight);
+        Constants12907.SkystonePosition blackBlockPosition = sensorHelper.getBlackBlock(colorLeft,colorRight, pTelemetry);
 
         //telemetry for reading the color sensor values
         pTelemetry.addData("Red Right:  ", colorRight.red());
@@ -248,27 +207,23 @@ public class SkystoneDetection {
         pTelemetry.update();
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        /*try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
 
         /*if (distanceFromSkystone > 6) {
             pNavigate.navigate(distanceFromSkystone-targetDistance, Constants12907.Direction.LEFT, 0, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }*/
 
-        double currentCloseDistance = quarryDistance.getDistance(DistanceUnit.INCH);
+
+        /*double currentCloseDistance = quarryDistance.getDistance(DistanceUnit.INCH);
 
         pTelemetry.addData("CLOSE DISTANCE TO QUARRY: ", currentCloseDistance);
         pTelemetry.update();
 
-        pNavigate.navigate(3 - currentCloseDistance, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        pNavigate.navigate(3 - currentCloseDistance, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);*/
 
 
         //RETURNS POSITION 1, 2, OR 3 FROM 'getBlackBlock' METHOD IN SensorHelper
@@ -276,15 +231,21 @@ public class SkystoneDetection {
 
         //robot moves to pick up skystone based on what position it is in:
         if (blackBlockPosition.equals(Constants12907.SkystonePosition.LEFT)) {
+
             pNavigate.navigate((15-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
             intakeSkystone(blockClamper, pivotGrabber);
             pNavigate.navigate(-(13-correction)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         } else if (blackBlockPosition.equals(Constants12907.SkystonePosition.CENTER) ) {
+
             pNavigate.navigate((8-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
             intakeSkystone(blockClamper, pivotGrabber);
             pNavigate.navigate(-(6-correction)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         } else {
+
             pNavigate.navigate((shift-correction)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
             intakeSkystone(blockClamper, pivotGrabber);
             pNavigate.navigate((2-(correction+shift))*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
@@ -318,7 +279,7 @@ public class SkystoneDetection {
         pTelemetry.addData("Blue Left: ", colorLeft.blue());
         pTelemetry.update();*/
 
-        //OLD CODE THAT USES 'isYellow' METHOD TO DETERMINE SKYSTONE POSITION
+    //OLD CODE THAT USES 'isYellow' METHOD TO DETERMINE SKYSTONE POSITION
         /*if (isRYellow && isLYellow) {
             pTelemetry.addData("position: ", 3);
 
@@ -374,7 +335,7 @@ public class SkystoneDetection {
         pTelemetry.addData("Blue Left: ", colorLeft.blue());
         pTelemetry.update();*/
 
-        //OLD CODE THAT USES 'isYellow' METHOD TO DETERMINE SKYSTONE POSITION
+    //OLD CODE THAT USES 'isYellow' METHOD TO DETERMINE SKYSTONE POSITION
         /*if (isRYellow && isLYellow) {
             pTelemetry.addData("position: ", 3);
 
@@ -416,7 +377,7 @@ public class SkystoneDetection {
         }
         pivotGrabber.setPosition(PIVOT_LOWERED);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(750);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -428,13 +389,10 @@ public class SkystoneDetection {
         }
         pivotGrabber.setPosition(PIVOT_RAISED);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(750);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
 }
-
-
-
