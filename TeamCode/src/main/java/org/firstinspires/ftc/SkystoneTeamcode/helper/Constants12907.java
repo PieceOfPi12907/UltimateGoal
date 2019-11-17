@@ -7,5 +7,8 @@ public class Constants12907 {
     public static enum SkystonePosition{
         LEFT, CENTER, RIGHT;
     }
+    public static enum RepositioningServoPositions{
+        UP, MID, DOWN;
+    }
 
 }
