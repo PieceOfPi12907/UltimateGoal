@@ -64,6 +64,8 @@ import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 //import java.util.Scanner;
 
@@ -92,6 +94,7 @@ public class Autonomous12907InnerBlue extends LinearOpMode {
     ColorSensor colorLeft;
     DistanceSensor distanceLeft;
     DistanceSensor quarryDistance;
+    WebcamName webcam = null;
     Servo pivotGrabber;
     Servo blockClamper;
 
@@ -127,6 +130,11 @@ public class Autonomous12907InnerBlue extends LinearOpMode {
         colorLeft=hardwareMap.get(ColorSensor.class,"sensor_color_distance_left");
         distanceLeft=hardwareMap.get(DistanceSensor.class,"sensor_color_distance_left");
         quarryDistance=hardwareMap.get(DistanceSensor.class,"sensor_distance_quarry");
+
+        webcam = hardwareMap.get(WebcamName.class, "webcam");
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parametersw = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
 
         //Initializing the IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

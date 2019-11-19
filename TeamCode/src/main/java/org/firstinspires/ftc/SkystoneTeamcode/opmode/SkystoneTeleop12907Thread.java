@@ -25,11 +25,12 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
     Servo leftIntakeServo;
     Servo rightIntakeServo;
     Servo leftRepositionServo;
-    //Servo rightRepositionServo;
+    Servo rightRepositionServo;
 
 
     boolean threadStarted = false;
     Constants12907.RepositioningServoPositions repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
+    Constants12907.DumperArmDropPositions dumperArmDropPositions = Constants12907.DumperArmDropPositions.DOWN;
     boolean isInsideClampUp = true;
     boolean isOutsideClampUp = false;
     boolean isArmIn = true;
@@ -47,24 +48,28 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
     final double INTAKE_RIGHT_OPEN = 0.8;
     // final double INTAKE_LEFT_OPEN = 0;
     final double INTAKE_RIGHT_CLOSE = 0.50;
-    final double DUMPER_ARM_OUT_FIRST = 0.4;
-    final double DUMPER_ARM_IN = 1;
-    final double LEFT_REPOSITIONING_DOWN = 0.9;
+    final double DUMPER_ARM_DOWN = 0.95;
+    final double DUMPER_ARM_DROP_1 = 0.1;
+    final double DUMPER_ARM_DROP_2 = 0.25;
+    final double DUMPER_ARM_DROP_3 = 0.5;
+    final double LEFT_REPOSITIONING_DOWN = 0.85;
     final double LEFT_REPOSITIONING_UP = 0;
-    final double LEFT_REPOSITIONING_MID = 0.8;
-    final double RIGHT_REPOSITIONING_DOWN = 0;
-    final double RIGHT_REPOSITIONING_MID = 0.1;
-    final double RIGHT_REPOSITIONING_UP = 0.8;
+    final double LEFT_REPOSITIONING_MID = 0.65;
+    final double RIGHT_REPOSITIONING_DOWN = 0.1;
+    final double RIGHT_REPOSITIONING_MID = 0.2;
+    final double RIGHT_REPOSITIONING_UP = 1;
     final double DUMPER_CLAMP_INSIDE_UP = 0.5;
-    final double DUMPER_CLAMP_INSIDE_DOWN = 0.15;
+    //final double DUMPER_CLAMP_INSIDE_DOWN = 0.15
+    final double DUMPER_CLAMP_INSIDE_DOWN = 0.05;
     final double DUMPER_CLAMP_OUTSIDE_UP = 0.3;
-    final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.8;
+    final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.9;
 
     boolean goingReverse = false;
     ElapsedTime b_time = new ElapsedTime();
     ElapsedTime y_time = new ElapsedTime();
     ElapsedTime x_time = new ElapsedTime();
     ElapsedTime a_time = new ElapsedTime();
+    ElapsedTime right_bumper_time = new ElapsedTime();
     ElapsedTime a_time_two = new ElapsedTime();
 
 
@@ -87,7 +92,7 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
         dumperClampInsideServo = hardwareMap.get(Servo.class,"dumperClampInsideServo");
        dumperClampOutsideServo = hardwareMap.get(Servo.class,"dumperClampOutsideServo");
         leftRepositionServo = hardwareMap.get(Servo.class, "leftRepositioningServo");
-        //rightRepositionServo = hardwareMap.get(Servo.class,"rightRepositioningServo");
+        rightRepositionServo = hardwareMap.get(Servo.class,"rightRepositioningServo");
         sideArmServo = hardwareMap.get(Servo.class, "pivotGrabber");
         sideClampServo = hardwareMap.get(Servo.class, "blockClamper");
 
@@ -99,12 +104,13 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
         leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
         rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
         leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
-        //rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
-        dumperArmServo.setPosition(DUMPER_ARM_IN);
+        rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
+        dumperArmServo.setPosition(DUMPER_ARM_DOWN);
         dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
         dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
-        //dumperClampServo.setPosition(DUMPER_CLAMP_UP);
-        //leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
+        leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
+        dumperArmDropPositions = Constants12907.DumperArmDropPositions.DOWN;
+        repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
 
     }
 
@@ -274,6 +280,12 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
                 rightIntakeMotor.setPower(0);
                 isIntakeSpinning = false;
             }
+            if(gamepad2.dpad_up){
+                leftIntakeServo.setPosition(INTAKE_RIGHT_CLOSE);
+            }
+            if(gamepad2.dpad_down){
+                leftIntakeServo.setPosition(INTAKE_RIGHT_CLOSE);
+            }
 
         }
 
@@ -303,32 +315,55 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
 
         if(gamepad2.y && y_time.seconds()>0.25){
             y_time.reset();
-            if(isArmIn){
-                dumperArmServo.setPosition(DUMPER_ARM_OUT_FIRST);
-                isArmIn = false;
-            }else if(!isArmIn){
-                dumperArmServo.setPosition(DUMPER_ARM_IN);
-                isArmIn = true;
+            dumperArmServo.setPosition(DUMPER_ARM_DOWN);
+            dumperArmDropPositions = Constants12907.DumperArmDropPositions.DOWN;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
+        }
+        if(gamepad2.dpad_right){
+            dumperArmServo.setPosition(1);
+        }
+
+        if(gamepad2.right_bumper && right_bumper_time.seconds()>0.25){
+            right_bumper_time.reset();
+            if(Constants12907.DumperArmDropPositions.DOWN.equals(dumperArmDropPositions)){
+                dumperArmServo.setPosition(DUMPER_ARM_DROP_3);
+                dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP3;
+            }else if(Constants12907.DumperArmDropPositions.DROP3.equals(dumperArmDropPositions)){
+                dumperArmServo.setPosition(DUMPER_ARM_DROP_2);
+                dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP2;
+            }else if(Constants12907.DumperArmDropPositions.DROP2.equals(dumperArmDropPositions)){
+                dumperArmServo.setPosition(DUMPER_ARM_DROP_1);
+                dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP1;
+            }else if(Constants12907.DumperArmDropPositions.DROP1.equals(dumperArmDropPositions)){
+                dumperArmServo.setPosition(DUMPER_ARM_DROP_3);
+                dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP3;
+            }
+
         }
 
     }
 
 
     private void repositioningControl(){
-        if(gamepad1.right_bumper){
+        if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
+            right_bumper_time.reset();
             if(Constants12907.RepositioningServoPositions.UP.equals(repositioningServoPos)){
                 leftRepositionServo.setPosition(LEFT_REPOSITIONING_MID);
-                //rightRepositionServo.setPosition(RIGHT_REPOSITIONING_MID);
+                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_MID);
                 repositioningServoPos = Constants12907.RepositioningServoPositions.MID;
             }else if(Constants12907.RepositioningServoPositions.MID.equals(repositioningServoPos)){
                 leftRepositionServo.setPosition(LEFT_REPOSITIONING_DOWN);
-                //rightRepositionServo.setPosition(RIGHT_REPOSITIONING_DOWN);
+                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_DOWN);
                 repositioningServoPos = Constants12907.RepositioningServoPositions.DOWN;
 
             }else if(Constants12907.RepositioningServoPositions.DOWN.equals(repositioningServoPos)){
                 leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
-                //rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
+                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
                 repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
 
             }
