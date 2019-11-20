@@ -278,11 +278,7 @@ public class NavigationHelper {
         double previousAngle = 0.0;
         pTelemetry.addData("Initial Angle: ", computedAngle);
         pTelemetry.update();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
 
         pFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -323,12 +319,8 @@ public class NavigationHelper {
 
         pTelemetry.addData("Current Angle: ",currentAngle);
         pTelemetry.update();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
+
     public void turnWithEncodersWithCorrection(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
                                                DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
         turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, pRotation,pSpeed,pImu,pTelemetry);

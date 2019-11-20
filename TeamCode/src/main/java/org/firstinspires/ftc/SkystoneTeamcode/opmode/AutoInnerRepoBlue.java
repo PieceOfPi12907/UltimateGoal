@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.helper.MotorHelper;
 
 @Autonomous(name = "AutonomousTest_Encoders", group = "autonomous")
-public class Autonomous12907 extends LinearOpMode {
+public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
     //Naming the motors
     DcMotor frontRightMotor;
     DcMotor frontLeftMotor;
@@ -70,8 +70,8 @@ import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 //@Disabled
 //Adding Source Code to GitHub
 
-@Autonomous(name = "Autonomous: REPOSITIONING BLUE", group = "autonomous")
-public class Autonomous12907Repositioning extends LinearOpMode {
+@Autonomous(name = "Auto: INNER BLUE REPOSITIONING", group = "autonomous")
+public class AutoInnerRepoBlue extends LinearOpMode {
 
     boolean isBlue = true;
     boolean isOuter = true;
@@ -165,8 +165,9 @@ public class Autonomous12907Repositioning extends LinearOpMode {
                 }
 
                 parking.doRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, repositioning);
+                parking.parkSkystoneInner(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue);
             }
-        }catch (Exception bad){
+        } catch (Exception bad){
             telemetry.addData("EXCEPTION:", bad.toString());
             telemetry.update();
             try {

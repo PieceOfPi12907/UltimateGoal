@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.helper.MotorHelper;
 
 @Autonomous(name = "AutonomousTest_Encoders", group = "autonomous")
-public class Autonomous12907 extends LinearOpMode {
+public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
     //Naming the motors
     DcMotor frontRightMotor;
     DcMotor frontLeftMotor;

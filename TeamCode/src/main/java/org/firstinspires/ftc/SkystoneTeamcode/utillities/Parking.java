@@ -15,7 +15,7 @@ public class Parking {
     final double REPOSITIONING_DOWN = 0.75;
     final double REPOSITIONING_UP = 0.15;
 
-    public void parkSkystone(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue){
+   public void parkSkystone(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue){
         if (isBlue==false) {
             negative = -1;
         } else {
@@ -24,7 +24,6 @@ public class Parking {
         //ADD COLOR SENSOR CODE FOR PARKING
         pNavigate.navigate(-42*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
     }
-
 
 
 
@@ -60,11 +59,21 @@ public class Parking {
         }
     }
 
-/*
-    public void parkSkystoneInner(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Boolean isPos2){
+
+    public void parkSkystoneInner(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue){
         //ADD COLOR SENSOR CODE FOR PARKING
-        pNavigate.navigate(-38, Constants12907.Direction.STRAIGHT,0,-0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        //move right (straight), out of harm's way
+        pNavigate.navigate(-18*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        //strafe "forward" (right), to stay on the inner path
+        pNavigate.navigate(-25, Constants12907.Direction.RIGHT,0,-0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        //zoom right (straight), under the bridge
+        pNavigate.navigate(-21, Constants12907.Direction.STRAIGHT,0,-0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
     }
+    /*
 
     public void parkSkystoneOuterRed(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry){
         //ADD COLOR SENSOR CODE FOR PARKING
