@@ -70,8 +70,8 @@ import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 //@Disabled
 //Adding Source Code to GitHub
 
-@Autonomous(name = "Autonomous: OUTER RED", group = "autonomous")
-public class Autonomous12907OuterRed extends LinearOpMode {
+@Autonomous(name = "Auto: OUTER RED one block repositioning", group = "autonomous")
+public class AutoOuterOneBlockRepoRed extends LinearOpMode {
 
     boolean isBlue = false;
     boolean isOuter = true;

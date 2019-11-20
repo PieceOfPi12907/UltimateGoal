@@ -80,7 +80,7 @@ import java.util.List;
 //@Disabled
 //Adding Source Code to GitHub
 
-@Autonomous(name = "Auto: INNER BLUE ONE BLOCK REPOSITIONING", group = "autonomous")
+@Autonomous(name = "Auto: INNER BLUE one block repositioning", group = "autonomous")
 public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
 
     boolean isBlue = true;

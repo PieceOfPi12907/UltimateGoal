@@ -63,7 +63,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 
 //import java.util.Scanner;
@@ -71,11 +70,11 @@ import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 //@Disabled
 //Adding Source Code to GitHub
 
-@Autonomous(name = "Auto: INNER BLUE repositioning", group = "autonomous")
-public class AutoInnerRepoBlue extends LinearOpMode {
+@Autonomous(name = "Auto: OUTER RED repositioning", group = "autonomous")
+public class AutoOuterRepoRed extends LinearOpMode {
 
-    boolean isBlue = true;
-    boolean isOuter = false;
+    boolean isBlue = false;
+    boolean isOuter = true;
 
     long startDelay = 0;
 

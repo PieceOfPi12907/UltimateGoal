@@ -63,12 +63,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
+import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
+import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -92,10 +91,10 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 //@Disabled
 //Adding Source Code to GitHub
 
-@Autonomous(name = "Auto: INNER BLUE 2 blocks", group = "autonomous")
-public class AutoInnerTwoBlocksBlue extends LinearOpMode {
+@Autonomous(name = "Auto: INNER RED 2 blocks", group = "autonomous")
+public class AutoInnerTwoBlocksRed extends LinearOpMode {
 
-    boolean isBlue = true;
+    boolean isBlue = false;
 
     //Naming the motors
     DcMotor frontLeft;
