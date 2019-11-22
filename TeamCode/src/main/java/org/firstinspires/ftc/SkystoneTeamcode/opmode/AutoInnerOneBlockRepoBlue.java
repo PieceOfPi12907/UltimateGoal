@@ -80,7 +80,7 @@ import java.util.List;
 //@Disabled
 //Adding Source Code to GitHub
 
-@Autonomous(name = "Auto: INNER BLUE one block repositioning", group = "autonomous")
+@Autonomous(name = "Auto: INNER BLUE 1 block repositioning", group = "autonomous")
 public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
 
     boolean isBlue = true;
@@ -164,11 +164,11 @@ public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
             waitForStart();
 
             if (opModeIsActive()) {
-                if (isOuter==true) {
+                if (isOuter == true) {
                     skystoneDetection.moveToSkystoneOuter(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, quarryDistance, pivotGrabber, blockClamper, isBlue, isPos2);
                     skystoneDelivery.placeSkystoneOuter(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber, isBlue);
                     parking.parkSkystone(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue);
-                }else {
+                } else {
                     skystoneDetection.moveToSkystoneInner(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, colorRight, colorLeft, distanceRight, distanceLeft, quarryDistance, pivotGrabber, blockClamper, isBlue, isPos2);
                     skystoneDelivery.placeSkystoneInner(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, blockClamper, pivotGrabber, isBlue);
                     parking.parkSkystone(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue);

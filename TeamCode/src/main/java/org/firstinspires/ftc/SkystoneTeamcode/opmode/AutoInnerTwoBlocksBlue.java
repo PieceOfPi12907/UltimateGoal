@@ -140,10 +140,16 @@ public class AutoInnerTwoBlocksBlue extends LinearOpMode {
         repositioningLeft = hardwareMap.get(Servo.class, "leftRepositioningServo");
 
         //Setting the direction of the motors
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+
+        //braking
+        //frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Initializing color and distance sensors
         colorRight=hardwareMap.get(ColorSensor.class,"sensor_color_distance_right");
@@ -307,6 +313,14 @@ public class AutoInnerTwoBlocksBlue extends LinearOpMode {
             Repositioning repositioning = new Repositioning();
             Parking parking = new Parking();
 
+            while(!isStopRequested() && !imu.isGyroCalibrated()){
+                sleep(50);
+                idle();
+            }
+
+            telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
+            telemetry.update();
+
             waitForStart();
 
             if (opModeIsActive()) {
@@ -351,5 +365,6 @@ public class AutoInnerTwoBlocksBlue extends LinearOpMode {
 
     }
 }
+
 
 

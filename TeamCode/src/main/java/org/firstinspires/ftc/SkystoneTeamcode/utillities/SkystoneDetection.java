@@ -203,7 +203,7 @@ public class SkystoneDetection {
         //Intake skystone  Code
         blockClamper.setPosition(CLAMP_OPENED);
         try {
-            Thread.sleep(100);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -221,7 +221,7 @@ public class SkystoneDetection {
         }
         pivotGrabber.setPosition(PIVOT_RAISED);
         try {
-            Thread.sleep(100);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -361,31 +361,31 @@ public class SkystoneDetection {
             negative = -1;
         }
 
-        pivotGrabber.setPosition(0.6);
+        pivotGrabber.setPosition(0.65);
 
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
-        double targetDistance = 2;
+        double targetDistance = 1.5;
 
         pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
-        pTelemetry.update();
 
         double toGoDistance = currentDistance - targetDistance;
 
         pTelemetry.addData("STRAFE DISTANCE ", toGoDistance);
-        pTelemetry.update();
+
+
 
         pNavigate.navigate(toGoDistance, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        double newDistance = quarryDistance.getDistance(DistanceUnit.INCH);
+        pTelemetry.addData("NEW DISTANCE TO QUARRY", newDistance);
+
 
         if (pSkystonePosition.equals(Constants12907.SkystonePosition.LEFT)) {
             pTelemetry.addLine("position --> LEFT");
 
-            pNavigate.navigate((13)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate((12)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             imu_correct = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                     AngleUnit.DEGREES).firstAngle;
@@ -403,19 +403,19 @@ public class SkystoneDetection {
 
             intakeSkystone(blockClamper, pivotGrabber);
             pNavigate.navigate((6)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
+//8
         } else {
 
             pTelemetry.addLine("position --> RIGHT");
 
-            pNavigate.navigate((0)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate(-(2)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             imu_correct = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                     AngleUnit.DEGREES).firstAngle;
 
             intakeSkystone(blockClamper, pivotGrabber);
-            pNavigate.navigate((12)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
+            pNavigate.navigate((14)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+//16
         }
 
         pTelemetry.update();
@@ -440,15 +440,11 @@ public class SkystoneDetection {
             negative = -1;
         }
 
-        pNavigate.navigate(-68*negative, Constants12907.Direction.STRAIGHT, 0, -0.65*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
+        pNavigate.navigate(-70*negative, Constants12907.Direction.STRAIGHT, 0, -0.65*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+//-68
         pivotGrabber.setPosition(0.6);
 
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
         double targetDistance = 2;
@@ -459,14 +455,21 @@ public class SkystoneDetection {
         double toGoDistance = currentDistance - targetDistance;
 
         pTelemetry.addData("STRAFE DISTANCE ", toGoDistance);
-        pTelemetry.update();
+
 
 
         pNavigate.navigate(toGoDistance, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        double newDistance = quarryDistance.getDistance(DistanceUnit.INCH);
+
+        pTelemetry.addData("NEW DISTANCE TO QUARRY", newDistance);
+
+        pTelemetry.update();
+
+
 
         if (pSkystonePosition.equals(Constants12907.SkystonePosition.LEFT)) {
             pTelemetry.addLine("2nd position --> LEFT");
-            pNavigate.navigate((0)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate((0)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             double imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
             pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
@@ -474,10 +477,10 @@ public class SkystoneDetection {
             navigater.turnWithEncoders(pFrontRight, pFrontLeft,pBackRight, pBackLeft, -imuCorrection, 0.25, pImu, pTelemetry);
 
             intakeSkystone(blockClamper, pivotGrabber);
-            pNavigate.navigate((0)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate((0)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         } else if (pSkystonePosition.equals(Constants12907.SkystonePosition.CENTER) ) {
             pTelemetry.addLine("2nd position --> CENTER");
-            pNavigate.navigate(-(6)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate(-(8)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             double imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
             pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
@@ -485,10 +488,10 @@ public class SkystoneDetection {
             navigater.turnWithEncoders(pFrontRight, pFrontLeft,pBackRight, pBackLeft, -imuCorrection, 0.25, pImu, pTelemetry);
 
             intakeSkystone(blockClamper, pivotGrabber);
-            pNavigate.navigate((6)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate((8)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         } else {
             pTelemetry.addLine("2nd position --> RIGHT");
-            pNavigate.navigate((-12)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate((-16)*negative, Constants12907.Direction.STRAIGHT, 0, -0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             double imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
             pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
@@ -497,19 +500,19 @@ public class SkystoneDetection {
 
             intakeSkystone(blockClamper, pivotGrabber);
 
-            pNavigate.navigate((12)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate((16)*negative, Constants12907.Direction.STRAIGHT, 0, 0.25*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }
 
         pTelemetry.update();
 
         pNavigate.navigate(2.5, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-        pNavigate.navigate(68*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
+        pNavigate.navigate(70, Constants12907.Direction.STRAIGHT, 0, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+//68
         skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
 
-        pNavigate.navigate(-20*negative, Constants12907.Direction.STRAIGHT, 0, -0.3*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
+        pNavigate.navigate(-22*negative, Constants12907.Direction.STRAIGHT, 0, -0.6*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+//-20
     }
 
 }

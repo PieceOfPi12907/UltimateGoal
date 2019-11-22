@@ -5,19 +5,22 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.SkystoneTeamcode.utillities.PIDController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class NavigationHelper {
+
+    Orientation lastAngles = new Orientation();
+    double globalAngle;
+
     // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
-
-
-
     public void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry ){
         if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
-            forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry);
+            forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry, pImu);
         }
 
         else if(pDirection.equals(Constants12907.Direction.LEFT)){
@@ -39,8 +42,12 @@ public class NavigationHelper {
 
 
     // This is the method that gets called if constant is STRAIGHT
-    private void forwardDrive (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry) {
+    private void forwardDrive (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry, BNO055IMU pImu) {
         ElapsedTime runtime = new ElapsedTime();
+
+        PIDController pidDrive = new PIDController(.05, 0, 0);
+        lastAngles = new Orientation();
+
         //Variables used for converting inches to Encoder dounts
         final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
         final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
@@ -79,14 +86,24 @@ public class NavigationHelper {
         pFrontLeft.setMode((DcMotor.RunMode.RUN_TO_POSITION));
         pFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        pFrontRight.setPower((pSpeed));
+        /*pFrontRight.setPower((pSpeed));
         pBackRight.setPower((pSpeed));
         pFrontLeft.setPower((pSpeed));
-        pBackLeft.setPower((pSpeed));
+        pBackLeft.setPower((pSpeed));*/
+
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, pSpeed);
+        pidDrive.setInputRange(90, 90);
+        pidDrive.enable();
+        double correction;
 
         //This while loop will keep the motors running to the target position until one of the motors have reached the final encoder count
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
-
+            correction = pidDrive.performPID(getAngle(pImu));
+            pFrontRight.setPower(pSpeed+correction);
+            pBackRight.setPower(pSpeed+correction);
+            pFrontLeft.setPower(pSpeed-correction);
+            pBackLeft.setPower(pSpeed-correction);
         }
 
         //stop motors
@@ -102,6 +119,31 @@ public class NavigationHelper {
                 pFrontRight.getCurrentPosition());
         telemetry.update();
     }
+
+    private double getAngle(BNO055IMU pImu)
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+
     private void leftStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
 
@@ -288,6 +330,7 @@ public class NavigationHelper {
 
         if (pRotation > 0) {
             while (computedAngle < pRotation) {
+                //right
                 previousAngle = computedAngle;
                 pFrontRight.setPower(pSpeed);
                 pBackRight.setPower(pSpeed);
@@ -298,6 +341,7 @@ public class NavigationHelper {
             }
         } else {
             while (computedAngle > pRotation) {
+                //left
                 previousAngle = computedAngle;
                 pFrontRight.setPower(-pSpeed);
                 pBackRight.setPower(-pSpeed);
@@ -330,11 +374,7 @@ public class NavigationHelper {
         if(Math.abs(correction)>=5){
             pTelemetry.addData("Correction value: ",correction);
             pTelemetry.update();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, correction,0.15,pImu,pTelemetry);
 
         }
