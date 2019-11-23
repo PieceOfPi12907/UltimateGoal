@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
 
+@Disabled
 //Version 10.19.18 (fixed switching & made dif drive ways into methods)
 //@TeleOp(name = "TeleOp 12907", group = "teleop")
 public class TeleOp12907 extends LinearOpMode {

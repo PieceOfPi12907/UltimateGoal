@@ -157,6 +157,14 @@ public class AutoInnerRepoBlue extends LinearOpMode {
             Parking parking = new Parking();
             Repositioning repositioning = new Repositioning();
 
+            while(!isStopRequested() && !imu.isGyroCalibrated()){
+                sleep(50);
+                idle();
+            }
+
+            telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
+            telemetry.update();
+
             waitForStart();
 
             if (opModeIsActive()) {

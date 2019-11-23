@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.FTCappTeamcode.utilities;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.FTCappTeamcode.helper.SensorHelper;
 
 
 //Delete once testing is done:
-
+@Disabled
 public class SamplingTensor {
     public void forward(DcMotor frontRight, DcMotor frontLeft, DcMotor backRight, DcMotor backLeft, MotorHelper motorHelper, SensorHelper sensorHelper,
                         Telemetry telemetry, ColorSensor middleColor, DistanceSensor distance, Servo rightArm, Servo leftArm, Servo rightKnocker,

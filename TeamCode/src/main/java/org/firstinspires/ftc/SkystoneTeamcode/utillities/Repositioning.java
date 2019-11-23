@@ -14,10 +14,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class Repositioning {
     int negative;
-    double leftServoDown = 0.85;
-    double rightServoDown = 0;
-    double leftServoUp = 0;
-    double rightServoUp = 0.8;
+
+    double leftServoDown = 0;
+    double rightServoDown = 0.9;
+
+    double leftServoUp = 0.8;
+    double rightServoUp = 0.3;
 
     public void doRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft) {
         if (isBlue == false) {
@@ -64,6 +66,43 @@ public class Repositioning {
             e.printStackTrace();
         }
     }
+
+
+    public void doSimpleRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft) {
+
+        repositioningLeft.setPosition(leftServoDown);
+        try {
+            Thread.sleep(400);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        repositioningRight.setPosition(rightServoDown);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //strafe back to wall pulling foundation along
+        //pNavigate.navigate(38, Constants12907.Direction.LEFT,0,0.3,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        leftStrafeWithoutCorrection(40,0.3, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        repositioningLeft.setPosition(leftServoUp);
+        try {
+            Thread.sleep(400);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        repositioningRight.setPosition(rightServoUp);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void doAngleRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft) {
         if (isBlue == false) {

@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.SkystoneTeamcode.tester;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+@Disabled
 @TeleOp(name = "dumper Test",group = "teleop")
 public class dumperTest extends LinearOpMode {
     DcMotor dumperMotor;

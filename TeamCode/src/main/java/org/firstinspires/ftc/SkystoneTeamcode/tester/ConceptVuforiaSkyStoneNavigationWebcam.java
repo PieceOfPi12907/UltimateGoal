@@ -82,6 +82,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * is explained below.
  */
 
+@Disabled
+
 @TeleOp(name="ananya''s and menaka's Vuforia Nav Webcam", group ="Concept")
 public class ConceptVuforiaSkyStoneNavigationWebcam extends LinearOpMode {
 

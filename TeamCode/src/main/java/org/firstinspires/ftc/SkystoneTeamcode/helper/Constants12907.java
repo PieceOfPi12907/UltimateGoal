@@ -7,5 +7,11 @@ public class Constants12907 {
     public static enum SkystonePosition{
         LEFT, CENTER, RIGHT;
     }
-
+    public static enum RepositioningServoPositions{
+        UP, MID, DOWN;
+    }
+    public static enum DumperArmDropPositions{
+        DROP1,DROP2,DROP3,DOWN;
+    }
 }
+

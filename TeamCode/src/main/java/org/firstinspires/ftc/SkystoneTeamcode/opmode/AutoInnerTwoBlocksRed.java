@@ -306,6 +306,14 @@ public class AutoInnerTwoBlocksRed extends LinearOpMode {
             Repositioning repositioning = new Repositioning();
             Parking parking = new Parking();
 
+            while(!isStopRequested() && !imu.isGyroCalibrated()){
+                sleep(50);
+                idle();
+            }
+
+            telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
+            telemetry.update();
+
             waitForStart();
 
             if (opModeIsActive()) {

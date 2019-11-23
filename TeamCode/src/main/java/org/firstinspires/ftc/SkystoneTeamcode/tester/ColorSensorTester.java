@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
-
+@Disabled
 @Autonomous(name = "Color Sensor Test", group = "Sensor")
 
 public class ColorSensorTester extends LinearOpMode {

@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name= "FINAL thread teleop 12907", group = "teleop")
+import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
+
+@TeleOp(name= "LEAGUE 2 - FINAL (thread) TELEOP 12907", group = "teleop")
 public class SkystoneTeleop12907Thread extends LinearOpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
@@ -18,24 +20,24 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
     Servo sideArmServo;
     Servo sideClampServo;
     Servo dumperArmServo;
-    //Servo dumperClampServo;
-   // Servo dumperPivotServo;
+    Servo dumperClampInsideServo;
+    Servo dumperClampOutsideServo;
     Servo leftIntakeServo;
     Servo rightIntakeServo;
     Servo leftRepositionServo;
     Servo rightRepositionServo;
+    Servo parkingArmServo;
 
 
     boolean threadStarted = false;
-    boolean isClamped = false;
-    boolean isArmDown = false;
-    boolean isArmStraight = false;
+    Constants12907.RepositioningServoPositions repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
+    Constants12907.DumperArmDropPositions dumperArmDropPositions = Constants12907.DumperArmDropPositions.DOWN;
+    boolean isInsideClampUp = true;
+    boolean isOutsideClampUp = false;
+    boolean isArmIn = true;
     boolean isSideArmDown = false;
-    boolean isAutoArmClamped = false;
-
+    boolean isSideArmClamped = false;
     boolean isIntakeSpinning = false;
-    boolean isIntakeServoOpen = true;
-
     double scaleFactor = 0.7;
     double intakeSpeed = 0;
 
@@ -47,23 +49,30 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
     final double INTAKE_RIGHT_OPEN = 0.8;
     // final double INTAKE_LEFT_OPEN = 0;
     final double INTAKE_RIGHT_CLOSE = 0.50;
-    final double DUMPER_ARM_OUT_FIRST = 0.4;
-    final double DUMPER_ARM_OUT_SECOND = 0.68;
-    final double DUMPER_ARM_IN = 1;
-    final double DUMPER_CLAMP_DOWN = 0.9;
-    final double DUMPER_CLAMP_UP = 0.3;
-    final double DUMPER_ROTATE_IN = 0.8;
-    final double DUMPER_ROTATE_OUT = 0;
-    final double LEFT_REPOSITIONING_DOWN = 1;
-    final double LEFT_REPOSITIONING_UP = 0.25;
-    final double RIGHT_REPOSITIONING_DOWN = 0.89;
-    final double RIGHT_REPOSITIONING_UP = 0.36;
+    final double DUMPER_ARM_DOWN = 1;
+    final double DUMPER_ARM_DROP_1 = 0.1;
+    final double DUMPER_ARM_DROP_2 = 0.25;
+    final double DUMPER_ARM_DROP_3 = 0.5;
+    final double LEFT_REPOSITIONING_DOWN = 0;
+    final double LEFT_REPOSITIONING_UP = 0.8;
+    final double LEFT_REPOSITIONING_MID = 0.3;
+    final double RIGHT_REPOSITIONING_DOWN = 0.9;
+    final double RIGHT_REPOSITIONING_MID = 0.75;
+    final double RIGHT_REPOSITIONING_UP = 0.3;
+    final double DUMPER_CLAMP_INSIDE_UP = 0.5;
+    //final double DUMPER_CLAMP_INSIDE_DOWN = 0.15
+    final double DUMPER_CLAMP_INSIDE_DOWN = 0.05;
+    final double DUMPER_CLAMP_OUTSIDE_UP = 0.3;
+    final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.9;
+    final double PARKING_ARM_OUT = 0.8;
 
     boolean goingReverse = false;
     ElapsedTime b_time = new ElapsedTime();
     ElapsedTime y_time = new ElapsedTime();
     ElapsedTime x_time = new ElapsedTime();
     ElapsedTime a_time = new ElapsedTime();
+    ElapsedTime right_bumper_time = new ElapsedTime();
+    ElapsedTime a_time_two = new ElapsedTime();
 
 
 
@@ -82,12 +91,13 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
         rightIntakeServo = hardwareMap.get(Servo.class, "rightIntakeServo");
         leftIntakeServo = hardwareMap.get(Servo.class, "leftIntakeServo");
         dumperArmServo = hardwareMap.get(Servo.class,"dumperArm");
-        //dumperClampServo = hardwareMap.get(Servo.class,"dumperClampServo");
-     //   dumperPivotServo = hardwareMap.get(Servo.class,"dumperPivot");
+        dumperClampInsideServo = hardwareMap.get(Servo.class,"dumperClampInsideServo");
+        dumperClampOutsideServo = hardwareMap.get(Servo.class,"dumperClampOutsideServo");
         leftRepositionServo = hardwareMap.get(Servo.class, "leftRepositioningServo");
         rightRepositionServo = hardwareMap.get(Servo.class,"rightRepositioningServo");
         sideArmServo = hardwareMap.get(Servo.class, "pivotGrabber");
         sideClampServo = hardwareMap.get(Servo.class, "blockClamper");
+        parkingArmServo = hardwareMap.get(Servo.class,"parkingArmServo");
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -96,29 +106,39 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
 
         leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
         rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
-        //dumperClampServo.setPosition(DUMPER_CLAMP_UP);
         leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
+        rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
+        dumperArmServo.setPosition(DUMPER_ARM_DOWN);
+        dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
+        dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
+        leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
+        dumperArmDropPositions = Constants12907.DumperArmDropPositions.DOWN;
+        repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
+        sideArmServo.setPosition(SIDE_ARM_RAISED);
+        sideClampServo.setPosition(AUTO_CLAMP_CLOSED);
+        //parkingArmServo.setPosition(PARKING_ARM_OUT);
 
     }
 
 
 
-    private class AttachmentsThread extends Thread{
+    private class AttachmentsThread extends Thread {
         boolean isIntakeSpinning = false;
         boolean isIntakeServoOpen = true;
 
-        public void AttachmentsThread(){
+        public void AttachmentsThread() {
             this.setName("Attachments Thread");
         }
+
         @Override
-        public void run(){
+        public void run() {
             try {
-                while(!isInterrupted()) {
+                while (!isInterrupted()) {
                     intakeControl();
                     dumperControl();
                     idle();
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
 
             }
         }
@@ -126,92 +146,94 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
         /*
            GAMEPAD2.a
          */
-        private void intakeControl(){
-            if(gamepad2.a){
-                if(isIntakeServoOpen && !isIntakeSpinning){
+        private void intakeControl() {
+            if (gamepad2.a) {
+                if (isIntakeServoOpen && !isIntakeSpinning) {
                     leftIntakeMotor.setPower(-0.4);
                     rightIntakeMotor.setPower(0.4);
                     isIntakeSpinning = true;
                     telemetry.addLine("Intake is Spinning");
-                }else if(isIntakeServoOpen && isIntakeSpinning){
+                    telemetry.update();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else if (isIntakeServoOpen && isIntakeSpinning) {
                     leftIntakeMotor.setPower(0);
                     rightIntakeMotor.setPower(0);
                     rightIntakeServo.setPosition(INTAKE_RIGHT_CLOSE);
-                    try {
-                        Thread.sleep(250);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    //dumperClampServo.setPosition(DUMPER_CLAMP_DOWN);
-                    try {
-                        Thread.sleep(250);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                     isIntakeSpinning = false;
                     isIntakeServoOpen = false;
                     telemetry.addLine("Intake stopped spinning and intake servo is closed");
-                }else if(!isIntakeServoOpen && !isIntakeSpinning){
+                    telemetry.update();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else if (!isIntakeServoOpen && !isIntakeSpinning) {
                     leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
                     rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
                     isIntakeServoOpen = true;
                     isIntakeSpinning = false;
                     telemetry.addLine("Intake servo is open and Intake is not spinning");
-                }else{
+                    telemetry.update();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
                     telemetry.addLine("Intake Servo and Motor error");
+                    telemetry.update();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 telemetry.update();
 
             }
 
         }
-        private void dumperControl(){
-            /*if(gamepad2.b&&b_time.seconds()>=0.25){
-                b_time.reset();
-                if(!isClamped){
-                    dumperClampServo.setPosition(DUMPER_CLAMP_DOWN);
-                    isClamped = true;
-                }
-                else if(isClamped){
-                    dumperClampServo.setPosition(DUMPER_CLAMP_UP);
-                    isClamped = false;
-                }
-            }
-            */
-            if(gamepad2.y&&y_time.seconds()>=0.25){
-                y_time.reset();
-                if(isArmDown){
-                    dumperArmServo.setPosition(DUMPER_ARM_IN);
-                    isArmDown = true;
-                }
-                else if(!isArmDown){
-                    dumperArmServo.setPosition(DUMPER_ARM_OUT_FIRST);
-                    isArmDown = false;
 
+        private void newIntakeControl() {
+            if (gamepad2.a) {
+                if (!isIntakeSpinning) {
+                    leftIntakeMotor.setPower(-0.4);
+                    rightIntakeMotor.setPower(0.4);
+                    isIntakeSpinning = true;
+                    telemetry.addLine("Intake is Spinning");
+                    telemetry.update();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else if (isIntakeSpinning) {
+                    leftIntakeMotor.setPower(0);
+                    rightIntakeMotor.setPower(0);
+                    isIntakeSpinning = false;
+                    telemetry.addLine("Intake stopped spinning");
+                    telemetry.update();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            if(gamepad2.x && x_time.seconds() >=0.25){
-                x_time.reset();
-                if(!isArmStraight){
-       //             dumperPivotServo.setPosition(DUMPER_ROTATE_OUT);
-                    isArmStraight = true;
-                }
-                else if(isArmStraight){
-         //           dumperPivotServo.setPosition(DUMPER_ROTATE_IN);
-                    isArmStraight = false;
-                }
-            }
-            if(gamepad2.dpad_up){
-                dumperArmServo.setPosition(DUMPER_ARM_OUT_SECOND);
-            }
-            if(gamepad2.dpad_down){
-                dumperArmServo.setPosition(DUMPER_ARM_IN);
-            }
 
+            }
 
         }
 
-    } //end of thread class
+        private void dumperControl() {
+
+        }
+    }//end of thread class
 
 
     private void mecanumDrive(double scale){
@@ -251,96 +273,102 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
     /*
     GAMEPAD1.right_bumper && GAMEPAD1.left_bumper
          */
-    private void intakeControl(){
-        if(gamepad2.a){
-            if(isIntakeServoOpen && !isIntakeSpinning){
+    private void newIntakeControl(){
+        if(gamepad2.a && a_time.seconds()>0.25){
+            a_time.reset();
+            if(!isIntakeSpinning){
                 leftIntakeMotor.setPower(-0.4);
                 rightIntakeMotor.setPower(0.4);
                 isIntakeSpinning = true;
-            }else if(isIntakeServoOpen && isIntakeSpinning){
+
+            }else if( isIntakeSpinning){
                 leftIntakeMotor.setPower(0);
                 rightIntakeMotor.setPower(0);
-                rightIntakeServo.setPosition(INTAKE_RIGHT_CLOSE);
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //dumperClampServo.setPosition(DUMPER_CLAMP_DOWN);
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 isIntakeSpinning = false;
-                isIntakeServoOpen = false;
-            }else if(!isIntakeServoOpen && !isIntakeSpinning){
-                leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
-                rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
-                isIntakeServoOpen = true;
-                isIntakeSpinning = false;
+            }
+            if(gamepad2.dpad_up){
+                leftIntakeServo.setPosition(INTAKE_RIGHT_CLOSE);
+            }
+            if(gamepad2.dpad_down){
+                leftIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
             }
 
         }
 
     }
     private void dumperControl(){
-            /*if(gamepad2.b&&b_time.seconds()>=0.25){
-                b_time.reset();
-                if(!isClamped){
-                    dumperClampServo.setPosition(DUMPER_CLAMP_DOWN);
-                    isClamped = true;
-                }
-                else if(isClamped){
-                    dumperClampServo.setPosition(DUMPER_CLAMP_UP);
-                    isClamped = false;
-                }
-            }
-            */
-        if(gamepad2.y&&y_time.seconds()>=0.25){
-            y_time.reset();
-            if(isArmDown){
-                dumperArmServo.setPosition(DUMPER_ARM_IN);
-                isArmDown = true;
-            }
-            else if(!isArmDown){
-                dumperArmServo.setPosition(DUMPER_ARM_OUT_FIRST);
-                isArmDown = false;
-
-            }
-        }
-        if(gamepad2.x && x_time.seconds() >=0.25){
+        if(gamepad2.x && x_time.seconds()>0.25){
             x_time.reset();
-            if(!isArmStraight){
-                //             dumperPivotServo.setPosition(DUMPER_ROTATE_OUT);
-                isArmStraight = true;
+            if(!isInsideClampUp){
+                dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
+                isInsideClampUp = true;
+            }else if(isInsideClampUp){
+                dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_DOWN);
+                isInsideClampUp = false;
             }
-            else if(isArmStraight){
-                //           dumperPivotServo.setPosition(DUMPER_ROTATE_IN);
-                isArmStraight = false;
-            }
-        }
-        if(gamepad2.dpad_up){
-            dumperArmServo.setPosition(DUMPER_ARM_OUT_SECOND);
-        }
-        if(gamepad2.dpad_down){
-            dumperArmServo.setPosition(DUMPER_ARM_IN);
         }
 
+        if(gamepad2.b && b_time.seconds()>0.25){
+            b_time.reset();
+            if(!isOutsideClampUp){
+                dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_UP);
+                isOutsideClampUp = true;
+            }else if(isOutsideClampUp){
+                dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
+                isOutsideClampUp = false;
+            }
+        }
+
+        if(gamepad2.y && y_time.seconds()>0.25){
+            y_time.reset();
+            parkingArmServo.setPosition(PARKING_ARM_OUT);
+        }
+        if(gamepad2.dpad_right){
+            dumperArmServo.setPosition(1);
+        }
+
+        if(gamepad2.right_bumper && right_bumper_time.seconds()>0.25){
+            right_bumper_time.reset();
+            if(Constants12907.DumperArmDropPositions.DOWN.equals(dumperArmDropPositions)){
+                dumperArmServo.setPosition(DUMPER_ARM_DROP_3);
+                dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP3;
+            }else if(Constants12907.DumperArmDropPositions.DROP3.equals(dumperArmDropPositions)){
+                dumperArmServo.setPosition(DUMPER_ARM_DROP_2);
+                dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP2;
+            }else if(Constants12907.DumperArmDropPositions.DROP2.equals(dumperArmDropPositions)){
+                dumperArmServo.setPosition(DUMPER_ARM_DROP_1);
+                dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP1;
+            }else if(Constants12907.DumperArmDropPositions.DROP1.equals(dumperArmDropPositions)){
+                dumperArmServo.setPosition(DUMPER_ARM_DROP_3);
+                dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP3;
+            }
+
+        }
 
     }
 
-    private void repositioning(){
-        if(gamepad1.right_bumper){
-            leftRepositionServo.setPosition(LEFT_REPOSITIONING_DOWN);
-            rightRepositionServo.setPosition(RIGHT_REPOSITIONING_DOWN);
-        }
-        if(gamepad1.left_bumper){
-            leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
-            rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
-        }
-    }
 
+    private void repositioningControl(){
+        if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
+            right_bumper_time.reset();
+            if(Constants12907.RepositioningServoPositions.UP.equals(repositioningServoPos)){
+                leftRepositionServo.setPosition(LEFT_REPOSITIONING_MID);
+                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_MID);
+                repositioningServoPos = Constants12907.RepositioningServoPositions.MID;
+            }else if(Constants12907.RepositioningServoPositions.MID.equals(repositioningServoPos)){
+                leftRepositionServo.setPosition(LEFT_REPOSITIONING_DOWN);
+                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_DOWN);
+                repositioningServoPos = Constants12907.RepositioningServoPositions.DOWN;
+
+            }else if(Constants12907.RepositioningServoPositions.DOWN.equals(repositioningServoPos)){
+                leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
+                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
+                repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
+
+            }
+        }
+
+    }
 
     private void sideArmControl(){
         if(gamepad1.a && a_time.seconds() >= 0.25){
@@ -356,13 +384,13 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
         }
         if(gamepad1.b && b_time.seconds() >= 0.25){
             b_time.reset();
-            if(!isAutoArmClamped){
+            if(!isSideArmClamped){
                 sideClampServo.setPosition(AUTO_CLAMP_CLOSED);
-                isAutoArmClamped = true;
+                isSideArmClamped = true;
             }
-            else if(isAutoArmClamped){
+            else if(isSideArmClamped){
                 sideClampServo.setPosition(AUTO_CLAMP_OPENED);
-                isAutoArmClamped = false;
+                isSideArmClamped = false;
             }
         }
     }
@@ -382,13 +410,13 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
             if(gamepad1.y){
                 scaleFactor=0.75;
             }
-            repositioning();
+            repositioningControl();
             sideArmControl();
             // Code going into thread
-            intakeControl();
+            newIntakeControl();
             dumperControl();
             idle();
         }
-        attachments.interrupt();
+        //  attachments.interrupt();
     }
 }

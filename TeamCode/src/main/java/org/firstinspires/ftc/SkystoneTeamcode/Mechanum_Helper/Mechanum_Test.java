@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.SkystoneTeamcode.Mechanum_Helper;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
+@Disabled
 @TeleOp(name = "Mechanum Test Run", group = "teleop")
 public class Mechanum_Test extends LinearOpMode {
     DcMotor frontRight;

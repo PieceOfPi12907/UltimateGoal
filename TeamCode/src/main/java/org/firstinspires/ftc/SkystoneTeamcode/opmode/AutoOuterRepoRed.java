@@ -111,10 +111,10 @@ public class AutoOuterRepoRed extends LinearOpMode {
          */
 
         //Configuration of the Motors/Servos
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
-        backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        backRight = hardwareMap.get(DcMotor.class, "backRight");
         pivotGrabber = hardwareMap.get(Servo.class, "pivotGrabber");
         blockClamper = hardwareMap.get(Servo.class, "blockClamper");
 
@@ -155,6 +155,14 @@ public class AutoOuterRepoRed extends LinearOpMode {
             skystoneDetection = new SkystoneDetection();
             Parking parking = new Parking();
             Repositioning repositioning = new Repositioning();
+
+            while(!isStopRequested() && !imu.isGyroCalibrated()){
+                sleep(50);
+                idle();
+            }
+
+            telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
+            telemetry.update();
 
             waitForStart();
 
