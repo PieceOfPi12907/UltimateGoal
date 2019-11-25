@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class SkystoneDelivery {
 
-    final double PIVOT_LOWERED = 0.7;
+    final double PIVOT_LOWERED = 0.9;
     //CHANGE VALUE FOR UPDATED ROBOT
     final double PIVOT_RAISED = 0.4;
     final double CLAMP_OPENED = 0.5;
@@ -177,13 +177,13 @@ public class SkystoneDelivery {
     public void extakeSkystone(Servo blockClamper, Servo pivotGrabber) {
         pivotGrabber.setPosition(PIVOT_LOWERED);
         try {
-            Thread.sleep(50);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         blockClamper.setPosition(CLAMP_OPENED);
         try {
-            Thread.sleep(50);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

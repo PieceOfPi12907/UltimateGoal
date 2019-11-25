@@ -387,6 +387,12 @@ public class SkystoneDetection {
 
         pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
 
+        pTelemetry.update();
+
+        if(currentDistance > 18){
+            currentDistance = 17;
+        }
+
         double toGoDistance = currentDistance - targetDistance;
 
         pTelemetry.addData("STRAFE DISTANCE ", toGoDistance);
@@ -528,10 +534,15 @@ public class SkystoneDetection {
 
 
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
-        double targetDistance = 2;
+        double targetDistance = 1.5;
 
         pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
+
         pTelemetry.update();
+
+        if(currentDistance > 18){
+            currentDistance = 17;
+        }
 
         double toGoDistance = currentDistance - targetDistance;
 
@@ -757,11 +768,19 @@ public class SkystoneDetection {
 
         pNavigate.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-        pNavigate.navigate(54*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        pNavigate.navigate(64*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-        pNavigate.navigate(6, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        //pNavigate.navigate(10, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        rightStrafeWithoutCorrection(10, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
+
     }
 
 

@@ -120,6 +120,8 @@ public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
     List<VuforiaTrackable> allTrackables;
     VuforiaLocalizer.Parameters parametersWebcam = null;
 
+    int negative;
+
     public void initialize() {
 
         /*Scanner scanner = new Scanner(System.in);
@@ -326,6 +328,12 @@ public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
 
             if (opModeIsActive()) {
 
+                if (isBlue==false) {
+                    negative = -1;
+                } else {
+                    negative = 1;
+                }
+
                 //moves 10 inches forward for best skystone detection with webcam
                 navigationHelper.navigate(12, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
@@ -353,7 +361,15 @@ public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
 
                 repositioning.doSimpleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, repositioningRight, repositioningLeft);
 
-                parking.repositioningPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter);
+                //parking.repositioningPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter);
+                //move right (straight), out of harm's way
+                navigationHelper.navigate(-32*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative, backLeft, backRight, frontRight,frontLeft,imu,telemetry);
+
+                //strafe "forward" (right), to stay on the inner path
+                navigationHelper.navigate(26, Constants12907.Direction.RIGHT,0,0.4,backLeft, backRight, frontRight,frontLeft,imu,telemetry);
+
+                //zoom right (straight), under the bridge
+                navigationHelper.navigate(-15*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative,backLeft, backRight, frontRight,frontLeft,imu,telemetry);
 
 
             }

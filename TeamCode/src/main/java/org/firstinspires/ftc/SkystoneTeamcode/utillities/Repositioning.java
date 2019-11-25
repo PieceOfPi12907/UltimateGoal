@@ -86,7 +86,12 @@ public class Repositioning {
 
         //strafe back to wall pulling foundation along
         //pNavigate.navigate(38, Constants12907.Direction.LEFT,0,0.3,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        leftStrafeWithoutCorrection(40,0.3, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        if(isBlue != true){
+            leftStrafeWithoutCorrection(43,0.3, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        } else {
+            leftStrafeWithoutCorrection(43,0.3, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        }
 
         repositioningLeft.setPosition(leftServoUp);
         try {
