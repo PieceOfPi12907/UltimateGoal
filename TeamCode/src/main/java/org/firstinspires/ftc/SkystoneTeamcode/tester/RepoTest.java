@@ -49,10 +49,11 @@ public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
 }
 */
 
-package org.firstinspires.ftc.SkystoneTeamcode.opmode;
+package org.firstinspires.ftc.SkystoneTeamcode.tester;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -63,21 +64,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 
 //import java.util.Scanner;
 
-//@Disabled
+@Disabled
 //Adding Source Code to GitHub
 
-@Autonomous(name = "Auto: INNER BLUE repositioning", group = "autonomous")
-public class AutoInnerRepoBlue extends LinearOpMode {
+@Autonomous(name = "REPO test", group = "autonomous")
+public class RepoTest extends LinearOpMode {
 
-    boolean isBlue = true;
-    boolean isOuter = false;
+    boolean isBlue = false;
+    boolean isOuter = true;
     boolean isStoneRepo = false;
-
     long startDelay = 0;
 
     //final long SLEEP_TIME_250 = 250;
@@ -99,6 +98,8 @@ public class AutoInnerRepoBlue extends LinearOpMode {
     Servo blockClamper;
     Servo repositioningRight;
     Servo repositioningLeft;
+
+
 
     //Initializes motors from the hardware map
 
@@ -164,7 +165,7 @@ public class AutoInnerRepoBlue extends LinearOpMode {
             }
 
             telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
-            telemetry.update();
+
 
             waitForStart();
 
@@ -175,7 +176,7 @@ public class AutoInnerRepoBlue extends LinearOpMode {
                     e.printStackTrace();
                 }
 
-                repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft);
+                repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter,isStoneRepo, repositioningRight, repositioningLeft);
             }
         } catch (Exception bad){
             telemetry.addData("EXCEPTION:", bad.toString());

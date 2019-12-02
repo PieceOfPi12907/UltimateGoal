@@ -134,7 +134,7 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
         public void run() {
             try {
                 while (!isInterrupted()) {
-                    intakeControl();
+                    newIntakeControl();
                     dumperControl();
                     idle();
                 }
@@ -232,6 +232,53 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
 
         private void dumperControl() {
 
+            if(gamepad2.x && x_time.seconds()>0.25){
+                x_time.reset();
+                if(!isInsideClampUp){
+                    dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
+                    isInsideClampUp = true;
+                }else if(isInsideClampUp){
+                    dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_DOWN);
+                    isInsideClampUp = false;
+                }
+            }
+
+            if(gamepad2.b && b_time.seconds()>0.25){
+                b_time.reset();
+                if(!isOutsideClampUp){
+                    dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_UP);
+                    isOutsideClampUp = true;
+                }else if(isOutsideClampUp){
+                    dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
+                    isOutsideClampUp = false;
+                }
+            }
+
+            if(gamepad2.y && y_time.seconds()>0.25){
+                y_time.reset();
+                parkingArmServo.setPosition(PARKING_ARM_OUT);
+            }
+            if(gamepad2.dpad_right){
+                dumperArmServo.setPosition(1);
+            }
+
+            if(gamepad2.right_bumper && right_bumper_time.seconds()>0.25){
+                right_bumper_time.reset();
+                if(Constants12907.DumperArmDropPositions.DOWN.equals(dumperArmDropPositions)){
+                    dumperArmServo.setPosition(DUMPER_ARM_DROP_3);
+                    dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP3;
+                }else if(Constants12907.DumperArmDropPositions.DROP3.equals(dumperArmDropPositions)){
+                    dumperArmServo.setPosition(DUMPER_ARM_DROP_2);
+                    dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP2;
+                }else if(Constants12907.DumperArmDropPositions.DROP2.equals(dumperArmDropPositions)){
+                    dumperArmServo.setPosition(DUMPER_ARM_DROP_1);
+                    dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP1;
+                }else if(Constants12907.DumperArmDropPositions.DROP1.equals(dumperArmDropPositions)){
+                    dumperArmServo.setPosition(DUMPER_ARM_DROP_3);
+                    dumperArmDropPositions = Constants12907.DumperArmDropPositions.DROP3;
+                }
+
+            }
         }
     }//end of thread class
 
@@ -401,7 +448,7 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
         initialize();
         Thread attachments = new AttachmentsThread();
         waitForStart();
-        //attachments.start();
+        attachments.start();
         while(opModeIsActive()){
             mecanumDrive(scaleFactor);
             if(gamepad1.x){
@@ -413,10 +460,10 @@ public class SkystoneTeleop12907Thread extends LinearOpMode {
             repositioningControl();
             sideArmControl();
             // Code going into thread
-            newIntakeControl();
-            dumperControl();
+            //newIntakeControl();
+            //dumperControl();
             idle();
         }
-        //  attachments.interrupt();
+          attachments.interrupt();
     }
 }

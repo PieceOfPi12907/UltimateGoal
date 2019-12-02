@@ -75,6 +75,7 @@ public class AutoOuterRepoBlue extends LinearOpMode {
 
     boolean isBlue = true;
     boolean isOuter = true;
+    boolean isStoneRepo = false;
 
     long startDelay = 0;
 
@@ -173,10 +174,8 @@ public class AutoOuterRepoBlue extends LinearOpMode {
                     e.printStackTrace();
                 }
 
-                //repositioning.doRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, repositioningRight, repositioningLeft);
-                repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, repositioningRight, repositioningLeft);
+                repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft);
 
-                parking.repositioningPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter);
             }
         } catch (Exception bad){
             telemetry.addData("EXCEPTION:", bad.toString());

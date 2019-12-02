@@ -98,7 +98,8 @@ public class AutoOuterOneBlockRepoRed extends LinearOpMode
  {
 
     boolean isBlue = false;
-    boolean isOuter = false;
+    boolean isOuter = true;
+    boolean isStoneRepo = true;
 
     //Naming the motors
     DcMotor frontLeft;
@@ -359,14 +360,9 @@ public class AutoOuterOneBlockRepoRed extends LinearOpMode
                 telemetry.update();
 
 
-                skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
+                skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue, repositioningRight,repositioningLeft);
 
-                repositioning.doSimpleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, repositioningRight, repositioningLeft);
-
-                //parking.repositioningPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter);
-                //move right (straight), out of harm's way
-                navigationHelper.navigate(-48*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative, backLeft, backRight, frontRight,frontLeft,imu,telemetry);
-
+                repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft);
             }
 
         }catch (Exception bad){

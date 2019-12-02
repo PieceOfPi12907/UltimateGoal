@@ -97,6 +97,7 @@ public class AutoInnerOneBlockRepoRed extends LinearOpMode {
 
     boolean isBlue = false;
     boolean isOuter = false;
+    boolean isStoneRepo = true;
 
     //Naming the motors
     DcMotor frontLeft;
@@ -357,19 +358,9 @@ public class AutoInnerOneBlockRepoRed extends LinearOpMode {
                 telemetry.update();
 
 
-                skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
+                skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue,repositioningRight,repositioningLeft);
 
-                repositioning.doSimpleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, repositioningRight, repositioningLeft);
-
-                //parking.repositioningPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter);
-                //move right (straight), out of harm's way
-                navigationHelper.navigate(-32*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative, backLeft, backRight, frontRight,frontLeft,imu,telemetry);
-
-                //strafe "forward" (right), to stay on the inner path
-                navigationHelper.navigate(26, Constants12907.Direction.RIGHT,0,0.4,backLeft, backRight, frontRight,frontLeft,imu,telemetry);
-
-                //zoom right (straight), under the bridge
-                navigationHelper.navigate(-15*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative,backLeft, backRight, frontRight,frontLeft,imu,telemetry);
+                repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft);
 
 
             }
