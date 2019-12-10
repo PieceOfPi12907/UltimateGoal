@@ -81,7 +81,9 @@ public class AutoAll extends LinearOpMode{
     Servo repositioningRight;
     Servo repositioningLeft;
 
-    List<VuforiaTrackable> allTrackables;
+    List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+
+
     VuforiaLocalizer.Parameters parametersWebcam = null;
     final float mmPerInch = 25.4f;
     double y_value = 0;
@@ -370,23 +372,15 @@ public class AutoAll extends LinearOpMode{
 // sets are stored in the 'assets' part of our application.
         VuforiaTrackables targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
 
-        telemetry.addLine("** target stone initialized **");
-        telemetry.update();
-        sleep(1000);
 
         VuforiaTrackable stoneTarget = targetsSkyStone.get(0);
         stoneTarget.setName("Stone Target");
 
-        telemetry.addLine("** target stone fetched **");
-        telemetry.update();
-        sleep(1000);
 
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+
+        allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.add(targetsSkyStone.get(0));
 
-        telemetry.addLine("** all trackables initialized **");
-        telemetry.update();
-        sleep(1000);
 
         stoneTarget.setLocation(OpenGLMatrix
                 .translation(0, 0, stoneZ)
@@ -414,27 +408,19 @@ public class AutoAll extends LinearOpMode{
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
 
-        telemetry.addLine("** BEFORE for loop **");
-        telemetry.update();
-        sleep(1000);
+
 
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parametersWebcam.cameraDirection);
         }
 
-        telemetry.addLine("** AFTER for loop **");
-        telemetry.update();
-        sleep(1000);
-
         VectorF translation = null;
         targetsSkyStone.activate();
+
         while (!opModeIsActive()) {
             targetsSkyStone.activate();
             targetVisible = false;
 
-            telemetry.addLine("** 2 BEFORE for loop **");
-            telemetry.update();
-            sleep(1000);
 
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
@@ -452,9 +438,6 @@ public class AutoAll extends LinearOpMode{
                 }
             }//for
 
-            telemetry.addLine("** 2 AFTER for loop **");
-            telemetry.update();
-            sleep(1000);
 
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
@@ -466,13 +449,11 @@ public class AutoAll extends LinearOpMode{
                 y_value = translation.get(1) / mmPerInch;
 
             } else {
-                telemetry.addData("Visible Target", "none");
+                telemetry.addData("Visibsle Target", "none");
             }
             telemetry.update();
+
         }
-        telemetry.addLine("** OUT of while loop **");
-        telemetry.update();
-        sleep(1000);
 
         return lastLocation;
     }
@@ -542,10 +523,6 @@ public class AutoAll extends LinearOpMode{
 
             OpenGLMatrix lastLocation = webcamInitialization();
 
-            sleep(1000);
-            telemetry.addLine("---- webcam intialized");
-            telemetry.update();
-            sleep(1000);
 
             waitForStart();
 
@@ -556,7 +533,6 @@ public class AutoAll extends LinearOpMode{
 
                 telemetry.addLine("**** opMode Is Active");
                 telemetry.update();
-                sleep(1000);
 
 
                 //delay set
