@@ -15,11 +15,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class Repositioning {
     int negative;
 
-    double leftServoDown = 0.7;
-    double rightServoDown = 0.25;
+    double leftServoDown = 0.85;
+    double rightServoDown = 0.3;
 
-    double leftServoUp = 0;
-    double rightServoUp = 1;
+    double leftServoUp = 0.3;
+    double rightServoUp = 0.85;
 
 
     /*public void doRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft) {
