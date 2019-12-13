@@ -15,13 +15,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class Repositioning {
     int negative;
 
-    double leftServoDown = 0;
-    double rightServoDown = 0.9;
+    double leftServoDown = 0.7;
+    double rightServoDown = 0.25;
 
-    double leftServoUp = 0.8;
-    double rightServoUp = 0.3;
+    double leftServoUp = 0;
+    double rightServoUp = 1;
 
-    public void doRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft) {
+
+    /*public void doRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft) {
         if (isBlue == false) {
             negative = -1;
         } else {
@@ -106,7 +107,7 @@ public class Repositioning {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
 
@@ -189,7 +190,13 @@ public class Repositioning {
             pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            pFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+            pBackLeft.setDirection(DcMotor.Direction.REVERSE);
+            pFrontRight.setDirection(DcMotor.Direction.FORWARD);
+            pBackRight.setDirection(DcMotor.Direction.FORWARD);
             //pNavigate.navigate(10, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
             leftStrafeWithoutCorrection(10, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             try {
                 Thread.sleep(250);
@@ -197,7 +204,7 @@ public class Repositioning {
                 e.printStackTrace();
             }
             //pNavigate.navigate(28, Constants12907.Direction.STRAIGHT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-            pNavigate.navigate(10*negative, Constants12907.Direction.STRAIGHT,0,0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            pNavigate.navigate(18*negative, Constants12907.Direction.STRAIGHT,0,0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
             //pNavigate.navigate(30, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
             leftStrafeWithoutCorrection(30, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
@@ -206,6 +213,9 @@ public class Repositioning {
             pNavigate.navigate(44, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }
     }
+
+
+
 
     public void turnWithEncoders(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
                                  DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {

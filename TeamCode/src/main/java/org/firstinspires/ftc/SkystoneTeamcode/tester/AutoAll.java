@@ -55,8 +55,8 @@ public class AutoAll extends LinearOpMode{
     Boolean isBlue = false;
     Boolean isOuter= false;
     Boolean isOneStone = false;
-    Boolean isRepo = false;
-    int delay = 0;
+    Boolean isRepo = true;
+    long delay = 0;
 
 
     DcMotor frontLeft;
@@ -104,13 +104,15 @@ public class AutoAll extends LinearOpMode{
 
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
 
+    VuforiaTrackables targetsSkyStone;
+
 
     public void initialize() {
 
         isBlue = false;
         isOuter= false;
         isOneStone = false;
-        isRepo = false;
+        isRepo = true;
         delay = 0;
 
 
@@ -121,13 +123,13 @@ public class AutoAll extends LinearOpMode{
         while(true){
             //add delay parameter to gamepads!
             if(gamepad2.x) {
-                delay = delay + 5;
+                delay = delay + 5000;
                 telemetry.addLine("DELAY: " + delay + " seconds");
                 telemetry.update();
             }
 
             if (gamepad2.b) {
-                delay = delay - 5;
+                delay = delay - 5000;
                 telemetry.addLine("DELAY: " + delay + " seconds");
                 telemetry.update();
             }
@@ -203,17 +205,17 @@ public class AutoAll extends LinearOpMode{
             }*/
 
             //y on gamepad 1 CONFIRMS decisions
-            if (gamepad1.y){
+            if (gamepad1.a){
                 telemetry.addData("DELAY: ", delay);
                 telemetry.addData("COLOR: ", (isBlue == true)? "blue" : "red");
                 telemetry.addData("ROUTE: ", (isOuter == true)? "outer" : "inner");
                 telemetry.addData("STONES: ", (isOneStone == true)? "one stone" : "two stone");
                 telemetry.addData("REPO: ", (isRepo == true)? "yes" : "no");
-                telemetry.addLine("press 'a' to confirm!");
+                telemetry.addLine("press 'y' to confirm!");
                 telemetry.update();
             }
 
-            if(gamepad1.a){
+            if(gamepad1.y){
                 telemetry.addLine("CONFIRMED");
                 telemetry.update();
                 break;
@@ -370,7 +372,7 @@ public class AutoAll extends LinearOpMode{
 
 // Load the data sets for the trackable objects. These particular data
 // sets are stored in the 'assets' part of our application.
-        VuforiaTrackables targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
+        targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
 
 
         VuforiaTrackable stoneTarget = targetsSkyStone.get(0);
@@ -536,11 +538,8 @@ public class AutoAll extends LinearOpMode{
 
 
                 //delay set
-                try {
-                    Thread.sleep(delay);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                sleep(delay);
+
 
                 if(!isRepo){
                     Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
@@ -560,16 +559,83 @@ public class AutoAll extends LinearOpMode{
                     variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
                 }
 
-                if (isOneStone == false && isBlue == true && isOuter == false){
-                    autoInnerTwoBlocksBlue.playProgram(variableMap);
-                    telemetry.addLine("Program Playing: Blue Inner Two Block");
+                if (isRepo == true && isBlue == true && isOuter == true ){
+                    telemetry.addLine("Program Playing: Blue Outer Repo");
+                    telemetry.update();
+                    autoOuterRepoBlue.playProgram(variableMap);
                 }
 
-                if (isRepo == true && isBlue == true && isOuter == true ){
-                    autoOuterRepoBlue.playProgram(variableMap);
-                    telemetry.addLine("Program Playing: Blue Outer Repo");
+                else if (isRepo == true && isBlue == true && isOuter == false){
+                    telemetry.addLine("Program Playing: Blue Inner Repo");
+                    telemetry.update();
+                    autoInnerRepoBlue.playProgram(variableMap);
                 }
+
+                else if (isRepo == true && isBlue == false && isOuter == true){
+                    telemetry.addLine("Program Playing: Red Outer Repo");
+                    telemetry.update();
+                    autoOuterRepoRed.playProgram(variableMap);
+                }
+
+                else if (isRepo == true && isBlue == false && isOuter == false){
+                    telemetry.addLine("Program Playing: Red Inner Repo");
+                    telemetry.update();
+                    autoInnerRepoRed.playProgram(variableMap);
+                }
+
+                else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true){
+                    telemetry.addLine("Program Playing: Blue Outer One Block Repo");
+                    telemetry.update();
+                    autoOuterOneBlockRepoBlue.playProgram(variableMap);
+
+                }
+
+                else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false){
+                    telemetry.addLine("Program Playing: Blue Inner One Block Repo");
+                    telemetry.update();
+                    autoInnerOneBlockRepoBlue.playProgram(variableMap);
+                }
+
+                else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true){
+                    telemetry.addLine("Program Playing: Red Outer One Block Repo");
+                    telemetry.update();
+                    autoOuterOneBlockRepoRed.playProgram(variableMap);
+                }
+
+                else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false){
+                    telemetry.addLine("Program Playing: Red Inner One Block Repo");
+                    telemetry.update();
+                    autoInnerOneBlockRepoRed.playProgram(variableMap);
+                }
+
+                else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false){
+                    telemetry.addLine("Program Playing: Blue Inner Two Block");
+                    telemetry.update();
+                    autoInnerTwoBlocksBlue.playProgram(variableMap);
+                }
+
+                else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false){
+                    telemetry.addLine("Program Playing: Red Inner Two Block");
+                    telemetry.update();
+                    autoInnerTwoBlocksRed.playProgram(variableMap);
+                }
+
+                if(isStopRequested()){
+                    stop();
+                }
+
+                telemetry.addLine("OPMODE END");
+                telemetry.update();
             }
+
+            // Disable Tracking when we are done;
+            if(targetsSkyStone !=null){
+                targetsSkyStone.deactivate();
+            }
+
+            telemetry.addLine("PROGRAM END");
+            telemetry.update();
+
 
         }catch (Exception bad){
             telemetry.addData("EXCEPTION!!!:", bad.getMessage());
@@ -581,67 +647,8 @@ public class AutoAll extends LinearOpMode{
                 e.printStackTrace();
             }
         }
-
-        //repositioning programs
-
-
-        /*if (isRepo == true && isBlue == true && isOuter == true ){
-            autoOuterRepoBlue.runOpMode();
-            telemetry.addLine("Program Playing: Blue Outer Repo");
-        }
-
-        if (isRepo == true && isBlue == true && isOuter == false){
-            autoInnerRepoBlue.runOpMode();
-            telemetry.addLine("Program Playing: Blue Inner Repo");
-        }
-
-        if (isRepo == true && isBlue == false && isOuter == true){
-            autoOuterRepoRed.runOpMode();
-            telemetry.addLine("Program Playing: Red Outer Repo");
-        }
-
-        if (isRepo == true && isBlue == false && isOuter == false){
-            autoInnerRepoRed.runOpMode();
-            telemetry.addLine("Program Playing: Red Inner Repo");
-        }
-
-//one block programs
-
-        if (isOneStone == true && isBlue == true && isOuter == true){
-            autoOuterOneBlockRepoBlue.runOpMode();
-            telemetry.addLine("Program Playing: Blue Outer One Block Repo");
-
-        }
-
-        if (isOneStone == true && isBlue == true && isOuter == false){
-            autoInnerOneBlockRepoBlue.runOpMode();
-            telemetry.addLine("Program Playing: Blue Inner One Block Repo");
-        }
-
-        if (isOneStone == true && isBlue == false && isOuter == true){
-            autoOuterOneBlockRepoRed.runOpMode();
-            telemetry.addLine("Program Playing: Red Outer One Block Repo");
-        }
-
-        if (isOneStone == true && isBlue == false && isOuter == false){
-            autoInnerOneBlockRepoRed.runOpMode();
-            telemetry.addLine("Program Playing: Red Inner One Block Repo");
-        }
-
-//two block programs
-
-        if (isOneStone == false && isBlue == true && isOuter == false){
-            autoInnerTwoBlocksBlue.runOpMode();
-            telemetry.addLine("Program Playing: Blue Inner Two Block");
-        }
-
-        if (isOneStone == false && isBlue == false && isOuter == false){
-            autoInnerTwoBlocksRed.runOpMode();
-            telemetry.addLine("Program Playing: Red Inner Two Block");
-        }
-
-        //}*/
-    }
-}
+        stop();
+    }//runOpmode
+}//end of class
 
 

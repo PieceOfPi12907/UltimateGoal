@@ -53,6 +53,7 @@ package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -90,7 +91,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 //import java.util.Scanner;
 
-
+@Disabled
 
 
 public class AutoInnerTwoBlocksRed{
@@ -128,7 +129,7 @@ public class AutoInnerTwoBlocksRed{
 
             skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
 
-                skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
+            skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
 
         } catch (Exception bad){
             telemetry.addData("EXCEPTION:", bad.toString());

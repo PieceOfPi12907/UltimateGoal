@@ -53,6 +53,7 @@ package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.ControlSystem;
@@ -92,7 +93,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 //import java.util.Scanner;
 
-
+@Disabled
 //Adding Source Code to GitHub
 
 public class AutoInnerTwoBlocksBlue {

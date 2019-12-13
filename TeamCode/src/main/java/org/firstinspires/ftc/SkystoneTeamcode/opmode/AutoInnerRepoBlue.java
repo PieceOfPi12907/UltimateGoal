@@ -53,6 +53,7 @@ package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -72,7 +73,7 @@ import java.util.HashMap;
 
 //import java.util.Scanner;
 
-//@Disabled
+@Disabled
 //Adding Source Code to GitHub
 
 public class AutoInnerRepoBlue {
