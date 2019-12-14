@@ -44,8 +44,8 @@ public class SkystoneDetection {
     final double CLAMP_OPENED = 0.5;
     final double CLAMP_CLOSED = 0.8;
 
-    double leftServoDown = 0.85;
-    double rightServoDown = 0.3;
+    double leftServoDown = 0.9;
+    double rightServoDown = 0.01;
 
     int negative;
     double correction;

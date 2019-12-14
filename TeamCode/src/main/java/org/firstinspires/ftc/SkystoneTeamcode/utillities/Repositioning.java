@@ -15,10 +15,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class Repositioning {
     int negative;
 
-    double leftServoDown = 0.85;
-    double rightServoDown = 0.3;
+    double leftServoDown = 0.9;
+    double rightServoDown = 0.01;
 
-    double leftServoUp = 0.3;
+    double leftServoUp = 0.1;
     double rightServoUp = 0.85;
 
 

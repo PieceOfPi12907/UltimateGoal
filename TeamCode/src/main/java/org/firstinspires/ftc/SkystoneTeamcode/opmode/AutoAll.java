@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.SkystoneTeamcode.tester;
+package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -107,7 +107,8 @@ public class AutoAll extends LinearOpMode{
 
     VuforiaTrackables targetsSkyStone;
 
-    boolean isDelayed;
+    boolean isDelayed = false;
+
 
     public void initialize() {
 
@@ -123,7 +124,7 @@ public class AutoAll extends LinearOpMode{
         //CHOOSE PROGRAM:
         while(true){
             //add delay parameter to gamepads!
-            if(gamepad2.x) {
+            /*if(gamepad2.x) {
                 delay = delay + 5000;
                 telemetry.addLine("DELAY: " + delay + " seconds");
                 telemetry.update();
@@ -133,13 +134,30 @@ public class AutoAll extends LinearOpMode{
                 delay = delay - 5000;
                 telemetry.addLine("DELAY: " + delay + " seconds");
                 telemetry.update();
+            }*/
+
+
+            if((gamepad2.a) && (isDelayed == false)){
+                isDelayed = true;
+                delay += 5;
+                /*if(delay > 10){
+                    delay = 10;
+                }*/
+                telemetry.addLine("DELAY: " + delay + " seconds");
+                telemetry.update();
             }
 
-            /*isDelayed = false;
-            if(gamepad2.a && isDelayed == false){
-                isDelayed = true;
-                delay = delay + 5000;
-            }*/
+            if(gamepad2.y){
+                isDelayed = false;
+                telemetry.addLine("DELAY: " + delay + " seconds");
+                telemetry.update();
+            }
+
+            if(gamepad2.x){
+                delay = 0;
+                telemetry.addLine("DELAY: " + delay + " seconds");
+                telemetry.update();
+            }
 
             //x on gamepad 1 sets BlUE
             if (gamepad1.x) {
@@ -561,7 +579,7 @@ public class AutoAll extends LinearOpMode{
 
 
                 //delay set
-                sleep(delay);
+                sleep(delay*1000);
 
 
                 if(!isRepo){
