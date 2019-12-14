@@ -110,9 +110,6 @@ public class Repositioning {
     }*/
 
 
-
-
-
     public void doAngleRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Boolean isOuter, Boolean isStoneRepo, Servo repositioningRight, Servo repositioningLeft) {
         if (isBlue == false) {
             negative = -1;
@@ -140,20 +137,6 @@ public class Repositioning {
                 e.printStackTrace();
             }
         }
-
-        /*repositioningLeft.setPosition(leftServoDown);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        repositioningRight.setPosition(rightServoDown);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
 
         //pNavigate.navigate(20, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
         if(isBlue == true){
@@ -185,16 +168,11 @@ public class Repositioning {
         }
 
         if (isOuter == true ){
-
             pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            pFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-            pBackLeft.setDirection(DcMotor.Direction.REVERSE);
-            pFrontRight.setDirection(DcMotor.Direction.FORWARD);
-            pBackRight.setDirection(DcMotor.Direction.FORWARD);
             //pNavigate.navigate(10, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
             leftStrafeWithoutCorrection(10, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
@@ -210,7 +188,11 @@ public class Repositioning {
             leftStrafeWithoutCorrection(30, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
         }else if(isOuter == false){
-            pNavigate.navigate(44, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate(10, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate(-8*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            pNavigate.navigate(34, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+            //pNavigate.navigate(44, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }
     }
 

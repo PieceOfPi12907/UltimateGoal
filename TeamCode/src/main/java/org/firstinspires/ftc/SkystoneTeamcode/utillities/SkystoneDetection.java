@@ -120,12 +120,6 @@ public class SkystoneDetection {
         pNavigate.navigate(3, Constants12907.Direction.RIGHT,0,0.5,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
     }
 
-
-
-
-
-
-
     public void moveToSkystoneInner(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, ColorSensor colorRight, ColorSensor colorLeft, DistanceSensor distanceRight, DistanceSensor distanceLeft, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, Boolean isBlue, Boolean isPos2) {
 
         if (isBlue==false) {
@@ -375,7 +369,7 @@ public class SkystoneDetection {
 
 
         //METHOD BEING CURRENTLY USED:
-    public void moveToSkystoneOne(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, SkystoneDelivery skystoneDelivery, Boolean isBlue){
+    public void moveToSkystoneOne(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, SkystoneDelivery skystoneDelivery, Boolean isBlue, Boolean isPlacing){
 
         if(isBlue == true){
             negative = 1;
@@ -420,9 +414,19 @@ public class SkystoneDetection {
         //commented out to check ending position of method called above^
         pNavigate.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-        pNavigate.navigate(44*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        if(isPlacing == true){
+            pNavigate.navigate(64*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            rightStrafeWithoutCorrection(10, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
+            leftStrafeWithoutCorrection(10, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //goes back 20 towards quarry and then will continue going the rest of the distance in 'moveToSkystoneTwo'
+            pNavigate.navigate(-20*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        } else{
+            pNavigate.navigate(44*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
+        }
 
-        skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
+        //skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
     }
 
 
@@ -518,7 +522,7 @@ public class SkystoneDetection {
 
 
 
-    public void moveToSkystoneTwo(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, SkystoneDelivery skystoneDelivery, boolean isBlue){
+    public void moveToSkystoneTwo(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, SkystoneDelivery skystoneDelivery, Boolean isBlue, Boolean isPlacing){
 
         if(isBlue == true){
             negative = 1;
@@ -586,12 +590,25 @@ public class SkystoneDetection {
             pNavigate.navigate(5.4, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }
 
-        pNavigate.navigate(70*negative, Constants12907.Direction.STRAIGHT, 0, 0.75*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-//68
+        if(isPlacing == true){
+            pNavigate.navigate(90*negative, Constants12907.Direction.STRAIGHT, 0, 0.75*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            rightStrafeWithoutCorrection(10, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        } else {
+            pNavigate.navigate(70*negative, Constants12907.Direction.STRAIGHT, 0, 0.75*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        }
+        //pNavigate.navigate(70*negative, Constants12907.Direction.STRAIGHT, 0, 0.75*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
         skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
 
-        pNavigate.navigate(-22*negative, Constants12907.Direction.STRAIGHT, 0, -0.6*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-//-20
+        if(isPlacing == true){
+            leftStrafeWithoutCorrection(10, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate(-44*negative, Constants12907.Direction.STRAIGHT, 0, -0.6*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        } else{
+            pNavigate.navigate(-22*negative, Constants12907.Direction.STRAIGHT, 0, -0.6*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        }
+        //pNavigate.navigate(-22*negative, Constants12907.Direction.STRAIGHT, 0, -0.6*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
     }
 
     private void goToSkystoneTwoBlue(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, SkystoneDelivery skystoneDelivery, Boolean isBlue){
@@ -673,8 +690,147 @@ public class SkystoneDetection {
         }
     }
 
+    public void moveToSkystoneOneWithREPO(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, SkystoneDelivery skystoneDelivery, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft){
+
+        if(isBlue == true){
+            negative = 1;
+        } else {
+            negative = -1;
+        }
+
+        pivotGrabber.setPosition(0.65);
+
+        double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
+        //double targetDistance = 1.5;
+        double targetDistance = 1.8;
 
 
+        pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
+
+        double toGoDistance = currentDistance - targetDistance;
+
+        pTelemetry.addData("STRAFE DISTANCE ", toGoDistance);
+
+        pNavigate.navigate(toGoDistance, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        double newDistance = quarryDistance.getDistance(DistanceUnit.INCH);
+        pTelemetry.addData("NEW DISTANCE TO QUARRY", newDistance);
+
+        pTelemetry.update();
+
+        if(isBlue == true){
+            goToSkystoneOneBlue(pBackLeft, pBackRight, pFrontRight, pFrontLeft, pNavigate,  pImu, pTelemetry, pSkystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
+        } else {
+            goToSkystoneOneRed(pBackLeft, pBackRight, pFrontRight, pFrontLeft, pNavigate,  pImu, pTelemetry, pSkystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
+        }
+
+        pNavigate.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        if(isBlue == true){
+            //pNavigate.navigate(68*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate(66*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        } else{
+            pNavigate.navigate(69*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        }
+
+        //pNavigate.navigate(10, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        rightStrafeWithoutCorrection(10, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        repositioningLeft.setPosition(leftServoDown);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        repositioningRight.setPosition(rightServoDown);
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
+
+    }
+
+
+    private void leftStrafeWithoutCorrection(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
+        ElapsedTime runtime = new ElapsedTime();
+
+        final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
+        final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
+        final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
+        final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
+                (WHEEL_DIAMETER_INCHES * 3.1415);
+        int newTargetPositionFrontRight;
+        int newTargetPositionFrontLeft;
+        int newTargetPositionBackRight;
+        int newTargetPositionBackLeft;
+
+        double startingAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
+
+        pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Determine new target position, and pass to motor controller
+        newTargetPositionBackLeft = pBackLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionBackRight = pBackRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionFrontLeft = pFrontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionFrontRight = pFrontRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        pBackLeft.setTargetPosition(newTargetPositionBackLeft);
+        pBackRight.setTargetPosition(-(newTargetPositionBackRight));
+        pFrontRight.setTargetPosition(newTargetPositionFrontRight);
+        pFrontLeft.setTargetPosition(-(newTargetPositionBackLeft));
+        runtime.reset();
+
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                pBackLeft.getCurrentPosition(), pBackRight.getCurrentPosition(), pFrontLeft.getCurrentPosition(), pFrontRight.getCurrentPosition());
+        telemetry.update();
+
+        pBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        pFrontRight.setPower((pSpeed));
+        pBackRight.setPower(-(pSpeed));
+        pFrontLeft.setPower(-(pSpeed));
+        pBackLeft.setPower((pSpeed));
+
+        telemetry.addData("Path1", "Target Position %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
+
+        telemetry.update();
+
+        while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
+
+            // Display it for the driver.
+
+        }
+
+        //stop motors
+        pFrontLeft.setPower(0);
+        pFrontRight.setPower(0);
+        pBackLeft.setPower(0);
+        pBackRight.setPower(0);
+
+        telemetry.addData("Final Position", "Running at %7d :%7d",
+                pBackLeft.getCurrentPosition(),
+                pBackRight.getCurrentPosition(),
+                pFrontLeft.getCurrentPosition(),
+                pFrontRight.getCurrentPosition());
+        telemetry.update();
+    }
 
     private void rightStrafeWithoutCorrection(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
@@ -750,79 +906,4 @@ public class SkystoneDetection {
                 pFrontRight.getCurrentPosition());
         telemetry.update();
     }
-
-
-
-    public void moveToSkystoneOneWithREPO(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, SkystoneDelivery skystoneDelivery, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft){
-
-        if(isBlue == true){
-            negative = 1;
-        } else {
-            negative = -1;
-        }
-
-        pivotGrabber.setPosition(0.65);
-
-        double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
-        //double targetDistance = 1.5;
-        double targetDistance = 1.8;
-
-
-        pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
-
-        double toGoDistance = currentDistance - targetDistance;
-
-        pTelemetry.addData("STRAFE DISTANCE ", toGoDistance);
-
-        pNavigate.navigate(toGoDistance, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
-        double newDistance = quarryDistance.getDistance(DistanceUnit.INCH);
-        pTelemetry.addData("NEW DISTANCE TO QUARRY", newDistance);
-
-        pTelemetry.update();
-
-        if(isBlue == true){
-            goToSkystoneOneBlue(pBackLeft, pBackRight, pFrontRight, pFrontLeft, pNavigate,  pImu, pTelemetry, pSkystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
-        } else {
-            goToSkystoneOneRed(pBackLeft, pBackRight, pFrontRight, pFrontLeft, pNavigate,  pImu, pTelemetry, pSkystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
-        }
-
-        pNavigate.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
-        if(isBlue == true){
-            //pNavigate.navigate(68*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            pNavigate.navigate(66*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        } else{
-            pNavigate.navigate(69*negative, Constants12907.Direction.STRAIGHT, 0, 0.60*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
-        }
-
-        //pNavigate.navigate(10, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        rightStrafeWithoutCorrection(10, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        repositioningLeft.setPosition(leftServoDown);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        repositioningRight.setPosition(rightServoDown);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        skystoneDelivery.extakeSkystone(blockClamper, pivotGrabber);
-
-    }
-
-
 }

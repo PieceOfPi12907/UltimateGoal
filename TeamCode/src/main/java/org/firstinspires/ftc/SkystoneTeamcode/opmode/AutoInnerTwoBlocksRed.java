@@ -120,6 +120,7 @@ public class AutoInnerTwoBlocksRed{
             Servo blockClamper = (Servo) pVariableMap.get(Constants12907.BLOCK_CLAMPER_SERVO);
 
             Boolean isBlue = (Boolean) pVariableMap.get(Constants12907.BLUE_FLAG);
+            Boolean isPlacing = (Boolean) pVariableMap.get(Constants12907.PLACING_FLAG);
 
             DistanceSensor quarryDistance = (DistanceSensor) pVariableMap.get(Constants12907.QUARRY_DISTANCE_SENSOR);
             //ColorSensor frontColor = (ColorSensor) pVariableMap.get(Constants12907.FRONT_COLOR_SENSOR);
@@ -127,9 +128,9 @@ public class AutoInnerTwoBlocksRed{
 
             navigationHelper.navigate(12, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
-            skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
+            skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue.booleanValue(), isPlacing);
 
-            skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue);
+            skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue.booleanValue(), isPlacing);
 
         } catch (Exception bad){
             telemetry.addData("EXCEPTION:", bad.toString());

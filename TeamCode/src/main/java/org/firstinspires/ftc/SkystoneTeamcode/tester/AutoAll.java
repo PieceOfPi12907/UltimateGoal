@@ -56,6 +56,7 @@ public class AutoAll extends LinearOpMode{
     Boolean isOuter= false;
     Boolean isOneStone = false;
     Boolean isRepo = true;
+    Boolean isPlacing = false;
     long delay = 0;
 
 
@@ -106,6 +107,7 @@ public class AutoAll extends LinearOpMode{
 
     VuforiaTrackables targetsSkyStone;
 
+    boolean isDelayed;
 
     public void initialize() {
 
@@ -114,7 +116,6 @@ public class AutoAll extends LinearOpMode{
         isOneStone = false;
         isRepo = true;
         delay = 0;
-
 
         telemetry.addLine("reached initialization");
         telemetry.update();
@@ -133,6 +134,12 @@ public class AutoAll extends LinearOpMode{
                 telemetry.addLine("DELAY: " + delay + " seconds");
                 telemetry.update();
             }
+
+            /*isDelayed = false;
+            if(gamepad2.a && isDelayed == false){
+                isDelayed = true;
+                delay = delay + 5000;
+            }*/
 
             //x on gamepad 1 sets BlUE
             if (gamepad1.x) {
@@ -162,17 +169,31 @@ public class AutoAll extends LinearOpMode{
                 telemetry.update();
             }
 
-            //bumper on gamepad 1 sets ONE STONE
+            //bumper left on gamepad 1 sets ONE STONE
             if(gamepad1.left_bumper){
                 isOneStone = true;
                 telemetry.addLine("ONE STONE");
                 telemetry.update();
             }
 
-            //bumper on gamepad 1 sets TWO STONES
+            //bumper right on gamepad 1 sets TWO STONES
             if(gamepad1.right_bumper){
                 isOneStone = false;
                 telemetry.addLine("TWO STONE");
+                telemetry.update();
+            }
+
+            //bumper left on gamepad 2 sets NO PLACE (DELIVER ONLY)
+            if(gamepad2.left_bumper){
+                isPlacing = false;
+                telemetry.addLine("NO PLACE (ONLY DELIVER)");
+                telemetry.update();
+            }
+
+            //bumper right on gamepad 2 sets PLACING ON FOUNDATION
+            if(gamepad2.right_bumper){
+                isPlacing = true;
+                telemetry.addLine("PLACING ON FOUNDATION");
                 telemetry.update();
             }
 
@@ -211,6 +232,7 @@ public class AutoAll extends LinearOpMode{
                 telemetry.addData("ROUTE: ", (isOuter == true)? "outer" : "inner");
                 telemetry.addData("STONES: ", (isOneStone == true)? "one stone" : "two stone");
                 telemetry.addData("REPO: ", (isRepo == true)? "yes" : "no");
+                telemetry.addData("PLACING DURING 2 STONE: ", (isPlacing == true)? "placing on foundation" : "only delivering");
                 telemetry.addLine("press 'y' to confirm!");
                 telemetry.update();
             }
@@ -463,6 +485,7 @@ public class AutoAll extends LinearOpMode{
     private void createVariableMap(){
         variableMap.put(Constants12907.BLUE_FLAG, this.isBlue);
         variableMap.put(Constants12907.OUTER_FLAG, this.isOuter);
+        variableMap.put(Constants12907.PLACING_FLAG, this.isPlacing);
 
 
         variableMap.put(Constants12907.BACK_LEFT_MOTOR,this.backLeft);
