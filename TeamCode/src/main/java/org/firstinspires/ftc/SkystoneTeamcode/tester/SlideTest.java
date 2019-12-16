@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.SkystoneTeamcode.tester;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-@TeleOp(name = "slide Test",group = "teleop")
+
+
+@Disabled//@TeleOp(name = "slide Test",group = "teleop")
 public class SlideTest extends LinearOpMode {
 
     DcMotor slideMotor;

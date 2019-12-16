@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,7 +10,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 
-@TeleOp(name= "LEAGUE 2 - FINAL (thread) TELEOP 12907", group = "teleop")
+@Disabled
+//s2@TeleOp(name= "LEAGUE 2 - FINAL (thread) TELEOP 12907", group = "teleop")
 public class SkystoneTeleop12907Thread extends LinearOpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;

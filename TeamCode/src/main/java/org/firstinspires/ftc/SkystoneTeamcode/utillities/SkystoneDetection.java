@@ -44,7 +44,7 @@ public class SkystoneDetection {
     final double CLAMP_OPENED = 0.5;
     final double CLAMP_CLOSED = 0.8;
 
-    double leftServoDown = 0.9;
+    double leftServoDown = 0.95;
     double rightServoDown = 0.01;
 
     int negative;
@@ -384,16 +384,16 @@ public class SkystoneDetection {
         double targetDistance;
 
         if(isBlue == true){
-            targetDistance = 1;
+            targetDistance = 0.75;
         } else{
-            targetDistance = 2;
+            targetDistance = 1.5;
         }
 
         pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
 
         pTelemetry.update();
 
-        if(currentDistance > 18){
+        if(currentDistance > 20){
             currentDistance = 17;
         }
 
@@ -552,6 +552,8 @@ public class SkystoneDetection {
 
 
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
+
+
         double targetDistance = 1.8;
 
         pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);

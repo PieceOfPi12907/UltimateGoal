@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -48,7 +49,7 @@ public class FinalTeleop extends LinearOpMode {
     final double INTAKE_LEFT_OPEN = 0.7;
     final double INTAKE_RIGHT_OPEN = 0.75;
     final double INTAKE_RIGHT_CLOSE = 0.50;
-    final double LEFT_REPOSITIONING_DOWN = 0.9;
+    final double LEFT_REPOSITIONING_DOWN = 0.95;
     final double LEFT_REPOSITIONING_UP = 0.1;
     final double LEFT_REPOSITIONING_MID = 0.45;
     final double RIGHT_REPOSITIONING_DOWN = 0.01;
@@ -127,7 +128,7 @@ public class FinalTeleop extends LinearOpMode {
                 y_time.reset();
                 if(spinningForward!=true){
                     leftIntakeMotor.setPower(-0.2);
-                    rightIntakeMotor.setPower(0.4);
+                    rightIntakeMotor.setPower(0.2);
                     spinningForward=true;
                 }
                 else if(spinningForward==true){

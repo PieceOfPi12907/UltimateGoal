@@ -54,6 +54,8 @@ public class AutoOuterOneBlockRepoRed {
         isStoneRepo = true;
 
         Telemetry telemetry = (Telemetry) pVariableMap.get(Constants12907.TELEMETRY);
+        WebcamName webcam = (WebcamName) pVariableMap.get(Constants12907.WEBCAM);
+        VuforiaLocalizer.Parameters parameters = (VuforiaLocalizer.Parameters) pVariableMap.get(Constants12907.PARAMETERS);
 
         try {
 
@@ -62,7 +64,7 @@ public class AutoOuterOneBlockRepoRed {
             SkystoneDelivery skystoneDelivery = new SkystoneDelivery();
             Repositioning repositioning = new Repositioning();
 
-            Constants12907.SkystonePosition skystonePosition = (Constants12907.SkystonePosition) pVariableMap.get(Constants12907.SKY_POSITION);
+            //Constants12907.SkystonePosition skystonePosition = (Constants12907.SkystonePosition) pVariableMap.get(Constants12907.SKY_POSITION);
 
             DcMotor backLeft = (DcMotor) pVariableMap.get(Constants12907.BACK_LEFT_MOTOR);
             DcMotor frontLeft = (DcMotor) pVariableMap.get(Constants12907.FRONT_LEFT_MOTOR);
@@ -90,7 +92,9 @@ public class AutoOuterOneBlockRepoRed {
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
 
-            navigationHelper.navigate(12, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            navigationHelper.navigate(11, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+
+            Constants12907.SkystonePosition skystonePosition = skystoneDetection.detectSkystoneWithWebcam(telemetry,webcam, parameters);
 
             skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, skystoneDelivery, isBlue,repositioningRight,repositioningLeft);
 

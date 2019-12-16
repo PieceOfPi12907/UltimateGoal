@@ -37,6 +37,8 @@ public class Constants12907 {
     public static String QUARRY_DISTANCE_SENSOR = "quarryDistance";
     public static String FRONT_COLOR_SENSOR = "frontColor";
     public static String BACK_COLOR_SENSOR = "backColor";
+    public static String WEBCAM = "webcam";
+    public static String PARAMETERS = "parametersWebcam";
 
 }
 

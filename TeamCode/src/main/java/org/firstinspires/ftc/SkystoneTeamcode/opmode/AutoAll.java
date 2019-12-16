@@ -202,7 +202,7 @@ public class AutoAll extends LinearOpMode{
             }
 
             //bumper left on gamepad 2 sets NO PLACE (DELIVER ONLY)
-            if(gamepad2.left_bumper){
+            /*if(gamepad2.left_bumper){
                 isPlacing = false;
                 telemetry.addLine("NO PLACE (ONLY DELIVER)");
                 telemetry.update();
@@ -214,6 +214,8 @@ public class AutoAll extends LinearOpMode{
                 telemetry.addLine("PLACING ON FOUNDATION");
                 telemetry.update();
             }
+            */
+
 
             //top dpad on gamepad 1 sets REPO
             if(gamepad1.dpad_up){
@@ -250,7 +252,7 @@ public class AutoAll extends LinearOpMode{
                 telemetry.addData("ROUTE: ", (isOuter == true)? "outer" : "inner");
                 telemetry.addData("STONES: ", (isOneStone == true)? "one stone" : "two stone");
                 telemetry.addData("REPO: ", (isRepo == true)? "yes" : "no");
-                telemetry.addData("PLACING DURING 2 STONE: ", (isPlacing == true)? "placing on foundation" : "only delivering");
+                //telemetry.addData("PLACING DURING 2 STONE: ", (isPlacing == true)? "placing on foundation" : "only delivering");
                 telemetry.addLine("press 'y' to confirm!");
                 telemetry.update();
             }
@@ -280,6 +282,7 @@ public class AutoAll extends LinearOpMode{
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
+        pivotGrabber.setPosition(0.45);
         //braking
         //frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -296,9 +299,9 @@ public class AutoAll extends LinearOpMode{
         backColor=hardwareMap.get(ColorSensor.class,"backColor");
         quarryDistance=hardwareMap.get(DistanceSensor.class,"quarryDistance");
 
-        //webcam = hardwareMap.get(WebcamName.class, "webcam");
-        //int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        //parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        webcam = hardwareMap.get(WebcamName.class, "webcam");
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         //webcamInitialization();
 
         //Initializing the IMU
@@ -522,6 +525,8 @@ public class AutoAll extends LinearOpMode{
         variableMap.put(Constants12907.QUARRY_DISTANCE_SENSOR, this.quarryDistance);
         variableMap.put(Constants12907.FRONT_COLOR_SENSOR, this.frontColor);
         variableMap.put(Constants12907.BACK_COLOR_SENSOR, this.backColor);
+        variableMap.put(Constants12907.WEBCAM, this.webcam);
+        variableMap.put(Constants12907.PARAMETERS, this.parametersWebcam);
     }
 
 
@@ -564,7 +569,7 @@ public class AutoAll extends LinearOpMode{
             telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
             telemetry.update();
 
-            OpenGLMatrix lastLocation = webcamInitialization();
+            //OpenGLMatrix lastLocation = webcamInitialization();
 
 
             waitForStart();
@@ -581,9 +586,10 @@ public class AutoAll extends LinearOpMode{
                 //delay set
                 sleep(delay*1000);
 
+                //navigationHelper.navigate(11, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
                 if(!isRepo){
-                    Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
+                    /*Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
                     if(skystonePosition.equals(Constants12907.SkystonePosition.LEFT)){
                         telemetry.addLine("LEFT");
 
@@ -598,36 +604,47 @@ public class AutoAll extends LinearOpMode{
                     }
                     telemetry.update();
                     variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
+                     */
                 }
 
                 if (isRepo == true && isBlue == true && isOuter == true ){
                     telemetry.addLine("Program Playing: Blue Outer Repo");
                     telemetry.update();
                     autoOuterRepoBlue.playProgram(variableMap);
+                    stop();
+
                 }
 
                 else if (isRepo == true && isBlue == true && isOuter == false){
                     telemetry.addLine("Program Playing: Blue Inner Repo");
                     telemetry.update();
                     autoInnerRepoBlue.playProgram(variableMap);
+                    stop();
+
                 }
 
                 else if (isRepo == true && isBlue == false && isOuter == true){
                     telemetry.addLine("Program Playing: Red Outer Repo");
                     telemetry.update();
                     autoOuterRepoRed.playProgram(variableMap);
+                    stop();
+
                 }
 
                 else if (isRepo == true && isBlue == false && isOuter == false){
                     telemetry.addLine("Program Playing: Red Inner Repo");
                     telemetry.update();
                     autoInnerRepoRed.playProgram(variableMap);
+                    stop();
+
                 }
 
                 else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true){
                     telemetry.addLine("Program Playing: Blue Outer One Block Repo");
                     telemetry.update();
                     autoOuterOneBlockRepoBlue.playProgram(variableMap);
+                    stop();
+
 
                 }
 
@@ -635,30 +652,41 @@ public class AutoAll extends LinearOpMode{
                     telemetry.addLine("Program Playing: Blue Inner One Block Repo");
                     telemetry.update();
                     autoInnerOneBlockRepoBlue.playProgram(variableMap);
+                    stop();
+
                 }
 
                 else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true){
                     telemetry.addLine("Program Playing: Red Outer One Block Repo");
                     telemetry.update();
                     autoOuterOneBlockRepoRed.playProgram(variableMap);
+                    stop();
+
                 }
 
                 else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false){
                     telemetry.addLine("Program Playing: Red Inner One Block Repo");
                     telemetry.update();
                     autoInnerOneBlockRepoRed.playProgram(variableMap);
+                    stop();
+
+
                 }
 
                 else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false){
                     telemetry.addLine("Program Playing: Blue Inner Two Block");
                     telemetry.update();
                     autoInnerTwoBlocksBlue.playProgram(variableMap);
+                    stop();
+
                 }
 
                 else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false){
                     telemetry.addLine("Program Playing: Red Inner Two Block");
                     telemetry.update();
                     autoInnerTwoBlocksRed.playProgram(variableMap);
+                    stop();
+
                 }
 
                 if(isStopRequested()){
