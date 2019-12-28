@@ -42,10 +42,10 @@ public class FinalTeleop extends LinearOpMode {
     boolean closed = false;
     boolean spinningForward = false;
 
-    final double SIDE_ARM_LOWERED = 0.9;
+    final double SIDE_ARM_LOWERED = 0.75;
     final double SIDE_ARM_RAISED = 0.45;
-    final double AUTO_CLAMP_OPENED = 0.5;
-    final double AUTO_CLAMP_CLOSED = 0.8;
+    final double AUTO_CLAMP_OPENED = 0.4;
+    final double AUTO_CLAMP_CLOSED = 0.6;
     final double INTAKE_LEFT_OPEN = 0.7;
     final double INTAKE_RIGHT_OPEN = 0.75;
     final double INTAKE_RIGHT_CLOSE = 0.50;
@@ -101,6 +101,8 @@ public class FinalTeleop extends LinearOpMode {
         leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
         repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
         sideArmServo.setPosition(SIDE_ARM_RAISED);
+
+        //sideClampServo.setPosition(AUTO_CLAMP_OPENED);
     }
     private class AttachmentsThread extends Thread {
         boolean isIntakeSpinning = false;

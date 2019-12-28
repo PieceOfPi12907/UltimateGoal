@@ -91,7 +91,7 @@ public class AutoInnerOneBlockRepoRed {
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
 
-            navigationHelper.navigate(12, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            //navigationHelper.navigate(11, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
             Constants12907.SkystonePosition skystonePosition = skystoneDetection.detectSkystoneWithWebcam(telemetry,webcam, parameters);
 

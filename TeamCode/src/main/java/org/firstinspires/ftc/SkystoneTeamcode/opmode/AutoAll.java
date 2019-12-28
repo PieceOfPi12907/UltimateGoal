@@ -31,6 +31,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -77,6 +80,8 @@ public class AutoAll extends LinearOpMode{
 
     DistanceSensor quarryDistance;
     WebcamName webcam;
+    OpenGLMatrix lastLocation;
+    Thread webcamInit;
     Servo pivotGrabber;
     Servo blockClamper;
     Servo repositioningRight;
@@ -84,7 +89,7 @@ public class AutoAll extends LinearOpMode{
 
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
-
+    boolean targetVisible;
     VuforiaLocalizer.Parameters parametersWebcam = null;
     final float mmPerInch = 25.4f;
     double y_value = 0;
@@ -106,6 +111,8 @@ public class AutoAll extends LinearOpMode{
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
 
     VuforiaTrackables targetsSkyStone;
+    VectorF translation;
+
 
     boolean isDelayed = false;
 
@@ -302,7 +309,16 @@ public class AutoAll extends LinearOpMode{
         webcam = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        //webcamInitialization();
+        webcamInitialization();
+        webcamInit = new AutoAll.WebcamThread();
+        webcamInit.start();
+        telemetry.addLine("Webcam init started and main thread has continued");
+        telemetry.update();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //Initializing the IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -316,8 +332,144 @@ public class AutoAll extends LinearOpMode{
         imu.initialize(parameters);
     }
 
+    public void webcamInitialization () {
+        telemetry.addLine("Inside WEBCAM THREAD run!!!!!!");
+        telemetry.update();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        webcam = hardwareMap.get(WebcamName.class, "webcam");
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
+        final boolean PHONE_IS_PORTRAIT = false;
+        final String VUFORIA_KEY =
+                "AU29nsP/////AAABmbmvuOwXSkEvjnmA/GE4vvtYcQ++rPSuF0c4fwBMDyTKVMiy0tgOzM+wgd2h5lhtywdhWMQRV+FPhX1SKEZ2LYwl1jKMN4JaKaWikc8DEfoXeFYf5cRAzlQa8CGQ2IFKgYm9Dq5tk8pdrD9WYqb4OFOUW6QkqhiOR1UCTQrAxgqCX0duHNRNK3ksVOyfDszUPL9r5nbIuaISyP5/iN7hWTbRk9damSem6xmKX4yex2YBroO0Ly7BX+JOiuu6x7c059WReN6DU1hrBDwUhIXxKjdV9OOTFL9uw1xedulivMI4G5LbjlQks09aSm/BbfUpCygx8oFo6NLikKP7V5RGUZBfOBwIP/cZDEb52gUZiBcp";
+// Constant for Stone Target
+        final float stoneZ = 2.00f * mmPerInch;
+        //OpenGLMatrix lastLocation = null;
+        VuforiaLocalizer vuforia = null;
+        float phoneXRotate = 0;
+        float phoneYRotate = 0;
+        float phoneZRotate = 0;
+        targetVisible = false;
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
+         * If no camera monitor is desired, use the parameter-less constructor instead (commented out below).
+         */
+        parametersWebcam.vuforiaLicenseKey = VUFORIA_KEY;
+        parametersWebcam.cameraName = webcam;
+
+        vuforia = ClassFactory.getInstance().createVuforia(parametersWebcam);
+
+// Load the data sets for the trackable objects. These particular data
+// sets are stored in the 'assets' part of our application.
+        targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
 
 
+        VuforiaTrackable stoneTarget = targetsSkyStone.get(0);
+        stoneTarget.setName("Stone Target");
+
+
+
+        allTrackables = new ArrayList<VuforiaTrackable>();
+        allTrackables.add(targetsSkyStone.get(0));
+
+
+        stoneTarget.setLocation(OpenGLMatrix
+                .translation(0, 0, stoneZ)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
+
+// We need to rotate the camera around it's long axis to bring the correct camera forward.
+        if (CAMERA_CHOICE == BACK) {
+            phoneYRotate = -90;
+        } else {
+            phoneYRotate = 90;
+        }
+
+// Rotate the phone vertical about the X axis if it's in portrait mode
+        if (PHONE_IS_PORTRAIT) {
+            phoneXRotate = 90;
+        }
+
+// Next, translate the camera lens to where it is on the robot.
+// In this example, it is centered (left to right), but forward of the middle of the robot, and above ground level.
+        final float CAMERA_FORWARD_DISPLACEMENT = 8.0f * mmPerInch;   // eg: Camera is 4 Inches in front of robot-center
+        final float CAMERA_VERTICAL_DISPLACEMENT = 4.0f * mmPerInch;   // eg: Camera is 8 Inches above ground
+        final float CAMERA_LEFT_DISPLACEMENT = 0;     // eg: Camera is ON the robot's center line
+
+        OpenGLMatrix robotFromCamera = OpenGLMatrix
+                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
+
+
+
+        for (VuforiaTrackable trackable : allTrackables) {
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parametersWebcam.cameraDirection);
+        }
+
+        translation = null;
+        targetsSkyStone.activate();
+
+    }
+    public class WebcamThread extends Thread {
+
+        public void webcamThread() {
+            this.setName("Webcam Thread");
+        }
+
+        @Override
+        public void run(){
+            try {
+                while (!isInterrupted()) {
+                    targetsSkyStone.activate();
+                    targetVisible = false;
+
+
+                    for (VuforiaTrackable trackable : allTrackables) {
+                        if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                            //telemetry.addData("Visible Target", trackable.getName());
+                            targetVisible = true;
+                            targetsSkyStone.deactivate();
+
+                            // getUpdatedRobotLocation() will return null if no new information is available since
+                            // the last time that call was made, or if the trackable is not currently visible.
+                            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+                            if (robotLocationTransform != null) {
+                                lastLocation = robotLocationTransform;
+                            }
+                            break;
+                        }
+                    }//for
+
+
+                    // Provide feedback as to where the robot is located (if we know).
+                    if (targetVisible) {
+                        // express position (translation) of robot in inches.
+                        translation = lastLocation.getTranslation();
+                        //telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                                //translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+
+
+                        y_value = translation.get(1) / mmPerInch;
+
+                    } else {
+                        //telemetry.addData("Visibsle Target", "none");
+                    }
+                    //telemetry.update();
+
+                }
+            } catch (Exception E){
+
+            }
+
+        }
+    }
 
 
     public Constants12907.SkystonePosition detectSkystoneWithWebcam(OpenGLMatrix lastLocation){//Telemetry pTelemetry, WebcamName pWebcam, VuforiaLocalizer.Parameters pParameters, ElapsedTime detectingTime, boolean blockFound, boolean targetVisible, OpenGLMatrix lastLocation, VectorF translation, float mmPerInch, double y_value, List<VuforiaTrackable> allTrackables, VuforiaTrackables targetsSkyStone ) {
@@ -386,7 +538,8 @@ public class AutoAll extends LinearOpMode{
     }
 
 
-    public OpenGLMatrix webcamInitialization (){
+
+    /*public OpenGLMatrix webcamInitialization (){
         webcam = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -408,7 +561,8 @@ public class AutoAll extends LinearOpMode{
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameter-less constructor instead (commented out below).
          */
-        parametersWebcam.vuforiaLicenseKey = VUFORIA_KEY;
+    /*
+      parametersWebcam.vuforiaLicenseKey = VUFORIA_KEY;
         parametersWebcam.cameraName = webcam;
 
         vuforia = ClassFactory.getInstance().createVuforia(parametersWebcam);
@@ -494,7 +648,7 @@ public class AutoAll extends LinearOpMode{
                 y_value = translation.get(1) / mmPerInch;
 
             } else {
-                telemetry.addData("Visibsle Target", "none");
+                telemetry.addData("Visible Target", "none");
             }
             telemetry.update();
 
@@ -502,6 +656,8 @@ public class AutoAll extends LinearOpMode{
 
         return lastLocation;
     }
+
+     */
 
     private void createVariableMap(){
         variableMap.put(Constants12907.BLUE_FLAG, this.isBlue);
@@ -533,9 +689,13 @@ public class AutoAll extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addLine("Auto All entered RunOpMode");
+        telemetry.addLine("!!Auto All entered RunOpMode!!");
         telemetry.update();
-
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         initialize();
 
@@ -568,6 +728,11 @@ public class AutoAll extends LinearOpMode{
 
             telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
             telemetry.update();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             //OpenGLMatrix lastLocation = webcamInitialization();
 
@@ -576,20 +741,42 @@ public class AutoAll extends LinearOpMode{
 
             telemetry.addLine("!!!! entered wait for start");
             telemetry.update();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             if (opModeIsActive()) {
 
                 telemetry.addLine("**** opMode Is Active");
                 telemetry.update();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
 
                 //delay set
                 sleep(delay*1000);
 
-                //navigationHelper.navigate(11, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+                //if(!isRepo){
+                telemetry.addLine("ABOUT TO MOVE FORWARD");
+                telemetry.update();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                    //navigationHelper.navigate(11, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
-                if(!isRepo){
-                    /*Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
+                    rightStrafe(11,0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+
+                    webcamInit.interrupt();
+
+                    Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
+
                     if(skystonePosition.equals(Constants12907.SkystonePosition.LEFT)){
                         telemetry.addLine("LEFT");
 
@@ -604,15 +791,14 @@ public class AutoAll extends LinearOpMode{
                     }
                     telemetry.update();
                     variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
-                     */
-                }
+
+                //}
 
                 if (isRepo == true && isBlue == true && isOuter == true ){
                     telemetry.addLine("Program Playing: Blue Outer Repo");
                     telemetry.update();
                     autoOuterRepoBlue.playProgram(variableMap);
                     stop();
-
                 }
 
                 else if (isRepo == true && isBlue == true && isOuter == false){
@@ -620,7 +806,6 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoInnerRepoBlue.playProgram(variableMap);
                     stop();
-
                 }
 
                 else if (isRepo == true && isBlue == false && isOuter == true){
@@ -628,7 +813,6 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoOuterRepoRed.playProgram(variableMap);
                     stop();
-
                 }
 
                 else if (isRepo == true && isBlue == false && isOuter == false){
@@ -636,7 +820,6 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoInnerRepoRed.playProgram(variableMap);
                     stop();
-
                 }
 
                 else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true){
@@ -718,6 +901,81 @@ public class AutoAll extends LinearOpMode{
         }
         stop();
     }//runOpmode
+
+    private void rightStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
+        ElapsedTime runtime = new ElapsedTime();
+
+        final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
+        final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
+        final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
+        final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
+                (WHEEL_DIAMETER_INCHES * 3.1415);
+        int newTargetPositionFrontRight;
+        int newTargetPositionFrontLeft;
+        int newTargetPositionBackRight;
+        int newTargetPositionBackLeft;
+
+        double startingAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+                AngleUnit.DEGREES).firstAngle;
+
+        pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Determine new target position, and pass to motor controller
+        newTargetPositionBackLeft = pBackLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionBackRight = pBackRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionFrontLeft = pFrontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionFrontRight = pFrontRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        pBackLeft.setTargetPosition(-(newTargetPositionBackLeft));
+        pBackRight.setTargetPosition(newTargetPositionBackRight);
+        pFrontRight.setTargetPosition(-(newTargetPositionFrontRight));
+        pFrontLeft.setTargetPosition(newTargetPositionBackLeft);
+        runtime.reset();
+
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                pBackLeft.getCurrentPosition(), pBackRight.getCurrentPosition(), pFrontLeft.getCurrentPosition(), pFrontRight.getCurrentPosition());
+        telemetry.update();
+
+        pBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        pFrontRight.setPower(-(pSpeed));
+        pBackRight.setPower((pSpeed));
+        pFrontLeft.setPower((pSpeed));
+        pBackLeft.setPower(-(pSpeed));
+
+        telemetry.addData("Path1", "Target Position %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
+        telemetry.update();
+
+        while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
+
+            // Display it for the driver.
+            /*telemetry.addData("Path1", "Running to %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
+            telemetry.addData("Path2", "Running at %7d :%7d",
+                    pBackLeft.getCurrentPosition(),
+                    pBackRight.getCurrentPosition(),
+                    pFrontLeft.getCurrentPosition(),
+                    pFrontRight.getCurrentPosition());
+            telemetry.update();*/
+        }
+
+        //stop motors
+        pFrontLeft.setPower(0);
+        pFrontRight.setPower(0);
+        pBackLeft.setPower(0);
+        pBackRight.setPower(0);
+
+        telemetry.addData("Final Position", "Running at %7d :%7d",
+                pBackLeft.getCurrentPosition(),
+                pBackRight.getCurrentPosition(),
+                pFrontLeft.getCurrentPosition(),
+                pFrontRight.getCurrentPosition());
+        telemetry.update();
+    }
 }//end of class
 
 
