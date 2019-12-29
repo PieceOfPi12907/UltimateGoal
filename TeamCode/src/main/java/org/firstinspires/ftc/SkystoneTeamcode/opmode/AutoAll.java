@@ -309,10 +309,13 @@ public class AutoAll extends LinearOpMode{
         webcam = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        //start up webcam
         webcamInitialization();
+        //Create thread
         webcamInit = new AutoAll.WebcamThread();
+        //Start thread
         webcamInit.start();
-        telemetry.addLine("Webcam init started and main thread has continued");
+        telemetry.addLine("webcam thread started");
         telemetry.update();
         try {
             Thread.sleep(1000);
@@ -332,8 +335,10 @@ public class AutoAll extends LinearOpMode{
         imu.initialize(parameters);
     }
 
+
+
     public void webcamInitialization () {
-        telemetry.addLine("Inside WEBCAM THREAD run!!!!!!");
+        telemetry.addLine("running inside webcam thread");
         telemetry.update();
         try {
             Thread.sleep(1000);
@@ -417,6 +422,8 @@ public class AutoAll extends LinearOpMode{
         targetsSkyStone.activate();
 
     }
+
+
     public class WebcamThread extends Thread {
 
         public void webcamThread() {
@@ -429,7 +436,6 @@ public class AutoAll extends LinearOpMode{
                 while (!isInterrupted()) {
                     targetsSkyStone.activate();
                     targetVisible = false;
-
 
                     for (VuforiaTrackable trackable : allTrackables) {
                         if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
@@ -538,7 +544,7 @@ public class AutoAll extends LinearOpMode{
     }
 
 
-
+//old webcam initialization
     /*public OpenGLMatrix webcamInitialization (){
         webcam = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -689,7 +695,7 @@ public class AutoAll extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addLine("!!Auto All entered RunOpMode!!");
+        telemetry.addLine("RunOpmode Entered");
         telemetry.update();
         try {
             Thread.sleep(1000);
@@ -739,42 +745,26 @@ public class AutoAll extends LinearOpMode{
 
             waitForStart();
 
-            telemetry.addLine("!!!! entered wait for start");
-            telemetry.update();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
             if (opModeIsActive()) {
 
-                telemetry.addLine("**** opMode Is Active");
-                telemetry.update();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
-                //delay set
+                //delay set (if not set in init: delay is 0)
                 sleep(delay*1000);
 
-                //if(!isRepo){
-                telemetry.addLine("ABOUT TO MOVE FORWARD");
-                telemetry.update();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                    //navigationHelper.navigate(11, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+                if(!isRepo){
 
-                    rightStrafe(11,0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+                    //calls right strafe method from this class (copied from navigationHelper) because with the thread running, we were unable to call the strafe right method from the class Navigation Helper
+                    rightStrafe(10,0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    //closes webcam
                     webcamInit.interrupt();
 
+                    //skystone position
                     Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
 
                     if(skystonePosition.equals(Constants12907.SkystonePosition.LEFT)){
@@ -790,9 +780,15 @@ public class AutoAll extends LinearOpMode{
 
                     }
                     telemetry.update();
-                    variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                //}
+                    //inputs skystone position into the hashmap "variableMap"
+                    variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
+                }
 
                 if (isRepo == true && isBlue == true && isOuter == true ){
                     telemetry.addLine("Program Playing: Blue Outer Repo");
@@ -827,8 +823,6 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoOuterOneBlockRepoBlue.playProgram(variableMap);
                     stop();
-
-
                 }
 
                 else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false){
@@ -836,7 +830,6 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoInnerOneBlockRepoBlue.playProgram(variableMap);
                     stop();
-
                 }
 
                 else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true){
@@ -844,7 +837,6 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoOuterOneBlockRepoRed.playProgram(variableMap);
                     stop();
-
                 }
 
                 else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false){
@@ -852,8 +844,6 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoInnerOneBlockRepoRed.playProgram(variableMap);
                     stop();
-
-
                 }
 
                 else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false){
@@ -861,7 +851,6 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoInnerTwoBlocksBlue.playProgram(variableMap);
                     stop();
-
                 }
 
                 else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false){
@@ -869,15 +858,11 @@ public class AutoAll extends LinearOpMode{
                     telemetry.update();
                     autoInnerTwoBlocksRed.playProgram(variableMap);
                     stop();
-
                 }
 
                 if(isStopRequested()){
                     stop();
                 }
-
-                telemetry.addLine("OPMODE END");
-                telemetry.update();
             }
 
             // Disable Tracking when we are done;
@@ -899,9 +884,12 @@ public class AutoAll extends LinearOpMode{
                 e.printStackTrace();
             }
         }
+
         stop();
+
     }//runOpmode
 
+    //copied from naviagation helper for this class
     private void rightStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
 
@@ -976,6 +964,7 @@ public class AutoAll extends LinearOpMode{
                 pFrontRight.getCurrentPosition());
         telemetry.update();
     }
+
 }//end of class
 
 

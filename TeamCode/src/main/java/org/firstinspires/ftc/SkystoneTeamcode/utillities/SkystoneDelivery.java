@@ -12,6 +12,7 @@ public class SkystoneDelivery {
 
     final double PIVOT_LOWERED = 0.75;
     final double PIVOT_RAISED = 0.45;
+
     final double CLAMP_OPENED = 0.4;
     final double CLAMP_CLOSED = 0.6;
 
@@ -177,25 +178,25 @@ public class SkystoneDelivery {
     public void extakeSkystone(Servo blockClamper, Servo pivotGrabber) {
         pivotGrabber.setPosition(PIVOT_LOWERED);
         try {
-            Thread.sleep(200);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         blockClamper.setPosition(CLAMP_OPENED);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         pivotGrabber.setPosition(PIVOT_RAISED);
         try {
-            Thread.sleep(50);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         blockClamper.setPosition(CLAMP_CLOSED);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
