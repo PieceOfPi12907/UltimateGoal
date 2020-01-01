@@ -23,7 +23,6 @@ import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterRepoBlue;
 import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterRepoRed;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Const;
@@ -82,10 +81,12 @@ public class AutoAll extends LinearOpMode{
     WebcamName webcam;
     OpenGLMatrix lastLocation;
     Thread webcamInit;
+
     Servo pivotGrabber;
     Servo blockClamper;
     Servo repositioningRight;
     Servo repositioningLeft;
+    Servo slideServo;
 
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
@@ -282,6 +283,7 @@ public class AutoAll extends LinearOpMode{
         blockClamper = hardwareMap.get(Servo.class, "blockClamper");
         repositioningRight = hardwareMap.get(Servo.class, "rightRepositioningServo");
         repositioningLeft = hardwareMap.get(Servo.class, "leftRepositioningServo");
+        slideServo = hardwareMap.get(Servo.class,"slideServo");
 
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -290,6 +292,8 @@ public class AutoAll extends LinearOpMode{
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
         pivotGrabber.setPosition(0.45);
+        slideServo.setPosition(0.1);
+
         //braking
         //frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -317,11 +321,6 @@ public class AutoAll extends LinearOpMode{
         webcamInit.start();
         telemetry.addLine("webcam thread started");
         telemetry.update();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         //Initializing the IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -340,12 +339,6 @@ public class AutoAll extends LinearOpMode{
     public void webcamInitialization () {
         telemetry.addLine("running inside webcam thread");
         telemetry.update();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         webcam = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -734,11 +727,6 @@ public class AutoAll extends LinearOpMode{
 
             telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
             telemetry.update();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             //OpenGLMatrix lastLocation = webcamInitialization();
 
@@ -754,12 +742,6 @@ public class AutoAll extends LinearOpMode{
 
                     //calls right strafe method from this class (copied from navigationHelper) because with the thread running, we were unable to call the strafe right method from the class Navigation Helper
                     rightStrafe(10,0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
 
                     //closes webcam
                     webcamInit.interrupt();

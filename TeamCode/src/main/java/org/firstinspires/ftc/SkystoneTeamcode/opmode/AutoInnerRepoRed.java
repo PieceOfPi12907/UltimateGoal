@@ -52,21 +52,14 @@ public class AutoInnerOneBlockRepoBlue extends LinearOpMode {
 package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDelivery;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;

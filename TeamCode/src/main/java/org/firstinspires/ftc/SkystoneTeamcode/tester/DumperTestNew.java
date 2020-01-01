@@ -8,7 +8,6 @@ package org.firstinspires.ftc.SkystoneTeamcode.tester;
         import com.qualcomm.robotcore.hardware.Servo;
         import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Disabled
 //@TeleOp(name = "dumper Test New",group = "teleop")
 public class DumperTestNew extends LinearOpMode {
     Servo dumperClampInsideServo;
