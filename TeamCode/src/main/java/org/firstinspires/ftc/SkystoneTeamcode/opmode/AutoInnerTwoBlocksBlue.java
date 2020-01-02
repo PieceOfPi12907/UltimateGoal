@@ -110,13 +110,9 @@ public class AutoInnerTwoBlocksBlue {
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
 
-            //navigationHelper.navigate(11, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-            //Constants12907.SkystonePosition skystonePosition = skystoneDetection.detectSkystoneWithWebcam(telemetry,webcam, parameters);
-
             skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue(), isPlacing);
 
-//            skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), isPlacing);
+            skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), isPlacing);
 
 
         }catch (Exception bad){

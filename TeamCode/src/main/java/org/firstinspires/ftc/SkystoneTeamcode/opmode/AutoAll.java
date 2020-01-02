@@ -690,11 +690,6 @@ public class AutoAll extends LinearOpMode{
 
         telemetry.addLine("RunOpmode Entered");
         telemetry.update();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         initialize();
 
@@ -762,11 +757,6 @@ public class AutoAll extends LinearOpMode{
 
                     }
                     telemetry.update();
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
 
                     //inputs skystone position into the hashmap "variableMap"
                     variableMap.put(Constants12907.SKY_POSITION, skystonePosition);

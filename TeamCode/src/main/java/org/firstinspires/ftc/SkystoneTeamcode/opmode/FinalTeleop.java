@@ -50,14 +50,14 @@ public class FinalTeleop extends LinearOpMode {
     final double AUTO_CLAMP_CLOSED = 0.6;*/
 
     final double SIDE_ARM_LOWERED = 0.8;
-    final double SIDE_ARM_RAISED = 0.35;
+    final double SIDE_ARM_RAISED = 0.45;
     final double SIDE_ARM_MID = 0.7;
 
     final double AUTO_CLAMP_OPENED = 0.5;
     final double AUTO_CLAMP_CLOSED = 0.8;
 
-    final double INTAKE_LEFT_OPEN = 0.7;
-    final double INTAKE_RIGHT_OPEN = 0.75;
+    final double INTAKE_LEFT_OPEN = 0.66;
+    final double INTAKE_RIGHT_OPEN = 0.79;
     final double INTAKE_RIGHT_CLOSE = 0.50;
     final double LEFT_REPOSITIONING_DOWN = 0.92;
     final double LEFT_REPOSITIONING_UP = 0.1;
@@ -113,7 +113,8 @@ public class FinalTeleop extends LinearOpMode {
         dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
         leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
         repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
-        sideArmServo.setPosition(0.45);
+
+        sideArmServo.setPosition(SIDE_ARM_RAISED);
         slideServo.setPosition(SLIDE_SERVO_IN);
 
         //sideClampServo.setPosition(AUTO_CLAMP_OPENED);
