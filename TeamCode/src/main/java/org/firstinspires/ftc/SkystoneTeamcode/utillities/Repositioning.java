@@ -140,17 +140,17 @@ public class Repositioning {
 
         //pNavigate.navigate(20, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
         if(isBlue == true){
-            leftStrafeWithoutCorrection(20, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            leftStrafeWithoutCorrection(30, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             turnWithEncoders(pFrontRight, pFrontLeft, pBackRight, pBackLeft, 90*negative, 0.5, pImu, pTelemetry);
 
-            rightStrafeWithoutCorrection(30,0.4,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
+            rightStrafeWithoutCorrection(35,0.4,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
         }else{
             leftStrafeWithoutCorrection(30, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             turnWithEncoders(pFrontRight, pFrontLeft, pBackRight, pBackLeft, 90*negative, 0.5, pImu, pTelemetry);
 
-            rightStrafeWithoutCorrection(26,0.4,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
+            rightStrafeWithoutCorrection(35,0.4,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
         }
 
         repositioningLeft.setPosition(leftServoUp);
@@ -177,23 +177,30 @@ public class Repositioning {
 
             //pNavigate.navigate(10, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
-            leftStrafeWithoutCorrection(10, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            leftStrafeWithoutCorrection(5, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+
             try {
                 Thread.sleep(250);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.mode = BNO055IMU.SensorMode.IMU;
+            pImu.initialize(parameters);
+
             //pNavigate.navigate(28, Constants12907.Direction.STRAIGHT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-            pNavigate.navigate(18*negative, Constants12907.Direction.STRAIGHT,0,0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+            pNavigate.navigate(24*negative, Constants12907.Direction.STRAIGHT,0,0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
             //pNavigate.navigate(30, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-            leftStrafeWithoutCorrection(30, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            leftStrafeWithoutCorrection(40, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
 
         }else if(isOuter == false){
-            pNavigate.navigate(10, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            //pNavigate.navigate(-20*negative, Constants12907.Direction.STRAIGHT,0,-0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-            pNavigate.navigate(32, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pNavigate.navigate(45, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             //pNavigate.navigate(44, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }

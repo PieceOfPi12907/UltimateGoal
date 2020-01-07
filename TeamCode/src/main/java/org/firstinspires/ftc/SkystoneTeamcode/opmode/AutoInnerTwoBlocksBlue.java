@@ -106,7 +106,6 @@ public class AutoInnerTwoBlocksBlue {
             //ColorSensor backColor = (ColorSensor) pVariableMap.get(Constants12907.BACK_COLOR_SENSOR);
 
 
-
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
 

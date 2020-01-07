@@ -21,6 +21,7 @@ import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterOneBlockRepoBlue;
 import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterOneBlockRepoRed;
 import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterRepoBlue;
 import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterRepoRed;
+import org.firstinspires.ftc.SkystoneTeamcode.utillities.PIDController;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
@@ -54,6 +55,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 public class AutoAll extends LinearOpMode{
 
+    Boolean isPark = false;
     Boolean isBlue = false;
     Boolean isOuter= false;
     Boolean isOneStone = false;
@@ -109,6 +111,8 @@ public class AutoAll extends LinearOpMode{
     AutoOuterRepoBlue autoOuterRepoBlue;
     AutoOuterRepoRed autoOuterRepoRed;
 
+    AutoParking autoParking;
+
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
 
     VuforiaTrackables targetsSkyStone;
@@ -120,6 +124,7 @@ public class AutoAll extends LinearOpMode{
 
     public void initialize() {
 
+        isPark = false;
         isBlue = false;
         isOuter= false;
         isOneStone = false;
@@ -240,7 +245,7 @@ public class AutoAll extends LinearOpMode{
             }
 
             //right trigger for PARKING
-            /*if(gamepad1.right_trigger > 0.1){
+            if(gamepad1.right_trigger > 0.1){
                 isPark = true;
                 telemetry.addLine("PARK ONLY");
                 telemetry.update();
@@ -251,7 +256,7 @@ public class AutoAll extends LinearOpMode{
                 isPark = false;
                 telemetry.addLine("NO PARK");
                 telemetry.update();
-            }*/
+            }
 
             //y on gamepad 1 CONFIRMS decisions
             if (gamepad1.a){
@@ -260,6 +265,7 @@ public class AutoAll extends LinearOpMode{
                 telemetry.addData("ROUTE: ", (isOuter == true)? "outer" : "inner");
                 telemetry.addData("STONES: ", (isOneStone == true)? "one stone" : "two stone");
                 telemetry.addData("REPO: ", (isRepo == true)? "yes" : "no");
+                telemetry.addData("ONLY PARK: ", (isPark == true)? "yes" : "no");
                 //telemetry.addData("PLACING DURING 2 STONE: ", (isPlacing == true)? "placing on foundation" : "only delivering");
                 telemetry.addLine("press 'y' to confirm!");
                 telemetry.update();
@@ -291,7 +297,8 @@ public class AutoAll extends LinearOpMode{
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        pivotGrabber.setPosition(0.45);
+        //initialize more back so it's within the 18 by 18 limit
+        pivotGrabber.setPosition(0.4);
         slideServo.setPosition(0.1);
 
         //braking
@@ -707,6 +714,8 @@ public class AutoAll extends LinearOpMode{
         autoOuterRepoBlue = new AutoOuterRepoBlue();
         autoOuterRepoRed = new AutoOuterRepoRed();
 
+        autoParking = new AutoParking();
+
         //waitForStart();
 
         //if (opModeIsActive()) {
@@ -735,8 +744,10 @@ public class AutoAll extends LinearOpMode{
 
                 if(!isRepo){
 
+
                     //calls right strafe method from this class (copied from navigationHelper) because with the thread running, we were unable to call the strafe right method from the class Navigation Helper
-                    rightStrafe(10,0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+                    //driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imu);
+                    rightStrafe(11,0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
                     //closes webcam
                     webcamInit.interrupt();
@@ -762,70 +773,77 @@ public class AutoAll extends LinearOpMode{
                     variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
                 }
 
-                if (isRepo == true && isBlue == true && isOuter == true ){
+                if (isPark == true){
+                    telemetry.addLine("Program Playing: Park");
+                    telemetry.update();
+                    autoParking.playProgram(variableMap);
+                    stop();
+                }
+
+                if (isRepo == true && isBlue == true && isOuter == true && isPark == false){
                     telemetry.addLine("Program Playing: Blue Outer Repo");
                     telemetry.update();
                     autoOuterRepoBlue.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == true && isBlue == true && isOuter == false){
+                else if (isRepo == true && isBlue == true && isOuter == false&& isPark == false){
                     telemetry.addLine("Program Playing: Blue Inner Repo");
                     telemetry.update();
                     autoInnerRepoBlue.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == true && isBlue == false && isOuter == true){
+                else if (isRepo == true && isBlue == false && isOuter == true&& isPark == false){
                     telemetry.addLine("Program Playing: Red Outer Repo");
                     telemetry.update();
                     autoOuterRepoRed.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == true && isBlue == false && isOuter == false){
+                else if (isRepo == true && isBlue == false && isOuter == false&& isPark == false){
                     telemetry.addLine("Program Playing: Red Inner Repo");
                     telemetry.update();
                     autoInnerRepoRed.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true){
+                else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true&& isPark == false){
                     telemetry.addLine("Program Playing: Blue Outer One Block Repo");
                     telemetry.update();
                     autoOuterOneBlockRepoBlue.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false){
+                else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false&& isPark == false){
                     telemetry.addLine("Program Playing: Blue Inner One Block Repo");
                     telemetry.update();
                     autoInnerOneBlockRepoBlue.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true){
+                else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true&& isPark == false){
                     telemetry.addLine("Program Playing: Red Outer One Block Repo");
                     telemetry.update();
                     autoOuterOneBlockRepoRed.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false){
+                else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false&& isPark == false){
                     telemetry.addLine("Program Playing: Red Inner One Block Repo");
                     telemetry.update();
                     autoInnerOneBlockRepoRed.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false){
+                else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false&& isPark == false){
                     telemetry.addLine("Program Playing: Blue Inner Two Block");
                     telemetry.update();
                     autoInnerTwoBlocksBlue.playProgram(variableMap);
                     stop();
                 }
 
-                else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false){
+                else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false&& isPark == false){
                     telemetry.addLine("Program Playing: Red Inner Two Block");
                     telemetry.update();
                     autoInnerTwoBlocksRed.playProgram(variableMap);
@@ -862,6 +880,84 @@ public class AutoAll extends LinearOpMode{
     }//runOpmode
 
     //copied from naviagation helper for this class
+
+    private void driveStraight (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry, BNO055IMU pImu) {
+        ElapsedTime runtime = new ElapsedTime();
+
+        PIDController pidDrive = new PIDController(.05, 0, 0);
+
+        //Variables used for converting inches to Encoder dounts
+        final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
+        final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
+        final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
+        final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
+                (WHEEL_DIAMETER_INCHES * 3.1415);
+        // newTargetPosition is the target position after it has been converted
+        int newTargetPositionRight;
+        int newTargetPositionLeft;
+        // Sets all encoder values to 0 as we are moving robot with all 4 encoders
+        pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Determine new target position, converts it, and pass to motor controller
+        newTargetPositionLeft = pBackLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionRight = pBackRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionLeft = pFrontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionRight = pFrontRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        pBackLeft.setTargetPosition(newTargetPositionLeft);
+        pBackRight.setTargetPosition(newTargetPositionRight);
+        pFrontLeft.setTargetPosition(newTargetPositionLeft);
+        pFrontRight.setTargetPosition(newTargetPositionRight);
+        runtime.reset();
+
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                pBackLeft.getCurrentPosition(), pBackRight.getCurrentPosition());
+        telemetry.addData("New Target Position","Left %7d : Right %7d", newTargetPositionLeft,newTargetPositionRight);
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                pFrontLeft.getCurrentPosition(), pFrontRight.getCurrentPosition());
+        telemetry.update();
+
+        pBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pFrontLeft.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+        pFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        /*pFrontRight.setPower((pSpeed));
+        pBackRight.setPower((pSpeed));
+        pFrontLeft.setPower((pSpeed));
+        pBackLeft.setPower((pSpeed));*/
+
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, pSpeed);
+        pidDrive.setInputRange(90, 90);
+        pidDrive.enable();
+        double correction;
+
+        //This while loop will keep the motors running to the target position until one of the motors have reached the final encoder count
+        while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
+            correction = 0;
+            pFrontRight.setPower(pSpeed+correction);
+            pBackRight.setPower(pSpeed+correction);
+            pFrontLeft.setPower(pSpeed-correction);
+            pBackLeft.setPower(pSpeed-correction);
+        }
+
+        //stop motors
+        pFrontLeft.setPower(0);
+        pFrontRight.setPower(0);
+        pBackLeft.setPower(0);
+        pBackRight.setPower(0);
+
+        telemetry.addData("Final Position", "Running at %7d :%7d : %7d: %7d",
+                pBackLeft.getCurrentPosition(),
+                pBackRight.getCurrentPosition(),
+                pFrontLeft.getCurrentPosition(),
+                pFrontRight.getCurrentPosition());
+        telemetry.update();
+    }
+
     private void rightStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
 

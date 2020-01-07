@@ -15,21 +15,31 @@ public class FinalTeleop extends LinearOpMode {
 
     Servo dumperClampInsideServo;
     Servo dumperClampOutsideServo;
+
     DcMotor leftIntakeMotor;
     DcMotor rightIntakeMotor;
-    DcMotor dumperMotor;
+
+    DcMotor dumperMotorRight;
+    DcMotor dumperMotorLeft;
+
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
     DcMotor frontLeftMotor;
+
     Servo sideArmServo;
     Servo sideClampServo;
+
     Servo dumperArmServo;
+
     Servo leftIntakeServo;
     Servo rightIntakeServo;
+
     Servo leftRepositionServo;
     Servo rightRepositionServo;
+
     Servo slideServo;
+
     boolean isInsideClampUp = true;
     boolean isOutsideClampUp = false;
     boolean threadStarted = false;
@@ -37,7 +47,7 @@ public class FinalTeleop extends LinearOpMode {
     int isSideArmDown = 1;
     boolean isSideArmClamped = false;
     boolean isIntakeSpinning = false;
-    double scaleFactor = 0.7;
+    double scaleFactor = 0.9;
     double intakeSpeed = 0;
     boolean closed = false;
     boolean spinningForward = false;
@@ -59,19 +69,24 @@ public class FinalTeleop extends LinearOpMode {
     final double INTAKE_LEFT_OPEN = 0.66;
     final double INTAKE_RIGHT_OPEN = 0.79;
     final double INTAKE_RIGHT_CLOSE = 0.50;
+
+    final double INTAKE_LEFT_CLOSE = 0.85;
+
     final double LEFT_REPOSITIONING_DOWN = 0.92;
     final double LEFT_REPOSITIONING_UP = 0.1;
     final double LEFT_REPOSITIONING_MID = 0.45;
+
     final double RIGHT_REPOSITIONING_DOWN = 0.01;
     final double RIGHT_REPOSITIONING_MID = 0.45;
     final double RIGHT_REPOSITIONING_UP = 0.85;
 
-    final double DUMPER_CLAMP_INSIDE_UP = 0.8;
-    final double DUMPER_CLAMP_INSIDE_DOWN = 0.45;
+    final double DUMPER_CLAMP_INSIDE_UP = 0.825;
+    final double DUMPER_CLAMP_INSIDE_DOWN = 0.38;
     final double DUMPER_CLAMP_OUTSIDE_UP = 0.1;
     final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.55;
-    final double SLIDE_SERVO_OUT = 0.65;
-    final double SLIDE_SERVO_IN = 0.1;
+
+    final double SLIDE_SERVO_OUT = 0.55;
+    final double SLIDE_SERVO_IN = 0.005;
 
     ElapsedTime b_time = new ElapsedTime();
     ElapsedTime y_time = new ElapsedTime();
@@ -82,7 +97,9 @@ public class FinalTeleop extends LinearOpMode {
     ElapsedTime lb_time = new ElapsedTime();
 
     private void initialize(){
-        dumperMotor = hardwareMap.get(DcMotor.class,"dumperMotor");
+        dumperMotorRight = hardwareMap.get(DcMotor.class,"dumperMotorRight");
+        dumperMotorLeft = hardwareMap.get(DcMotor.class,"dumperMotorLeft");
+
         dumperClampInsideServo = hardwareMap.get(Servo.class,"dumperClampInsideServo");
         dumperClampOutsideServo = hardwareMap.get(Servo.class,"dumperClampOutsideServo");
         leftIntakeMotor = hardwareMap.get(DcMotor.class,"leftIntakeMotor");
@@ -103,7 +120,12 @@ public class FinalTeleop extends LinearOpMode {
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        dumperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        dumperMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        dumperMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        dumperMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dumperMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
         rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
@@ -181,10 +203,13 @@ public class FinalTeleop extends LinearOpMode {
 
 
             if(gamepad2.left_stick_y>=0){
-                dumperMotor.setPower(Math.pow(gamepad2.left_stick_y,2));
+                dumperMotorRight.setPower(Math.pow(gamepad2.left_stick_y,2));
+                dumperMotorLeft.setPower(Math.pow(gamepad2.left_stick_y,2));
             }if(gamepad2.left_stick_y<0){
-                dumperMotor.setPower(-Math.pow(gamepad2.left_stick_y,2));
+                dumperMotorRight.setPower(-Math.pow(gamepad2.left_stick_y,2));
+                dumperMotorLeft.setPower(-Math.pow(gamepad2.left_stick_y,2));
             }
+
             if(gamepad2.right_bumper && right_bumper_time.seconds()>0.25){
                 right_bumper_time.reset();
                 if(!slideOut){
@@ -195,10 +220,16 @@ public class FinalTeleop extends LinearOpMode {
                     slideOut = false;
                 }
             }
+            if(gamepad2.dpad_up){
+                dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
+                dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_UP);
+            }
+            if(gamepad2.dpad_down){
+                dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
+                dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_DOWN);
+            }
 
         }
-
-
 
         private void newIntakeControl() {
             if (gamepad2.a) {
@@ -234,14 +265,14 @@ public class FinalTeleop extends LinearOpMode {
             if(gamepad2.left_bumper&&lb_time.seconds()>0.25){
                 lb_time.reset();
                 if(closed!=true){
-                    rightIntakeServo.setPosition(INTAKE_RIGHT_CLOSE);
+                    leftIntakeServo.setPosition(INTAKE_LEFT_CLOSE);
                     dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
                     dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
                     isIntakeSpinning = true;
                     closed = true;
                 }
                 else if(closed==true){
-                    rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
+                    leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
                     closed = false;
                 }
             }
@@ -354,10 +385,10 @@ public class FinalTeleop extends LinearOpMode {
         while(opModeIsActive()){
             mecanumDrive(scaleFactor);
             if(gamepad1.x){
-                scaleFactor=0.5;
+                scaleFactor=0.6;
             }
             if(gamepad1.y){
-                scaleFactor=0.75;
+                scaleFactor=0.9;
             }
             repositioningControl();
             sideArmControl();
