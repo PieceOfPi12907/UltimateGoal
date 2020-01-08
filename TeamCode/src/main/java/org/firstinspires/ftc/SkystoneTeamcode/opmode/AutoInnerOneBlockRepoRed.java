@@ -77,6 +77,7 @@ public class AutoInnerOneBlockRepoRed {
 
             repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft);
 
+
         } catch (Exception bad){
             telemetry.addData("EXCEPTION:", bad.toString());
             telemetry.update();

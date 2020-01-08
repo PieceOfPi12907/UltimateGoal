@@ -298,7 +298,8 @@ public class AutoAll extends LinearOpMode{
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
         //initialize more back so it's within the 18 by 18 limit
-        pivotGrabber.setPosition(0.4);
+        pivotGrabber.setPosition(0.35);
+        blockClamper.setPosition(0.3);
         slideServo.setPosition(0.1);
 
         //braking
@@ -346,9 +347,10 @@ public class AutoAll extends LinearOpMode{
     public void webcamInitialization () {
         telemetry.addLine("running inside webcam thread");
         telemetry.update();
-        webcam = hardwareMap.get(WebcamName.class, "webcam");
+        //done above
+        /*webcam = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);*/
 
         final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
         final boolean PHONE_IS_PORTRAIT = false;
@@ -412,8 +414,6 @@ public class AutoAll extends LinearOpMode{
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
 
-
-
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parametersWebcam.cameraDirection);
         }
@@ -433,7 +433,7 @@ public class AutoAll extends LinearOpMode{
         @Override
         public void run(){
             try {
-                while (!isInterrupted()) {
+                //while (!isInterrupted()) {
                     targetsSkyStone.activate();
                     targetVisible = false;
 
@@ -469,7 +469,7 @@ public class AutoAll extends LinearOpMode{
                     }
                     //telemetry.update();
 
-                }
+                //}
             } catch (Exception E){
 
             }
@@ -698,6 +698,8 @@ public class AutoAll extends LinearOpMode{
         telemetry.addLine("RunOpmode Entered");
         telemetry.update();
 
+        try {
+
         initialize();
 
         autoInnerOneBlockRepoBlue = new AutoInnerOneBlockRepoBlue();
@@ -722,7 +724,8 @@ public class AutoAll extends LinearOpMode{
 
         createVariableMap();
 
-        try {
+        //moved up to line 701:
+        //try {
 
             while(!isStopRequested() && !imu.isGyroCalibrated()){
                 sleep(50);
@@ -739,120 +742,111 @@ public class AutoAll extends LinearOpMode{
 
             if (opModeIsActive()) {
 
-                //delay set (if not set in init: delay is 0)
-                sleep(delay*1000);
+                //while (!isStopRequested()) {
 
-                if(!isRepo){
+                    //delay set (if not set in init: delay is 0)
+                    sleep(delay * 1000);
 
+                    if (!isRepo) {
 
-                    //calls right strafe method from this class (copied from navigationHelper) because with the thread running, we were unable to call the strafe right method from the class Navigation Helper
-                    //driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imu);
-                    rightStrafe(11,0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+                        //calls right strafe method from this class (copied from navigationHelper) because with the thread running, we were unable to call the strafe right method from the class Navigation Helper
+                        //if(isBlue == true){
+                        //driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imu);
+                        //}
+                        rightStrafe(11, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
-                    //closes webcam
-                    webcamInit.interrupt();
+                        //closes webcam
+                        webcamInit.interrupt();
+                        webcam.close();
+                        // Disable Tracking when we are done;
+                        if (targetsSkyStone != null) {
+                            targetsSkyStone.deactivate();
+                        }
 
-                    //skystone position
-                    Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
+                        //skystone position
+                        Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
 
-                    if(skystonePosition.equals(Constants12907.SkystonePosition.LEFT)){
-                        telemetry.addLine("LEFT");
+                        if (skystonePosition.equals(Constants12907.SkystonePosition.LEFT)) {
+                            telemetry.addLine("LEFT");
+
+                        }
+                        if (skystonePosition.equals(Constants12907.SkystonePosition.RIGHT)) {
+                            telemetry.addLine("RIGHT");
+
+                        }
+                        if (skystonePosition.equals(Constants12907.SkystonePosition.CENTER)) {
+                            telemetry.addLine("CENTER");
+
+                        }
+                        telemetry.update();
+
+                        //inputs skystone position into the hashmap "variableMap"
+                        variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
+                    }else {
+                        webcamInit.interrupt();
+                        webcam.close();
 
                     }
-                    if(skystonePosition.equals(Constants12907.SkystonePosition.RIGHT)){
-                        telemetry.addLine("RIGHT");
 
+                    if (isPark == true) {
+                        telemetry.addLine("Program Playing: Park");
+                        telemetry.update();
+                        autoParking.playProgram(variableMap);
+                        //stop();
                     }
-                    if(skystonePosition.equals(Constants12907.SkystonePosition.CENTER)){
-                        telemetry.addLine("CENTER");
-
+                    if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {
+                        telemetry.addLine("Program Playing: Blue Outer Repo");
+                        telemetry.update();
+                        autoOuterRepoBlue.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == true && isBlue == true && isOuter == false && isPark == false) {
+                        telemetry.addLine("Program Playing: Blue Inner Repo");
+                        telemetry.update();
+                        autoInnerRepoBlue.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == true && isBlue == false && isOuter == true && isPark == false) {
+                        telemetry.addLine("Program Playing: Red Outer Repo");
+                        telemetry.update();
+                        autoOuterRepoRed.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == true && isBlue == false && isOuter == false && isPark == false) {
+                        telemetry.addLine("Program Playing: Red Inner Repo");
+                        telemetry.update();
+                        autoInnerRepoRed.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true && isPark == false) {
+                        telemetry.addLine("Program Playing: Blue Outer One Block Repo");
+                        telemetry.update();
+                        autoOuterOneBlockRepoBlue.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false && isPark == false) {
+                        telemetry.addLine("Program Playing: Blue Inner One Block Repo");
+                        telemetry.update();
+                        autoInnerOneBlockRepoBlue.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true && isPark == false) {
+                        telemetry.addLine("Program Playing: Red Outer One Block Repo");
+                        telemetry.update();
+                        autoOuterOneBlockRepoRed.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false && isPark == false) {
+                        telemetry.addLine("Program Playing: Red Inner One Block Repo");
+                        telemetry.update();
+                        autoInnerOneBlockRepoRed.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false && isPark == false) {
+                        telemetry.addLine("Program Playing: Blue Inner Two Block");
+                        telemetry.update();
+                        autoInnerTwoBlocksBlue.playProgram(variableMap);
+                        //stop();
+                    } else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false && isPark == false) {
+                        telemetry.addLine("Program Playing: Red Inner Two Block");
+                        telemetry.update();
+                        autoInnerTwoBlocksRed.playProgram(variableMap);
+                        //stop();
                     }
-                    telemetry.update();
-
-                    //inputs skystone position into the hashmap "variableMap"
-                    variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
-                }
-
-                if (isPark == true){
-                    telemetry.addLine("Program Playing: Park");
-                    telemetry.update();
-                    autoParking.playProgram(variableMap);
-                    stop();
-                }
-
-                if (isRepo == true && isBlue == true && isOuter == true && isPark == false){
-                    telemetry.addLine("Program Playing: Blue Outer Repo");
-                    telemetry.update();
-                    autoOuterRepoBlue.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == true && isBlue == true && isOuter == false&& isPark == false){
-                    telemetry.addLine("Program Playing: Blue Inner Repo");
-                    telemetry.update();
-                    autoInnerRepoBlue.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == true && isBlue == false && isOuter == true&& isPark == false){
-                    telemetry.addLine("Program Playing: Red Outer Repo");
-                    telemetry.update();
-                    autoOuterRepoRed.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == true && isBlue == false && isOuter == false&& isPark == false){
-                    telemetry.addLine("Program Playing: Red Inner Repo");
-                    telemetry.update();
-                    autoInnerRepoRed.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true&& isPark == false){
-                    telemetry.addLine("Program Playing: Blue Outer One Block Repo");
-                    telemetry.update();
-                    autoOuterOneBlockRepoBlue.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false&& isPark == false){
-                    telemetry.addLine("Program Playing: Blue Inner One Block Repo");
-                    telemetry.update();
-                    autoInnerOneBlockRepoBlue.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true&& isPark == false){
-                    telemetry.addLine("Program Playing: Red Outer One Block Repo");
-                    telemetry.update();
-                    autoOuterOneBlockRepoRed.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false&& isPark == false){
-                    telemetry.addLine("Program Playing: Red Inner One Block Repo");
-                    telemetry.update();
-                    autoInnerOneBlockRepoRed.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false&& isPark == false){
-                    telemetry.addLine("Program Playing: Blue Inner Two Block");
-                    telemetry.update();
-                    autoInnerTwoBlocksBlue.playProgram(variableMap);
-                    stop();
-                }
-
-                else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false&& isPark == false){
-                    telemetry.addLine("Program Playing: Red Inner Two Block");
-                    telemetry.update();
-                    autoInnerTwoBlocksRed.playProgram(variableMap);
-                    stop();
-                }
-
-                if(isStopRequested()){
-                    stop();
-                }
+                //}
+                //stop();
             }
 
             // Disable Tracking when we are done;
@@ -862,7 +856,6 @@ public class AutoAll extends LinearOpMode{
 
             telemetry.addLine("PROGRAM END");
             telemetry.update();
-
 
         }catch (Exception bad){
             telemetry.addData("EXCEPTION!!!:", bad.getMessage());
@@ -875,12 +868,10 @@ public class AutoAll extends LinearOpMode{
             }
         }
 
-        stop();
-
     }//runOpmode
 
-    //copied from naviagation helper for this class
 
+    //copied from naviagation helper for this class
     private void driveStraight (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry, BNO055IMU pImu) {
         ElapsedTime runtime = new ElapsedTime();
 
