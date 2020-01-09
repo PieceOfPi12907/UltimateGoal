@@ -295,18 +295,18 @@ public class SkystoneDetection {
 
         if(isBlue == true){
             //targetDistance = 0.75;
-            targetDistance = 0;
+            targetDistance = -2;
         } else{
-            targetDistance = 0;
+            targetDistance = -2;
         }
 
         pTelemetry.addData("DISTANCE TO QUARRY: ", currentDistance);
         pTelemetry.update();
 
-        if(currentDistance > 20){
+        if(currentDistance > 21){
             pTelemetry.addLine("Distance Too Great!! Stone not found");
             pTelemetry.update();
-            currentDistance = 19.5;
+            currentDistance = 20.5;
         }
 
         double toGoDistance = currentDistance - targetDistance;
@@ -314,6 +314,7 @@ public class SkystoneDetection {
         pTelemetry.addData("STRAFE DISTANCE ", toGoDistance);
         pTelemetry.update();
         pivotGrabber.setPosition(PIVOT_MID);
+
 
         pNavigate.navigate(toGoDistance, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
     }
