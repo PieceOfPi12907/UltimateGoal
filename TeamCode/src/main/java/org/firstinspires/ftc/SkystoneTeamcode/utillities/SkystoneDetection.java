@@ -296,7 +296,7 @@ public class SkystoneDetection {
         if(isBlue == true){
             //targetDistance = 0.75;
             targetDistance = -2;
-        } else{
+        } else {
             targetDistance = -2;
         }
 

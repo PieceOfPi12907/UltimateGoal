@@ -2,13 +2,13 @@ package org.firstinspires.ftc.SkystoneTeamcode.helper;
 
 public class Constants12907 {
 
-    public static enum Direction{
+    public static enum Direction {
         STRAIGHT, LEFT, RIGHT, TURN;
     }
-    public static enum SkystonePosition{
+    public static enum SkystonePosition {
         LEFT, CENTER, RIGHT;
     }
-    public static enum RepositioningServoPositions{
+    public static enum RepositioningServoPositions {
         UP, MID, DOWN;
     }
     public static enum DumperArmDropPositions{
