@@ -56,6 +56,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
@@ -79,6 +80,7 @@ public class AutoInnerTwoBlocksBlue {
         Telemetry telemetry = (Telemetry) pVariableMap.get(Constants12907.TELEMETRY);
         WebcamName webcam = (WebcamName) pVariableMap.get(Constants12907.WEBCAM);
         VuforiaLocalizer.Parameters parameters = (VuforiaLocalizer.Parameters) pVariableMap.get(Constants12907.PARAMETERS);
+        ElapsedTime runtime = (ElapsedTime) pVariableMap.get(Constants12907.ELAPSEDTIME);
         try {
 
             NavigationHelper navigationHelper = new NavigationHelper();
@@ -111,7 +113,7 @@ public class AutoInnerTwoBlocksBlue {
 
             skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue(), isPlacing);
 
-            skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), isPlacing);
+            skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), isPlacing, runtime);
 
 
         }catch (Exception bad){

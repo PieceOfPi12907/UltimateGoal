@@ -61,16 +61,18 @@ public class AutoAll extends LinearOpMode{
     Boolean isOneStone = false;
     Boolean isRepo = true;
     Boolean isPlacing = false;
-    Boolean webcamRunning = true;
     long delay = 0;
 
+    ElapsedTime runtime = new ElapsedTime();
 
 
     DcMotor frontLeft;
     DcMotor backLeft;
     DcMotor frontRight;
     DcMotor backRight;
-    BNO055IMU imu;
+    //BNO055IMU imu;
+    BNO055IMU imuBase;
+    BNO055IMU imuSide;
     SkystoneDetection skystoneDetection;
     NavigationHelper navigationHelper;
 
@@ -84,7 +86,7 @@ public class AutoAll extends LinearOpMode{
     DistanceSensor quarryDistance;
     WebcamName webcam;
     OpenGLMatrix lastLocation;
-    Thread webcamInit;
+    WebcamThread webcamThread;
 
     Servo pivotGrabber;
     Servo blockClamper;
@@ -326,9 +328,9 @@ public class AutoAll extends LinearOpMode{
         //start up webcam
         webcamInitialization();
         //Create thread
-        webcamInit = new AutoAll.WebcamThread();
+        webcamThread = new WebcamThread();
         //Start thread
-        webcamInit.start();
+        webcamThread.start();
         telemetry.addLine("webcam thread started");
         telemetry.update();
 
@@ -338,10 +340,14 @@ public class AutoAll extends LinearOpMode{
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.mode = BNO055IMU.SensorMode.IMU;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imuBase = hardwareMap.get(BNO055IMU.class, "imu");
+        imuBase.initialize(parameters);
+        imuSide = hardwareMap.get(BNO055IMU.class, "imu 1");
+        imuSide.initialize(parameters);
+        /*imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         imu = hardwareMap.get(BNO055IMU.class, "imu 1");
-        imu.initialize(parameters);
+        imu.initialize(parameters);*/
     }
 
 
@@ -427,16 +433,24 @@ public class AutoAll extends LinearOpMode{
 
 
     public class WebcamThread extends Thread {
+        volatile boolean stopThread = false;
 
         public void webcamThread() {
             this.setName("Webcam Thread");
+        }
+
+        public void requestStop(){
+            stopThread = true;
+            telemetry.addData("Stop Requested: ", stopThread);
+            telemetry.update();
+
         }
 
         @Override
         public void run(){
             try {
                 //while (!isInterrupted()) {
-                while (webcamRunning == true) {
+                while (!stopThread) {
 
                     targetsSkyStone.activate();
                     targetVisible = false;
@@ -475,6 +489,11 @@ public class AutoAll extends LinearOpMode{
 
                     //}
                 }
+
+                telemetry.addData("Stopped ", stopThread);
+                telemetry.update();
+
+
             } catch (Exception E){
 
             }
@@ -687,13 +706,16 @@ public class AutoAll extends LinearOpMode{
         variableMap.put(Constants12907.LEFT_REPOSITIONING_SERVO, this.repositioningLeft);
 
         variableMap.put(Constants12907.TELEMETRY, this.telemetry);
-        variableMap.put(Constants12907.IMU, this.imu);
+        //variableMap.put(Constants12907.IMU, this.imu);
+        variableMap.put(Constants12907.IMU, this.imuBase);
 
         variableMap.put(Constants12907.QUARRY_DISTANCE_SENSOR, this.quarryDistance);
         variableMap.put(Constants12907.FRONT_COLOR_SENSOR, this.frontColor);
         variableMap.put(Constants12907.BACK_COLOR_SENSOR, this.backColor);
         variableMap.put(Constants12907.WEBCAM, this.webcam);
         variableMap.put(Constants12907.PARAMETERS, this.parametersWebcam);
+
+        variableMap.put(Constants12907.ELAPSEDTIME, this.runtime);
     }
 
 
@@ -723,6 +745,7 @@ public class AutoAll extends LinearOpMode{
 
         autoParking = new AutoParking();
 
+
         //waitForStart();
 
         //if (opModeIsActive()) {
@@ -732,12 +755,12 @@ public class AutoAll extends LinearOpMode{
         //moved up to line 701:
         //try {
 
-            while(!isStopRequested() && !imu.isGyroCalibrated()){
+            while(!isStopRequested() && !imuBase.isGyroCalibrated()){
                 sleep(50);
                 idle();
             }
 
-            telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
+            telemetry.addData("imu calib status: ", imuBase.getCalibrationStatus().toString());
             telemetry.update();
 
             //OpenGLMatrix lastLocation = webcamInitialization();
@@ -746,6 +769,7 @@ public class AutoAll extends LinearOpMode{
             waitForStart();
 
             if (opModeIsActive()) {
+                runtime.reset();
 
                 //while (!isStopRequested()) {
 
@@ -755,15 +779,24 @@ public class AutoAll extends LinearOpMode{
                     if (!isRepo) {
 
                         //calls right strafe method from this class (copied from navigationHelper) because with the thread running, we were unable to call the strafe right method from the class Navigation Helper
-                        //if(isBlue == true){
-                        //driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imu);
-                        //}
-                       rightStrafeWithCorrection(9, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+                        if(isBlue == true){
+                        driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imuBase);
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                       rightStrafeWithCorrection(9, 0.4, backLeft, backRight, frontRight, frontLeft, imuBase, telemetry);
+                        try {
+                            Thread.sleep(250);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         //navigationHelper.navigate(9, Constants12907.Direction.RIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+                        webcamThread.requestStop();
                         //closes webcam
-                        webcamRunning = false;
-                        webcamInit.interrupt();
-                        //webcam.close();
+                        webcamThread.interrupt();
                         // Disable Tracking when we are done;
                         /*if (targetsSkyStone != null) {
                             targetsSkyStone.deactivate();
@@ -792,9 +825,8 @@ public class AutoAll extends LinearOpMode{
                         //inputs skystone position into the hashmap "variableMap"
                         variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
                     } else {
-                        webcamRunning = false;
-                        webcamInit.interrupt();
-                        webcam.close();
+                        webcamThread.requestStop();
+                        webcamThread.interrupt();
 
                     }
 
@@ -857,7 +889,29 @@ public class AutoAll extends LinearOpMode{
                     }
                 //}
                 //stop();
+
             }
+            webcam.close();
+
+            //reset imu
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.mode = BNO055IMU.SensorMode.IMU;
+            imuBase.initialize(parameters);
+
+            imuSide.initialize(parameters);
+
+            backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            backLeft.setPower(0);
+            backRight.setPower(0);
+            frontLeft.setPower(0);
+            frontRight.setPower(0);
 
             // Disable Tracking when we are done;
             if(targetsSkyStone !=null){
@@ -866,6 +920,7 @@ public class AutoAll extends LinearOpMode{
 
             telemetry.addLine("PROGRAM END");
             telemetry.update();
+
 
         }catch (Exception bad){
             telemetry.addData("EXCEPTION!!!:", bad.getMessage());
@@ -877,6 +932,8 @@ public class AutoAll extends LinearOpMode{
                 e.printStackTrace();
             }
         }
+
+        webcam.close();
 
     }//runOpmode
 

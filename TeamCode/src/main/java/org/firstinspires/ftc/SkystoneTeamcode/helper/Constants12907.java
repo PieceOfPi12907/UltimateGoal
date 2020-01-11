@@ -40,5 +40,8 @@ public class Constants12907 {
     public static String WEBCAM = "webcam";
     public static String PARAMETERS = "parametersWebcam";
 
+    public static String ELAPSEDTIME = "elapsedTime";
+
+
 }
 

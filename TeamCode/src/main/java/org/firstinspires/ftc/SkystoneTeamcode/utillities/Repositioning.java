@@ -202,7 +202,6 @@ public class Repositioning {
         }else if(isOuter == false){
             pNavigate.navigate(45, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-            //pNavigate.navigate(44, Constants12907.Direction.LEFT, 0, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }
     }
 
@@ -263,6 +262,76 @@ public class Repositioning {
         pTelemetry.update();
     }
 
+    private void driveStraight (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry, BNO055IMU pImu) {
+        ElapsedTime runtime = new ElapsedTime();
+
+        //Variables used for converting inches to Encoder dounts
+        final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
+        final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
+        final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
+        final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
+                (WHEEL_DIAMETER_INCHES * 3.1415);
+        // newTargetPosition is the target position after it has been converted
+        int newTargetPositionRight;
+        int newTargetPositionLeft;
+        // Sets all encoder values to 0 as we are moving robot with all 4 encoders
+        pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Determine new target position, converts it, and pass to motor controller
+        newTargetPositionLeft = pBackLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionRight = pBackRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionLeft = pFrontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionRight = pFrontRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        pBackLeft.setTargetPosition(newTargetPositionLeft);
+        pBackRight.setTargetPosition(newTargetPositionRight);
+        pFrontLeft.setTargetPosition(newTargetPositionLeft);
+        pFrontRight.setTargetPosition(newTargetPositionRight);
+        runtime.reset();
+
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                pBackLeft.getCurrentPosition(), pBackRight.getCurrentPosition());
+        telemetry.addData("New Target Position","Left %7d : Right %7d", newTargetPositionLeft,newTargetPositionRight);
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                pFrontLeft.getCurrentPosition(), pFrontRight.getCurrentPosition());
+        telemetry.update();
+
+        pBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pFrontLeft.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+        pFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        /*pFrontRight.setPower((pSpeed));
+        pBackRight.setPower((pSpeed));
+        pFrontLeft.setPower((pSpeed));
+        pBackLeft.setPower((pSpeed));*/
+
+        double correction;
+
+        //This while loop will keep the motors running to the target position until one of the motors have reached the final encoder count
+        while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
+            correction = 0;
+            pFrontRight.setPower(pSpeed+correction);
+            pBackRight.setPower(pSpeed+correction);
+            pFrontLeft.setPower(pSpeed-correction);
+            pBackLeft.setPower(pSpeed-correction);
+        }
+
+        //stop motors
+        pFrontLeft.setPower(0);
+        pFrontRight.setPower(0);
+        pBackLeft.setPower(0);
+        pBackRight.setPower(0);
+
+        telemetry.addData("Final Position", "Running at %7d :%7d : %7d: %7d",
+                pBackLeft.getCurrentPosition(),
+                pBackRight.getCurrentPosition(),
+                pFrontLeft.getCurrentPosition(),
+                pFrontRight.getCurrentPosition());
+        telemetry.update();
+    }
 
     private void leftStrafeWithoutCorrection(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();

@@ -40,6 +40,8 @@ public class FinalTeleop extends LinearOpMode {
 
     Servo slideServo;
 
+    Servo capServo;
+
     boolean isInsideClampUp = true;
     boolean isOutsideClampUp = false;
     boolean threadStarted = false;
@@ -88,6 +90,8 @@ public class FinalTeleop extends LinearOpMode {
     final double SLIDE_SERVO_OUT = 0.55;
     final double SLIDE_SERVO_IN = 0.005;
 
+    final double CAP_UP = 0.49;
+
     ElapsedTime b_time = new ElapsedTime();
     ElapsedTime y_time = new ElapsedTime();
     ElapsedTime x_time = new ElapsedTime();
@@ -115,6 +119,7 @@ public class FinalTeleop extends LinearOpMode {
         sideArmServo = hardwareMap.get(Servo.class, "pivotGrabber");
         sideClampServo = hardwareMap.get(Servo.class, "blockClamper");
         slideServo = hardwareMap.get(Servo.class,"slideServo");
+        capServo = hardwareMap.get(Servo.class,"capServo");
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -138,6 +143,7 @@ public class FinalTeleop extends LinearOpMode {
 
         sideArmServo.setPosition(SIDE_ARM_RAISED);
         slideServo.setPosition(SLIDE_SERVO_IN);
+        capServo.setPosition(0);
 
         //sideClampServo.setPosition(AUTO_CLAMP_OPENED);
     }
@@ -347,7 +353,10 @@ public class FinalTeleop extends LinearOpMode {
     }
 
     private void sideArmControl(){
-        if(gamepad1.a && a_time.seconds() >= 0.25){
+        if(gamepad1.dpad_up){
+            capServo.setPosition(CAP_UP);
+        }
+        if(gamepad1.dpad_down && a_time.seconds() >= 0.25){
             a_time.reset();
             if(isSideArmDown==1){
                 sideArmServo.setPosition(SIDE_ARM_LOWERED);
