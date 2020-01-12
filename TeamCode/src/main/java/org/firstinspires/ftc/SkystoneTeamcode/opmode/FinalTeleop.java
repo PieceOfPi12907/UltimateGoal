@@ -54,6 +54,7 @@ public class FinalTeleop extends LinearOpMode {
     boolean closed = false;
     boolean spinningForward = false;
     boolean slideOut = false;
+    boolean clampsUp = false;
 
     /*final double SIDE_ARM_LOWERED = 0.75;
     final double SIDE_ARM_RAISED = 0.45;
@@ -68,10 +69,9 @@ public class FinalTeleop extends LinearOpMode {
     final double AUTO_CLAMP_OPENED = 0.5;
     final double AUTO_CLAMP_CLOSED = 0.8;
 
-    final double INTAKE_LEFT_OPEN = 0.66;
-    final double INTAKE_RIGHT_OPEN = 0.79;
+    final double INTAKE_LEFT_OPEN = 0.68;
+    final double INTAKE_RIGHT_OPEN = 0.78;
     final double INTAKE_RIGHT_CLOSE = 0.50;
-
     final double INTAKE_LEFT_CLOSE = 0.85;
 
     final double LEFT_REPOSITIONING_DOWN = 0.92;
@@ -99,6 +99,7 @@ public class FinalTeleop extends LinearOpMode {
     ElapsedTime right_bumper_time = new ElapsedTime();
     ElapsedTime a_time_two = new ElapsedTime();
     ElapsedTime lb_time = new ElapsedTime();
+    ElapsedTime dpad_time = new ElapsedTime();
 
     private void initialize(){
         dumperMotorRight = hardwareMap.get(DcMotor.class,"dumperMotorRight");
@@ -226,11 +227,14 @@ public class FinalTeleop extends LinearOpMode {
                     slideOut = false;
                 }
             }
-            if(gamepad2.dpad_up){
+            if(gamepad2.dpad_up&&dpad_time.seconds()>0.25){
+                dpad_time.reset();
                 dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
                 dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_UP);
+
             }
-            if(gamepad2.dpad_down){
+            if(gamepad2.dpad_down&&dpad_time.seconds()>0.25){
+                dpad_time.reset();
                 dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
                 dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_DOWN);
             }
@@ -238,6 +242,12 @@ public class FinalTeleop extends LinearOpMode {
         }
 
         private void newIntakeControl() {
+
+            if(gamepad1.left_bumper&&lb_time.seconds()<0.25){
+                lb_time.reset();
+                leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
+                rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
+            }
             if (gamepad2.a) {
                 if (!isIntakeSpinning) {
                     leftIntakeMotor.setPower(-0.4);

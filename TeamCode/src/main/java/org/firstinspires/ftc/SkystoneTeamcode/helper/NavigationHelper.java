@@ -2,6 +2,7 @@ package org.firstinspires.ftc.SkystoneTeamcode.helper;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,6 +17,8 @@ public class NavigationHelper {
 
     Orientation lastAngles = new Orientation();
     double globalAngle;
+    LinearOpMode opm = new LinearOpMode() {
+
 
     // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
     public void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry ){

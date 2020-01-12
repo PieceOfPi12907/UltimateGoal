@@ -668,7 +668,7 @@ public class SkystoneDetection {
         }
 
         //pNavigate.navigate(10, Constants12907.Direction.RIGHT, 0, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        rightStrafeWithoutCorrection(18, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        rightStrafeWithoutCorrection(22, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
         try {
             Thread.sleep(250);

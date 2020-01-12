@@ -176,7 +176,7 @@ public class RepoTest extends LinearOpMode {
                     e.printStackTrace();
                 }
 
-                repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter,isStoneRepo, repositioningRight, repositioningLeft);
+                //repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter,isStoneRepo, repositioningRight, repositioningLeft);
             }
         } catch (Exception bad){
             telemetry.addData("EXCEPTION:", bad.toString());

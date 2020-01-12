@@ -303,7 +303,7 @@ public class AutoAll extends LinearOpMode{
 
         //initialize more back so it's within the 18 by 18 limit
         pivotGrabber.setPosition(0.35);
-        blockClamper.setPosition(0.3);
+        //blockClamper.setPosition(0.3);
         slideServo.setPosition(0.1);
 
         //braking
@@ -508,7 +508,7 @@ public class AutoAll extends LinearOpMode{
         boolean blockFound = false;
         boolean targetVisible = false;
         VectorF translation = null;
-        while (detectingTime.seconds() <= 1 && !blockFound) {
+        while (detectingTime.seconds() <= 1.25 && !blockFound) {
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
@@ -934,6 +934,7 @@ public class AutoAll extends LinearOpMode{
         }
 
         webcam.close();
+        stop();
 
     }//runOpmode
 
