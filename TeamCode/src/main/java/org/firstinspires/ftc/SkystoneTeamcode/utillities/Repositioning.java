@@ -22,94 +22,6 @@ public class Repositioning {
     double rightServoUp = 0.85;
 
 
-    /*public void doRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft) {
-        if (isBlue == false) {
-            negative = -1;
-        } else {
-            negative = 1;
-        }
-
-        //move straight along the wall to align with foundation
-        pNavigate.navigate(14*negative, Constants12907.Direction.STRAIGHT,0,0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-
-        //strafe right to the foundation
-        pNavigate.navigate(34, Constants12907.Direction.RIGHT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-
-        repositioningLeft.setPosition(leftServoDown);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        repositioningRight.setPosition(rightServoDown);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //strafe back to wall pulling foundation along
-        //pNavigate.navigate(38, Constants12907.Direction.LEFT,0,0.3,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        leftStrafeWithoutCorrection(40,0.3, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-
-        repositioningLeft.setPosition(leftServoUp);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        repositioningRight.setPosition(rightServoUp);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void doSimpleRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Servo repositioningRight, Servo repositioningLeft) {
-
-        repositioningLeft.setPosition(leftServoDown);
-        try {
-            Thread.sleep(400);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        repositioningRight.setPosition(rightServoDown);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //strafe back to wall pulling foundation along
-        //pNavigate.navigate(38, Constants12907.Direction.LEFT,0,0.3,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        if(isBlue != true){
-            leftStrafeWithoutCorrection(43,0.3, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-
-        } else {
-            leftStrafeWithoutCorrection(43,0.3, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        }
-
-        repositioningLeft.setPosition(leftServoUp);
-        try {
-            Thread.sleep(400);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        repositioningRight.setPosition(rightServoUp);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-
     public void doAngleRepositioning(DcMotor pFrontLeft, DcMotor pFrontRight, DcMotor pBackLeft, DcMotor pBackRight, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Boolean isBlue, Boolean isOuter, Boolean isStoneRepo, Servo repositioningRight, Servo repositioningLeft, ElapsedTime runtime) {
         if (isBlue == false) {
             negative = -1;
@@ -120,7 +32,6 @@ public class Repositioning {
         if(isStoneRepo != true){
             pNavigate.navigate(10*negative, Constants12907.Direction.STRAIGHT,0,0.4*negative,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
-            //pNavigate.navigate(38, Constants12907.Direction.RIGHT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
             rightStrafeWithoutCorrection(38, 0.4, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
             repositioningLeft.setPosition(leftServoDown);
@@ -138,8 +49,8 @@ public class Repositioning {
             }
         }
 
-        //pNavigate.navigate(20, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
         if(isBlue == true){
+
             if(isStoneRepo == true){
                 leftStrafeWithoutCorrection(34, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             } else {
@@ -149,7 +60,8 @@ public class Repositioning {
             turnWithEncoders(pFrontRight, pFrontLeft, pBackRight, pBackLeft, 90*negative, 0.5, pImu, pTelemetry);
 
             rightStrafeWithoutCorrection(35,0.4,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
-        }else{
+
+        } else {
             if(isStoneRepo == true){
                 leftStrafeWithoutCorrection(34, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             } else {
@@ -175,16 +87,14 @@ public class Repositioning {
             e.printStackTrace();
         }
 
-        if(isStoneRepo == false || runtime.seconds()<=26 ) {
-            if (isOuter == true) {
+        //if(isStoneRepo == false || runtime.seconds()<=26 ) {
+        if(isStoneRepo == false) {
+
+                if (isOuter == true) {
                 pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                //pNavigate.navigate(42, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-
-                //pNavigate.navigate(10, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
                 leftStrafeWithoutCorrection(5, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
@@ -201,10 +111,8 @@ public class Repositioning {
                 parameters.mode = BNO055IMU.SensorMode.IMU;
                 pImu.initialize(parameters);
 
-                //pNavigate.navigate(28, Constants12907.Direction.STRAIGHT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
                 pNavigate.navigate(24 * negative, Constants12907.Direction.STRAIGHT, 0, 0.4 * negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-                //pNavigate.navigate(30, Constants12907.Direction.LEFT,0,0.4,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
                 leftStrafeWithoutCorrection(40, 0.4, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
 
@@ -225,8 +133,7 @@ public class Repositioning {
 
 
 
-    public void turnWithEncoders(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
-                                 DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
+    public void turnWithEncoders(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight, DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
         double computedAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                 AngleUnit.DEGREES).firstAngle;
         double currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
@@ -234,8 +141,6 @@ public class Repositioning {
         double previousAngle = 0.0;
         pTelemetry.addData("Initial Angle: ", computedAngle);
         pTelemetry.update();
-
-
 
         pFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -266,6 +171,7 @@ public class Repositioning {
             }
 
         }
+
         pFrontRight.setPower(0);
         pBackRight.setPower(0);
         pFrontLeft.setPower(0);
@@ -319,11 +225,6 @@ public class Repositioning {
         pBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         pFrontLeft.setMode((DcMotor.RunMode.RUN_TO_POSITION));
         pFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        /*pFrontRight.setPower((pSpeed));
-        pBackRight.setPower((pSpeed));
-        pFrontLeft.setPower((pSpeed));
-        pBackLeft.setPower((pSpeed));*/
 
         double correction;
 
@@ -402,8 +303,6 @@ public class Repositioning {
 
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
 
-            // Display it for the driver.
-
         }
 
         //stop motors
@@ -471,14 +370,6 @@ public class Repositioning {
 
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
 
-            // Display it for the driver.
-            /*telemetry.addData("Path1", "Running to %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
-            telemetry.addData("Path2", "Running at %7d :%7d",
-                    pBackLeft.getCurrentPosition(),
-                    pBackRight.getCurrentPosition(),
-                    pFrontLeft.getCurrentPosition(),
-                    pFrontRight.getCurrentPosition());
-            telemetry.update();*/
         }
 
         //stop motors

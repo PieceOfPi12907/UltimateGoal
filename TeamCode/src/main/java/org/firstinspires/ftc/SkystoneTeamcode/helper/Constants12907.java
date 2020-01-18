@@ -25,7 +25,6 @@ public class Constants12907 {
     public static String RIGHT_REPOSITIONING_SERVO = "rightRepositioning";
     public static String LEFT_REPOSITIONING_SERVO = "leftRepositioning";
 
-    public static String PLACING_FLAG = "placingFlag";
     public static String BLUE_FLAG = "blueFlag";
     public static String OUTER_FLAG = "outerFlag";
     public static String TELEMETRY = "telemetry";

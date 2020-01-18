@@ -60,7 +60,6 @@ public class AutoAll extends LinearOpMode{
     Boolean isOuter= false;
     Boolean isOneStone = false;
     Boolean isRepo = true;
-    Boolean isPlacing = false;
     long delay = 0;
 
     ElapsedTime runtime = new ElapsedTime();
@@ -70,7 +69,6 @@ public class AutoAll extends LinearOpMode{
     DcMotor backLeft;
     DcMotor frontRight;
     DcMotor backRight;
-    //BNO055IMU imu;
     BNO055IMU imuBase;
     BNO055IMU imuSide;
     SkystoneDetection skystoneDetection;
@@ -140,20 +138,7 @@ public class AutoAll extends LinearOpMode{
 
         //CHOOSE PROGRAM:
         while(true){
-            //add delay parameter to gamepads!
-            /*if(gamepad2.x) {
-                delay = delay + 5000;
-                telemetry.addLine("DELAY: " + delay + " seconds");
-                telemetry.update();
-            }
-
-            if (gamepad2.b) {
-                delay = delay - 5000;
-                telemetry.addLine("DELAY: " + delay + " seconds");
-                telemetry.update();
-            }*/
-
-
+            //add delay parameter to gamepads
             if((gamepad2.a) && (isDelayed == false)){
                 isDelayed = true;
                 delay += 5;
@@ -217,23 +202,6 @@ public class AutoAll extends LinearOpMode{
                 telemetry.addLine("TWO STONE");
                 telemetry.update();
             }
-
-            //bumper left on gamepad 2 sets NO PLACE (DELIVER ONLY)
-            /*if(gamepad2.left_bumper){
-                isPlacing = false;
-                telemetry.addLine("NO PLACE (ONLY DELIVER)");
-                telemetry.update();
-            }
-
-            //bumper right on gamepad 2 sets PLACING ON FOUNDATION
-            if(gamepad2.right_bumper){
-                isPlacing = true;
-                telemetry.addLine("PLACING ON FOUNDATION");
-                telemetry.update();
-            }
-            */
-
-
             //top dpad on gamepad 1 sets REPO
             if(gamepad1.dpad_up){
                 isRepo = true;
@@ -270,7 +238,6 @@ public class AutoAll extends LinearOpMode{
                 telemetry.addData("STONES: ", (isOneStone == true)? "one stone" : "two stone");
                 telemetry.addData("REPO: ", (isRepo == true)? "yes" : "no");
                 telemetry.addData("ONLY PARK: ", (isPark == true)? "yes" : "no");
-                //telemetry.addData("PLACING DURING 2 STONE: ", (isPlacing == true)? "placing on foundation" : "only delivering");
                 telemetry.addLine("press 'y' to confirm!");
                 telemetry.update();
             }
@@ -344,27 +311,17 @@ public class AutoAll extends LinearOpMode{
         imuBase.initialize(parameters);
         imuSide = hardwareMap.get(BNO055IMU.class, "imu 1");
         imuSide.initialize(parameters);
-        /*imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-        imu = hardwareMap.get(BNO055IMU.class, "imu 1");
-        imu.initialize(parameters);*/
+
     }
-
-
 
     public void webcamInitialization () {
         telemetry.addLine("running inside webcam thread");
         telemetry.update();
-        //done above
-        /*webcam = hardwareMap.get(WebcamName.class, "webcam");
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);*/
-
         final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
         final boolean PHONE_IS_PORTRAIT = false;
         final String VUFORIA_KEY =
                 "AU29nsP/////AAABmbmvuOwXSkEvjnmA/GE4vvtYcQ++rPSuF0c4fwBMDyTKVMiy0tgOzM+wgd2h5lhtywdhWMQRV+FPhX1SKEZ2LYwl1jKMN4JaKaWikc8DEfoXeFYf5cRAzlQa8CGQ2IFKgYm9Dq5tk8pdrD9WYqb4OFOUW6QkqhiOR1UCTQrAxgqCX0duHNRNK3ksVOyfDszUPL9r5nbIuaISyP5/iN7hWTbRk9damSem6xmKX4yex2YBroO0Ly7BX+JOiuu6x7c059WReN6DU1hrBDwUhIXxKjdV9OOTFL9uw1xedulivMI4G5LbjlQks09aSm/BbfUpCygx8oFo6NLikKP7V5RGUZBfOBwIP/cZDEb52gUZiBcp";
-// Constant for Stone Target
+        // Constant for Stone Target
         final float stoneZ = 2.00f * mmPerInch;
         //OpenGLMatrix lastLocation = null;
         VuforiaLocalizer vuforia = null;
@@ -568,132 +525,9 @@ public class AutoAll extends LinearOpMode{
     }
 
 
-//old webcam initialization
-    /*public OpenGLMatrix webcamInitialization (){
-        webcam = hardwareMap.get(WebcamName.class, "webcam");
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
-        final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-        final boolean PHONE_IS_PORTRAIT = false;
-        final String VUFORIA_KEY =
-                "AU29nsP/////AAABmbmvuOwXSkEvjnmA/GE4vvtYcQ++rPSuF0c4fwBMDyTKVMiy0tgOzM+wgd2h5lhtywdhWMQRV+FPhX1SKEZ2LYwl1jKMN4JaKaWikc8DEfoXeFYf5cRAzlQa8CGQ2IFKgYm9Dq5tk8pdrD9WYqb4OFOUW6QkqhiOR1UCTQrAxgqCX0duHNRNK3ksVOyfDszUPL9r5nbIuaISyP5/iN7hWTbRk9damSem6xmKX4yex2YBroO0Ly7BX+JOiuu6x7c059WReN6DU1hrBDwUhIXxKjdV9OOTFL9uw1xedulivMI4G5LbjlQks09aSm/BbfUpCygx8oFo6NLikKP7V5RGUZBfOBwIP/cZDEb52gUZiBcp";
-// Constant for Stone Target
-        final float stoneZ = 2.00f * mmPerInch;
-        OpenGLMatrix lastLocation = null;
-        VuforiaLocalizer vuforia = null;
-        float phoneXRotate = 0;
-        float phoneYRotate = 0;
-        float phoneZRotate = 0;
-        boolean targetVisible = false;
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
-         * If no camera monitor is desired, use the parameter-less constructor instead (commented out below).
-         */
-    /*
-      parametersWebcam.vuforiaLicenseKey = VUFORIA_KEY;
-        parametersWebcam.cameraName = webcam;
-
-        vuforia = ClassFactory.getInstance().createVuforia(parametersWebcam);
-
-// Load the data sets for the trackable objects. These particular data
-// sets are stored in the 'assets' part of our application.
-        targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
-
-
-        VuforiaTrackable stoneTarget = targetsSkyStone.get(0);
-        stoneTarget.setName("Stone Target");
-
-
-
-        allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.add(targetsSkyStone.get(0));
-
-
-        stoneTarget.setLocation(OpenGLMatrix
-                .translation(0, 0, stoneZ)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
-
-// We need to rotate the camera around it's long axis to bring the correct camera forward.
-        if (CAMERA_CHOICE == BACK) {
-            phoneYRotate = -90;
-        } else {
-            phoneYRotate = 90;
-        }
-
-// Rotate the phone vertical about the X axis if it's in portrait mode
-        if (PHONE_IS_PORTRAIT) {
-            phoneXRotate = 90;
-        }
-
-// Next, translate the camera lens to where it is on the robot.
-// In this example, it is centered (left to right), but forward of the middle of the robot, and above ground level.
-        final float CAMERA_FORWARD_DISPLACEMENT = 8.0f * mmPerInch;   // eg: Camera is 4 Inches in front of robot-center
-        final float CAMERA_VERTICAL_DISPLACEMENT = 4.0f * mmPerInch;   // eg: Camera is 8 Inches above ground
-        final float CAMERA_LEFT_DISPLACEMENT = 0;     // eg: Camera is ON the robot's center line
-
-        OpenGLMatrix robotFromCamera = OpenGLMatrix
-                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
-
-
-
-        for (VuforiaTrackable trackable : allTrackables) {
-            ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parametersWebcam.cameraDirection);
-        }
-
-        VectorF translation = null;
-        targetsSkyStone.activate();
-
-        while (!opModeIsActive()) {
-            targetsSkyStone.activate();
-            targetVisible = false;
-
-
-            for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
-                    targetVisible = true;
-                    targetsSkyStone.deactivate();
-
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
-                    if (robotLocationTransform != null) {
-                        lastLocation = robotLocationTransform;
-                    }
-                    break;
-                }
-            }//for
-
-
-            // Provide feedback as to where the robot is located (if we know).
-            if (targetVisible) {
-                // express position (translation) of robot in inches.
-                translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-
-                y_value = translation.get(1) / mmPerInch;
-
-            } else {
-                telemetry.addData("Visible Target", "none");
-            }
-            telemetry.update();
-
-        }
-
-        return lastLocation;
-    }
-
-     */
-
     private void createVariableMap(){
         variableMap.put(Constants12907.BLUE_FLAG, this.isBlue);
         variableMap.put(Constants12907.OUTER_FLAG, this.isOuter);
-        variableMap.put(Constants12907.PLACING_FLAG, this.isPlacing);
-
 
         variableMap.put(Constants12907.BACK_LEFT_MOTOR,this.backLeft);
         variableMap.put(Constants12907.FRONT_LEFT_MOTOR,this.frontLeft);
@@ -745,17 +579,9 @@ public class AutoAll extends LinearOpMode{
 
         autoParking = new AutoParking();
 
-
-        //waitForStart();
-
-        //if (opModeIsActive()) {
-
         createVariableMap();
 
-        //moved up to line 701:
-        //try {
-
-            while(!isStopRequested() && !imuBase.isGyroCalibrated()){
+        while(!isStopRequested() && !imuBase.isGyroCalibrated()){
                 sleep(50);
                 idle();
             }
@@ -763,15 +589,11 @@ public class AutoAll extends LinearOpMode{
             telemetry.addData("imu calib status: ", imuBase.getCalibrationStatus().toString());
             telemetry.update();
 
-            //OpenGLMatrix lastLocation = webcamInitialization();
-
 
             waitForStart();
 
             if (opModeIsActive()) {
                 runtime.reset();
-
-                //while (!isStopRequested()) {
 
                     //delay set (if not set in init: delay is 0)
                     sleep(delay * 1000);
@@ -793,16 +615,9 @@ public class AutoAll extends LinearOpMode{
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        //navigationHelper.navigate(9, Constants12907.Direction.RIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
                         webcamThread.requestStop();
                         //closes webcam
                         webcamThread.interrupt();
-                        // Disable Tracking when we are done;
-                        /*if (targetsSkyStone != null) {
-                            targetsSkyStone.deactivate();
-                        }
-
-                         */
 
                         //skystone position
                         Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
@@ -834,61 +649,49 @@ public class AutoAll extends LinearOpMode{
                         telemetry.addLine("Program Playing: Park");
                         telemetry.update();
                         autoParking.playProgram(variableMap);
-                        //stop();
                     }
                     if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Outer Repo");
                         telemetry.update();
                         autoOuterRepoBlue.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == true && isBlue == true && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Inner Repo");
                         telemetry.update();
                         autoInnerRepoBlue.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == true && isBlue == false && isOuter == true && isPark == false) {
                         telemetry.addLine("Program Playing: Red Outer Repo");
                         telemetry.update();
                         autoOuterRepoRed.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == true && isBlue == false && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Red Inner Repo");
                         telemetry.update();
                         autoInnerRepoRed.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Outer One Block Repo");
                         telemetry.update();
                         autoOuterOneBlockRepoBlue.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Inner One Block Repo");
                         telemetry.update();
                         autoInnerOneBlockRepoBlue.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true && isPark == false) {
                         telemetry.addLine("Program Playing: Red Outer One Block Repo");
                         telemetry.update();
                         autoOuterOneBlockRepoRed.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Red Inner One Block Repo");
                         telemetry.update();
                         autoInnerOneBlockRepoRed.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Inner Two Block");
                         telemetry.update();
                         autoInnerTwoBlocksBlue.playProgram(variableMap);
-                        //stop();
                     } else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Red Inner Two Block");
                         telemetry.update();
                         autoInnerTwoBlocksRed.playProgram(variableMap);
-                        //stop();
                     }
-                //}
-                //stop();
+
 
             }
             webcam.close();
@@ -922,7 +725,7 @@ public class AutoAll extends LinearOpMode{
             telemetry.update();
 
 
-        }catch (Exception bad){
+        } catch (Exception bad){
             telemetry.addData("EXCEPTION!!!:", bad.getMessage());
             bad.printStackTrace();
             telemetry.update();
@@ -933,10 +736,9 @@ public class AutoAll extends LinearOpMode{
             }
         }
 
-        webcam.close();
         stop();
 
-    }//runOpmode
+    } //RunOpmode
 
 
     //copied from naviagation helper for this class
@@ -1016,7 +818,6 @@ public class AutoAll extends LinearOpMode{
                 pFrontRight.getCurrentPosition());
         telemetry.update();
     }
-
     private void rightStrafe(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
 
@@ -1183,8 +984,7 @@ public class AutoAll extends LinearOpMode{
         }
 
     }
-    public void turnWithEncoders(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
-                                 DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
+    public void turnWithEncoders(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight, DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {
         double computedAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                 AngleUnit.DEGREES).firstAngle;
         double currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
@@ -1238,6 +1038,6 @@ public class AutoAll extends LinearOpMode{
     }
 
 
-}//end of class
+} //End of Class
 
 

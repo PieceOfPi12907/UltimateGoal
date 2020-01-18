@@ -66,8 +66,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;
 
-//import java.util.Scanner;
-
 @Disabled
 //Adding Source Code to GitHub
 
@@ -83,7 +81,6 @@ public class AutoOuterRepoBlue {
             NavigationHelper navigationHelper = new NavigationHelper();
             SkystoneDetection skystoneDetection = new SkystoneDetection();
             Repositioning repositioning = new Repositioning();
-            Parking parking = new Parking();
 
             Constants12907.SkystonePosition skystonePosition = (Constants12907.SkystonePosition) pVariableMap.get(Constants12907.SKY_POSITION);
             ElapsedTime runtime = (ElapsedTime) pVariableMap.get(Constants12907.ELAPSEDTIME);

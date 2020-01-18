@@ -18,8 +18,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.HashMap;
 
-//import java.util.Scanner;
-
 @Disabled
 
 //Adding Source Code to GitHub
@@ -61,19 +59,12 @@ public class AutoInnerOneBlockRepoRed {
             Boolean isBlue = (Boolean) pVariableMap.get(Constants12907.BLUE_FLAG);
             Boolean isOuter = (Boolean) pVariableMap.get(Constants12907.OUTER_FLAG);
 
-//uncomment below
             DistanceSensor quarryDistance = (DistanceSensor) pVariableMap.get(Constants12907.QUARRY_DISTANCE_SENSOR);
             ColorSensor frontColor = (ColorSensor) pVariableMap.get(Constants12907.FRONT_COLOR_SENSOR);
             ColorSensor backColor = (ColorSensor) pVariableMap.get(Constants12907.BACK_COLOR_SENSOR);
 
-
-//uncomment below
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
-
-            //navigationHelper.navigate(11, Constants12907.Direction.RIGHT,0,0.5,backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-            //Constants12907.SkystonePosition skystonePosition = skystoneDetection.detectSkystoneWithWebcam(telemetry,webcam, parameters);
 
             skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, isBlue,repositioningRight,repositioningLeft);
 

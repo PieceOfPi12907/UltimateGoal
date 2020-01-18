@@ -65,9 +65,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;
 
-//import java.util.Scanner;
+@Disabled
 
-@Disabled//Adding Source Code to GitHub
+//Adding Source Code to GitHub
 
 public class AutoInnerRepoRed {
 
@@ -81,7 +81,6 @@ public class AutoInnerRepoRed {
 
             NavigationHelper navigationHelper = new NavigationHelper();
             Repositioning repositioning = new Repositioning();
-            Parking parking = new Parking();
 
             Constants12907.SkystonePosition skystonePosition = (Constants12907.SkystonePosition) pVariableMap.get(Constants12907.SKY_POSITION);
 

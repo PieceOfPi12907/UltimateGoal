@@ -66,8 +66,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;
 
-//import java.util.Scanner;
-
 @Disabled
 //Adding Source Code to GitHub
 
@@ -83,7 +81,6 @@ public class AutoInnerRepoBlue {
             NavigationHelper navigationHelper = new NavigationHelper();
             SkystoneDetection skystoneDetection = new SkystoneDetection();
             Repositioning repositioning = new Repositioning();
-            Parking parking = new Parking();
 
             Constants12907.SkystonePosition skystonePosition = (Constants12907.SkystonePosition) pVariableMap.get(Constants12907.SKY_POSITION);
             ElapsedTime runtime = (ElapsedTime) pVariableMap.get(Constants12907.ELAPSEDTIME);
@@ -98,12 +95,11 @@ public class AutoInnerRepoBlue {
 
             BNO055IMU imu = (BNO055IMU) pVariableMap.get(Constants12907.IMU);
 
-
             Boolean isBlue = (Boolean) pVariableMap.get(Constants12907.BLUE_FLAG);
             Boolean isOuter = (Boolean) pVariableMap.get(Constants12907.OUTER_FLAG);
 
 
-            repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+            repositioning.doAngleRepositioning (frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
 
         } catch (Exception bad) {
             telemetry.addData("EXCEPTION:", bad.toString());

@@ -17,7 +17,7 @@ public class NavigationHelper {
 
     Orientation lastAngles = new Orientation();
     double globalAngle;
-    LinearOpMode opm = new LinearOpMode() {
+    //LinearOpMode opm = new LinearOpMode() {
 
 
     // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
@@ -103,10 +103,10 @@ public class NavigationHelper {
         //This while loop will keep the motors running to the target position until one of the motors have reached the final encoder count
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
             correction = pidDrive.performPID(getAngle(pImu));
-            pFrontRight.setPower(pSpeed+correction);
-            pBackRight.setPower(pSpeed+correction);
-            pFrontLeft.setPower(pSpeed-correction);
-            pBackLeft.setPower(pSpeed-correction);
+            pFrontRight.setPower(pSpeed + correction);
+            pBackRight.setPower(pSpeed + correction);
+            pFrontLeft.setPower(pSpeed - correction);
+            pBackLeft.setPower(pSpeed - correction);
         }
 
         //stop motors

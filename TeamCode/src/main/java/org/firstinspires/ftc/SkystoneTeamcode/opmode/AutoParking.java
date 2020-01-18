@@ -67,8 +67,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.HashMap;
 
-//import java.util.Scanner;
-
 @Disabled
 //Adding Source Code to GitHub
 
@@ -78,7 +76,6 @@ public class AutoParking {
     public void playProgram(HashMap<String, Object> pVariableMap) {
 
         Telemetry telemetry = (Telemetry) pVariableMap.get(Constants12907.TELEMETRY);
-        WebcamName webcam = (WebcamName) pVariableMap.get(Constants12907.WEBCAM);
         VuforiaLocalizer.Parameters parameters = (VuforiaLocalizer.Parameters) pVariableMap.get(Constants12907.PARAMETERS);
 
         try {
@@ -95,17 +92,9 @@ public class AutoParking {
 
             BNO055IMU imu = (BNO055IMU) pVariableMap.get(Constants12907.IMU);
 
-
-            Servo pivotGrabber = (Servo) pVariableMap.get(Constants12907.PIVOT_GRABBER_SERVO);
-            Servo blockClamper = (Servo) pVariableMap.get(Constants12907.BLOCK_CLAMPER_SERVO);
-
             Boolean isBlue = (Boolean) pVariableMap.get(Constants12907.BLUE_FLAG);
-            Boolean isPlacing = (Boolean) pVariableMap.get(Constants12907.PLACING_FLAG);
 
             DistanceSensor quarryDistance = (DistanceSensor) pVariableMap.get(Constants12907.QUARRY_DISTANCE_SENSOR);
-            //ColorSensor frontColor = (ColorSensor) pVariableMap.get(Constants12907.FRONT_COLOR_SENSOR);
-            //ColorSensor backColor = (ColorSensor) pVariableMap.get(Constants12907.BACK_COLOR_SENSOR);
-
 
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
