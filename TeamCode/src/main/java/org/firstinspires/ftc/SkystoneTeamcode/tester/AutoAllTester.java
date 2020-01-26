@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.SkystoneTeamcode.opmode;
+package org.firstinspires.ftc.SkystoneTeamcode.tester;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -21,6 +21,7 @@ import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterOneBlockRepoBlue;
 import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterOneBlockRepoRed;
 import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterRepoBlue;
 import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterRepoRed;
+import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoParking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.PIDController;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
@@ -39,7 +40,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.android.dx.rop.cst.Constant;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,9 +53,42 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
-@Autonomous(name = "Autonomous All", group = "autonomous")
+@Autonomous(name = "Autonomous All TESTER", group = "autonomous")
 
-public class AutoAll extends LinearOpMode{
+public class AutoAllTester extends LinearOpMode {
+
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
+    ElapsedTime detection = new ElapsedTime();
+    String position = "RIGHT";
+
+    /*
+     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+     * web site at https://developer.vuforia.com/license-manager.
+     *
+     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+     * random data. As an example, here is a example of a fragment of a valid key:
+     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+     * Once you've obtained a license key, copy the string from the Vuforia web site
+     * and paste it in to your code on the next line, between the double quotes.
+     */
+    private static final String VUFORIA_KEY =
+            "AU29nsP/////AAABmbmvuOwXSkEvjnmA/GE4vvtYcQ++rPSuF0c4fwBMDyTKVMiy0tgOzM+wgd2h5lhtywdhWMQRV+FPhX1SKEZ2LYwl1jKMN4JaKaWikc8DEfoXeFYf5cRAzlQa8CGQ2IFKgYm9Dq5tk8pdrD9WYqb4OFOUW6QkqhiOR1UCTQrAxgqCX0duHNRNK3ksVOyfDszUPL9r5nbIuaISyP5/iN7hWTbRk9damSem6xmKX4yex2YBroO0Ly7BX+JOiuu6x7c059WReN6DU1hrBDwUhIXxKjdV9OOTFL9uw1xedulivMI4G5LbjlQks09aSm/BbfUpCygx8oFo6NLikKP7V5RGUZBfOBwIP/cZDEb52gUZiBcp";
+
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
+    private VuforiaLocalizer vuforia;
+
+    /**
+     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
+     * Detection engine.
+     */
+    private TFObjectDetector tfod;
 
     Boolean isPark = false;
     Boolean isBlue = false;
@@ -99,6 +134,7 @@ public class AutoAll extends LinearOpMode{
     final float mmPerInch = 25.4f;
     double y_value = 0;
 
+    TensorTesterClass tensor = new TensorTesterClass();
 
     AutoInnerOneBlockRepoBlue autoInnerOneBlockRepoBlue;
     AutoInnerOneBlockRepoRed autoInnerOneBlockRepoRed;
@@ -114,6 +150,10 @@ public class AutoAll extends LinearOpMode{
     AutoOuterRepoRed autoOuterRepoRed;
 
     AutoParking autoParking;
+
+    Repositioning repositioning;
+
+
 
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
 
@@ -293,11 +333,11 @@ public class AutoAll extends LinearOpMode{
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parametersWebcam = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         //start up webcam
-        webcamInitialization();
+        //webcamInitialization();
         //Create thread
-        webcamThread = new WebcamThread();
+        //webcamThread = new WebcamThread();
         //Start thread
-        webcamThread.start();
+        //webcamThread.start();
         telemetry.addLine("webcam thread started");
         telemetry.update();
 
@@ -579,7 +619,11 @@ public class AutoAll extends LinearOpMode{
 
         autoParking = new AutoParking();
 
-        createVariableMap();
+        Repositioning repositioning = new Repositioning();
+        Parking parkingClass = new Parking();
+        SkystoneDetection skystoneDetection = new SkystoneDetection();
+
+            createVariableMap();
 
         while(!isStopRequested() && !imuBase.isGyroCalibrated()){
                 sleep(50);
@@ -601,27 +645,32 @@ public class AutoAll extends LinearOpMode{
                     if (!isRepo) {
 
                         //calls right strafe method from this class (copied from navigationHelper) because with the thread running, we were unable to call the strafe right method from the class Navigation Helper
-                        if(isBlue == true){
+                        /*if(isBlue == true){
                         driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imuBase);
-                        }
+                        }*/
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                       rightStrafeWithCorrection(9, 0.4, backLeft, backRight, frontRight, frontLeft, imuBase, telemetry);
+                       //rightStrafeWithCorrection(9, 0.4, backLeft, backRight, frontRight, frontLeft, imuBase, telemetry);
                         try {
                             Thread.sleep(250);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        webcamThread.requestStop();
+                        //webcamThread.requestStop();
                         //closes webcam
-                        webcamThread.interrupt();
+                        //webcamThread.interrupt();
 
                         //skystone position
-                        Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
+                        Constants12907.SkystonePosition skystonePosition = detect();
 
+                        rightStrafeWithCorrection(10, 0.4, backLeft, backRight, frontRight, frontLeft, imuBase, telemetry);
+
+                        if(isBlue == true){
+                            driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imuBase);
+                        }
                         if (skystonePosition.equals(Constants12907.SkystonePosition.LEFT)) {
                             telemetry.addLine("LEFT");
 
@@ -648,48 +697,85 @@ public class AutoAll extends LinearOpMode{
                     if (isPark == true) {
                         telemetry.addLine("Program Playing: Park");
                         telemetry.update();
-                        autoParking.playProgram(variableMap);
+                        parkingClass.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue);
+                        // autoParking.playProgram(variableMap);
                     }
                     if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Outer Repo");
                         telemetry.update();
-                        autoOuterRepoBlue.playProgram(variableMap);
+                        boolean isStoneRepo = false;
+                        repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                        //autoOuterRepoBlue.playProgram(variableMap);
                     } else if (isRepo == true && isBlue == true && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Inner Repo");
                         telemetry.update();
-                        autoInnerRepoBlue.playProgram(variableMap);
+                        boolean isStoneRepo = false;
+                        repositioning.doAngleRepositioning (frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                        // autoInnerRepoBlue.playProgram(variableMap);
                     } else if (isRepo == true && isBlue == false && isOuter == true && isPark == false) {
                         telemetry.addLine("Program Playing: Red Outer Repo");
                         telemetry.update();
-                        autoOuterRepoRed.playProgram(variableMap);
+                        boolean isStoneRepo = false;
+                        repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                        // autoOuterRepoRed.playProgram(variableMap);
                     } else if (isRepo == true && isBlue == false && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Red Inner Repo");
                         telemetry.update();
-                        autoInnerRepoRed.playProgram(variableMap);
+                        boolean isStoneRepo = false;
+                        repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                        //  autoInnerRepoRed.playProgram(variableMap);
+
                     } else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Outer One Block Repo");
                         telemetry.update();
-                        autoOuterOneBlockRepoBlue.playProgram(variableMap);
+                        boolean isStoneRepo = true;
+                        Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
+                        skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue, repositioningRight,repositioningLeft);
+                        repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                        //  autoOuterOneBlockRepoBlue.playProgram(variableMap);
+
                     } else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Inner One Block Repo");
                         telemetry.update();
-                        autoInnerOneBlockRepoBlue.playProgram(variableMap);
+                        boolean isStoneRepo = true;
+                        Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
+                        skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue, repositioningRight, repositioningLeft);
+                        repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                        //  autoInnerOneBlockRepoBlue.playProgram(variableMap);
+
                     } else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true && isPark == false) {
                         telemetry.addLine("Program Playing: Red Outer One Block Repo");
                         telemetry.update();
-                        autoOuterOneBlockRepoRed.playProgram(variableMap);
+                        boolean isStoneRepo = true;
+                        Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
+                        skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue,repositioningRight,repositioningLeft);
+                        repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                        //autoOuterOneBlockRepoRed.playProgram(variableMap);
+
                     } else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Red Inner One Block Repo");
                         telemetry.update();
-                        autoInnerOneBlockRepoRed.playProgram(variableMap);
+                        boolean isStoneRepo = true;
+                        Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
+                        skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper, isBlue,repositioningRight,repositioningLeft);
+                        repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                        //autoInnerOneBlockRepoRed.playProgram(variableMap);
+
                     } else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Blue Inner Two Block");
                         telemetry.update();
-                        autoInnerTwoBlocksBlue.playProgram(variableMap);
+                        Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
+                        skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue());
+                        skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), runtime);
+                        //autoInnerTwoBlocksBlue.playProgram(variableMap);
+
                     } else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false && isPark == false) {
                         telemetry.addLine("Program Playing: Red Inner Two Block");
                         telemetry.update();
-                        autoInnerTwoBlocksRed.playProgram(variableMap);
+                        Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
+                        skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue());
+                        skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry,position, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue(), runtime);
+                        //autoInnerTwoBlocksRed.playProgram(variableMap);
                     }
 
 
@@ -1038,6 +1124,101 @@ public class AutoAll extends LinearOpMode{
         pTelemetry.addData("Current Angle: ",currentAngle);
         pTelemetry.update();
     }
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "webcam");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.8;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+    }
+
+    public Constants12907.SkystonePosition detect(){
+        initVuforia();
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+
+        /**
+         * Activate TensorFlow Object Detection before we wait for the start command.
+         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+         **/
+        if (tfod != null) {
+            tfod.activate();
+        }
+        detection.reset();
+        while (detection.seconds()<=1) {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    // step through the list of recognitions and display boundary info.
+                    int i = 0;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if(recognition.getLabel().equals("Skystone")) {
+                              /*telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                              telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                      recognition.getLeft(), recognition.getTop());
+                              telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                      recognition.getRight(), recognition.getBottom());
+
+                               */
+                            if(recognition.getLeft()<300){
+                                telemetry.addData("Skystone position","LEFT");
+                                position = "LEFT";
+                            }
+                            if(recognition.getRight()>500){
+                                telemetry.addData("Skystone position","CENTER");
+                                position = "CENTER";
+                            }
+                        }
+                    }
+                    telemetry.update();
+                }
+            }
+        }
+
+        if (tfod != null) {
+            tfod.shutdown();
+        }
+        if(position.equals("LEFT")){
+            return Constants12907.SkystonePosition.LEFT;
+        }
+        else if(position.equals("CENTER")){
+            return Constants12907.SkystonePosition.CENTER;
+        }
+        else{
+            return Constants12907.SkystonePosition.RIGHT;
+        }
+
+    }
+
 } //End of Class
 
 

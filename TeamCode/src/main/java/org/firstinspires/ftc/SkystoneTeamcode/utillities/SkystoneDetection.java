@@ -566,9 +566,7 @@ public class SkystoneDetection {
         telemetry.update();
 
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
-
             // Display it for the driver.
-
         }
 
         //stop motors

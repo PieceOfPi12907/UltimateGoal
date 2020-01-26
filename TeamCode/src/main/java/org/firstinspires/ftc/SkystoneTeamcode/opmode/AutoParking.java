@@ -59,6 +59,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
+import org.firstinspires.ftc.SkystoneTeamcode.tester.TensorTesterClass;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -72,8 +73,7 @@ import java.util.HashMap;
 
 public class AutoParking {
 
-
-    public void playProgram(HashMap<String, Object> pVariableMap) {
+    public void playProgram(HashMap<String, Object> pVariableMap){
 
         Telemetry telemetry = (Telemetry) pVariableMap.get(Constants12907.TELEMETRY);
         VuforiaLocalizer.Parameters parameters = (VuforiaLocalizer.Parameters) pVariableMap.get(Constants12907.PARAMETERS);
@@ -101,7 +101,7 @@ public class AutoParking {
 
             parking.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue);
 
-        }catch (Exception bad){
+        } catch (Exception bad) {
             telemetry.addData("EXCEPTION:", bad.toString());
             telemetry.update();
             try {
