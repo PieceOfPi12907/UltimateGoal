@@ -10,7 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class SlideTest extends LinearOpMode {
 
     DcMotor slideMotor;
-    private void initialize(){
+    private void initialize()
+    {
         slideMotor = hardwareMap.get(DcMotor.class,"slideMotor");
     }
     @Override

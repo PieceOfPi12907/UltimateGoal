@@ -55,6 +55,7 @@ public class FinalTeleop extends LinearOpMode {
     boolean spinningForward = false;
     boolean slideOut = false;
     boolean clampsUp = false;
+    boolean backSpinning = false;
 
     /*final double SIDE_ARM_LOWERED = 0.75;
     final double SIDE_ARM_RAISED = 0.45;
@@ -82,12 +83,12 @@ public class FinalTeleop extends LinearOpMode {
     final double RIGHT_REPOSITIONING_MID = 0.45;
     final double RIGHT_REPOSITIONING_UP = 0.85;
 
-    final double DUMPER_CLAMP_INSIDE_UP = 0.825;
+    final double DUMPER_CLAMP_INSIDE_UP = 0.875;
     final double DUMPER_CLAMP_INSIDE_DOWN = 0.38;
     final double DUMPER_CLAMP_OUTSIDE_UP = 0.1;
     final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.55;
 
-    final double SLIDE_SERVO_OUT = 0.55;
+    final double SLIDE_SERVO_OUT = 0.58;
     final double SLIDE_SERVO_IN = 0.005;
 
     final double CAP_UP = 0.49;
@@ -100,6 +101,7 @@ public class FinalTeleop extends LinearOpMode {
     ElapsedTime a_time_two = new ElapsedTime();
     ElapsedTime lb_time = new ElapsedTime();
     ElapsedTime dpad_time = new ElapsedTime();
+    ElapsedTime test_time = new ElapsedTime();
 
     private void initialize(){
         dumperMotorRight = hardwareMap.get(DcMotor.class,"dumperMotorRight");
@@ -163,6 +165,10 @@ public class FinalTeleop extends LinearOpMode {
                     newIntakeControl();
                     dumperControl();
                     testWheelControl();
+                    if(!closed){
+                        leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
+                        rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
+                    }
                     idle();
                 }
             } catch (Exception e) {
@@ -170,7 +176,7 @@ public class FinalTeleop extends LinearOpMode {
             }
         }
         private void testWheelControl(){
-            if(gamepad2.y&&y_time.seconds()>0.25){
+            /*if(gamepad2.y&&y_time.seconds()>0.25){
                 y_time.reset();
                 if(spinningForward!=true){
                     leftIntakeMotor.setPower(-0.2);
@@ -183,6 +189,19 @@ public class FinalTeleop extends LinearOpMode {
                     spinningForward=false;
                 }
                 isIntakeSpinning=true;
+            }
+             */
+            if(gamepad2.y&&y_time.seconds()>0.25){
+                if(!backSpinning){
+                    leftIntakeMotor.setPower(0.4);
+                    rightIntakeMotor.setPower(-0.4);
+                    backSpinning = true;
+                }
+                else if (backSpinning){
+                    leftIntakeMotor.setPower(0);
+                    rightIntakeMotor.setPower(0);
+                    backSpinning = false;
+                }
             }
         }
         private void dumperControl(){
@@ -240,9 +259,23 @@ public class FinalTeleop extends LinearOpMode {
             }
 
         }
-
         private void newIntakeControl() {
-
+            if(gamepad2.dpad_left&&test_time.seconds()>0.25){
+                if(intakeSpeed<1){
+                    test_time.reset();
+                    intakeSpeed=intakeSpeed+0.05;
+                    telemetry.addData("intake speed: ", intakeSpeed);
+                    telemetry.update();
+                }
+            }
+            if(gamepad2.dpad_right&&test_time.seconds()>0.25){
+                if(intakeSpeed>0){
+                    test_time.reset();
+                    intakeSpeed=intakeSpeed-0.05;
+                    telemetry.addData("intake speed: ", intakeSpeed);
+                    telemetry.update();
+                }
+            }
             if(gamepad1.left_bumper&&lb_time.seconds()<0.25){
                 lb_time.reset();
                 leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
@@ -250,8 +283,8 @@ public class FinalTeleop extends LinearOpMode {
             }
             if (gamepad2.a) {
                 if (!isIntakeSpinning) {
-                    leftIntakeMotor.setPower(-0.4);
-                    rightIntakeMotor.setPower(0.4);
+                    leftIntakeMotor.setPower(-intakeSpeed);
+                    rightIntakeMotor.setPower(intakeSpeed);
                     isIntakeSpinning = true;
                     dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
                     dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
@@ -297,8 +330,6 @@ public class FinalTeleop extends LinearOpMode {
 
 
     }//end of thread class
-
-
     private void mecanumDrive(double scale){
         double radius=Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
         double angle = (Math.atan2(-(gamepad1.left_stick_y),(gamepad1.left_stick_x)))-(Math.PI/4);
@@ -332,14 +363,6 @@ public class FinalTeleop extends LinearOpMode {
         frontRightMotor.setPower((fRPower) * scale);
         backRightMotor.setPower((bRPower) * scale);
     }
-
-    /*
-    GAMEPAD1.right_bumper && GAMEPAD1.left_bumper
-         */
-
-
-
-
     private void repositioningControl(){
         if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
             right_bumper_time.reset();
@@ -361,7 +384,6 @@ public class FinalTeleop extends LinearOpMode {
         }
 
     }
-
     private void sideArmControl(){
         if(gamepad1.dpad_up){
             capServo.setPosition(CAP_UP);

@@ -202,6 +202,7 @@ public class SkystoneTeleop12907 extends LinearOpMode {
                 intakeLeft.setPower(0);
                 intakeRight.setPower(0);
                 rightIntake.setPosition(0.50);
+
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
