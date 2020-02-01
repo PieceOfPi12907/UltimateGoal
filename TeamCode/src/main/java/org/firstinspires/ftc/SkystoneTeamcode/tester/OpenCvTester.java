@@ -72,7 +72,9 @@ public class OpenCvTester extends LinearOpMode {
         //width = height in this case, because camera is in portrait mode.
 
         waitForStart();
+
         runtime.reset();
+
         while (opModeIsActive()) {
             telemetry.addData("Values", valLeft+"   "+valMid+"   "+valRight);
             telemetry.addData("Height", rows);
