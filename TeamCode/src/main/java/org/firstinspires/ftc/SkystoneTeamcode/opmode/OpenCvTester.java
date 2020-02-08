@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.SkystoneTeamcode.tester;
+package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;

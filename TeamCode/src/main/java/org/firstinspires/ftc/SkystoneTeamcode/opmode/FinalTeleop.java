@@ -130,7 +130,7 @@ public class FinalTeleop extends LinearOpMode {
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         dumperMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        dumperMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        dumperMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         dumperMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dumperMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -349,7 +349,7 @@ public class FinalTeleop extends LinearOpMode {
             fLPower = radius * Math.cos(-3*Math.PI/4) + rotation;
             bLPower = radius * Math.sin(-3*Math.PI/4) + rotation;
             fRPower = radius * Math.sin(-3*Math.PI/4) - rotation;
-            bRPower = radius * Math.cos(-3*Math.PI/4) - rotation;;
+            bRPower = radius * Math.cos(-3*Math.PI/4) - rotation;
         }
         else {
             fLPower = radius * Math.cos(angle) + rotation;

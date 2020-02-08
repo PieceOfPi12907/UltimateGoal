@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.SkystoneTeamcode.tester;
+package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,42 +11,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoInnerOneBlockRepoBlue;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoInnerOneBlockRepoRed;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoInnerRepoBlue;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoInnerRepoRed;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoInnerTwoBlocksBlue;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoInnerTwoBlocksRed;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterOneBlockRepoBlue;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterOneBlockRepoRed;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterRepoBlue;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoOuterRepoRed;
-import org.firstinspires.ftc.SkystoneTeamcode.opmode.AutoParking;
+import org.firstinspires.ftc.SkystoneTeamcode.tester.TensorTesterClass;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.PIDController;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -56,21 +36,12 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 @Autonomous(name = "Autonomous All TESTER", group = "autonomous")
 
