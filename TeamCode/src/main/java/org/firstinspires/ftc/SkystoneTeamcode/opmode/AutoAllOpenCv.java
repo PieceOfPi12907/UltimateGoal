@@ -83,7 +83,7 @@ public class AutoAllOpenCv extends LinearOpMode {
     Boolean isPark = false;
     Boolean isBlue = false;
     Boolean isOuter= false;
-    Boolean isOneStone = false;
+    Boolean isTwoStoneRepo = false;
     Boolean isRepo = true;
     long delay = 0;
 
@@ -125,18 +125,12 @@ public class AutoAllOpenCv extends LinearOpMode {
 
     TensorTesterClass tensor = new TensorTesterClass();
 
-    AutoInnerOneBlockRepoBlue autoInnerOneBlockRepoBlue;
-    AutoInnerOneBlockRepoRed autoInnerOneBlockRepoRed;
-    AutoOuterOneBlockRepoBlue autoOuterOneBlockRepoBlue;
-    AutoOuterOneBlockRepoRed autoOuterOneBlockRepoRed;
-
-    AutoInnerTwoBlocksBlue autoInnerTwoBlocksBlue;
-    AutoInnerTwoBlocksRed autoInnerTwoBlocksRed;
-
     AutoInnerRepoBlue autoInnerRepoBlue;
     AutoInnerRepoRed autoInnerRepoRed;
     AutoOuterRepoBlue autoOuterRepoBlue;
     AutoOuterRepoRed autoOuterRepoRed;
+
+    AutoTwoStoneRepo autoTwoStoneRepo;
 
     AutoParking autoParking;
 
@@ -177,7 +171,7 @@ public class AutoAllOpenCv extends LinearOpMode {
         isPark = false;
         isBlue = false;
         isOuter= false;
-        isOneStone = false;
+        isTwoStoneRepo = false;
         isRepo = true;
         delay = 0;
 
@@ -237,17 +231,17 @@ public class AutoAllOpenCv extends LinearOpMode {
                 telemetry.update();
             }
 
-            //bumper left on gamepad 1 sets ONE STONE
-            if(gamepad1.left_bumper){
-                isOneStone = true;
-                telemetry.addLine("ONE STONE");
+            //bumper right on gamepad 1 sets TWO STONE REPO
+            if(gamepad1.right_bumper){
+                isTwoStoneRepo = true;
+                telemetry.addLine("TWO STONE REPO");
                 telemetry.update();
             }
 
-            //bumper right on gamepad 1 sets TWO STONES
-            if(gamepad1.right_bumper){
-                isOneStone = false;
-                telemetry.addLine("TWO STONE");
+            //bumper left on gamepad 1 sets NO TWO STONE REPO
+            if(gamepad1.left_bumper){
+                isTwoStoneRepo = false;
+                telemetry.addLine("NO TWO STONE REPO");
                 telemetry.update();
             }
             //top dpad on gamepad 1 sets REPO
@@ -283,7 +277,7 @@ public class AutoAllOpenCv extends LinearOpMode {
                 telemetry.addData("DELAY: ", delay);
                 telemetry.addData("COLOR: ", (isBlue == true)? "blue" : "red");
                 telemetry.addData("ROUTE: ", (isOuter == true)? "outer" : "inner");
-                telemetry.addData("STONES: ", (isOneStone == true)? "one stone" : "two stone");
+                telemetry.addData("STONES: ", (isTwoStoneRepo == true)? "two stone + repo" : "no stones");
                 telemetry.addData("REPO: ", (isRepo == true)? "yes" : "no");
                 telemetry.addData("ONLY PARK: ", (isPark == true)? "yes" : "no");
                 telemetry.addLine("press 'y' to confirm!");
@@ -405,21 +399,15 @@ public class AutoAllOpenCv extends LinearOpMode {
 
             initialize();
 
-            autoInnerOneBlockRepoBlue = new AutoInnerOneBlockRepoBlue();
-            autoInnerOneBlockRepoBlue = new AutoInnerOneBlockRepoBlue();
-            autoInnerOneBlockRepoRed = new AutoInnerOneBlockRepoRed();
-            autoOuterOneBlockRepoBlue = new AutoOuterOneBlockRepoBlue();
-            autoOuterOneBlockRepoRed = new AutoOuterOneBlockRepoRed();
-
-            autoInnerTwoBlocksBlue = new AutoInnerTwoBlocksBlue();
-            autoInnerTwoBlocksRed = new AutoInnerTwoBlocksRed();
-
             autoInnerRepoBlue = new AutoInnerRepoBlue();
             autoInnerRepoRed = new AutoInnerRepoRed();
             autoOuterRepoBlue = new AutoOuterRepoBlue();
             autoOuterRepoRed = new AutoOuterRepoRed();
 
             autoParking = new AutoParking();
+
+            autoTwoStoneRepo = new AutoTwoStoneRepo();
+
 
             Repositioning repositioning = new Repositioning();
             Parking parkingClass = new Parking();
@@ -497,88 +485,38 @@ public class AutoAllOpenCv extends LinearOpMode {
                 if (isPark == true) {
                     telemetry.addLine("Program Playing: Park");
                     telemetry.update();
-                    parkingClass.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue);
-                    // autoParking.playProgram(variableMap);
-                }
-                if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {
+                    //parkingClass.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue);
+                    autoParking.playProgram(variableMap);
+                } else if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {
                     telemetry.addLine("Program Playing: Blue Outer Repo");
                     telemetry.update();
                     boolean isStoneRepo = false;
-                    repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
-                    //autoOuterRepoBlue.playProgram(variableMap);
+                    //repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                    autoOuterRepoBlue.playProgram(variableMap);
                 } else if (isRepo == true && isBlue == true && isOuter == false && isPark == false) {
                     telemetry.addLine("Program Playing: Blue Inner Repo");
                     telemetry.update();
                     boolean isStoneRepo = false;
-                    repositioning.doAngleRepositioning (frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
-                    // autoInnerRepoBlue.playProgram(variableMap);
+                    //repositioning.doAngleRepositioning (frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                    autoInnerRepoBlue.playProgram(variableMap);
                 } else if (isRepo == true && isBlue == false && isOuter == true && isPark == false) {
                     telemetry.addLine("Program Playing: Red Outer Repo");
                     telemetry.update();
                     boolean isStoneRepo = false;
-                    repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
-                    // autoOuterRepoRed.playProgram(variableMap);
+                    //repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                    autoOuterRepoRed.playProgram(variableMap);
                 } else if (isRepo == true && isBlue == false && isOuter == false && isPark == false) {
                     telemetry.addLine("Program Playing: Red Inner Repo");
                     telemetry.update();
                     boolean isStoneRepo = false;
-                    repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
-                    //  autoInnerRepoRed.playProgram(variableMap);
+                    //repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
+                    autoInnerRepoRed.playProgram(variableMap);
 
-                } else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == true && isPark == false) {
-                    telemetry.addLine("Program Playing: Blue Outer One Block Repo");
+                } else if(isTwoStoneRepo == true && isPark == false && isRepo == false){
+                    telemetry.addLine("Program Playing: Two Stone Repo");
                     telemetry.update();
-                    boolean isStoneRepo = true;
-                    Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue, repositioningRight,repositioningLeft);
-                    repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
-                    //  autoOuterOneBlockRepoBlue.playProgram(variableMap);
-
-                } else if (isRepo == false && isOneStone == true && isBlue == true && isOuter == false && isPark == false) {
-                    telemetry.addLine("Program Playing: Blue Inner One Block Repo");
-                    telemetry.update();
-                    boolean isStoneRepo = true;
-                    Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue, repositioningRight, repositioningLeft);
-                    repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
-                    //  autoInnerOneBlockRepoBlue.playProgram(variableMap);
-
-                } else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == true && isPark == false) {
-                    telemetry.addLine("Program Playing: Red Outer One Block Repo");
-                    telemetry.update();
-                    boolean isStoneRepo = true;
-                    Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue,repositioningRight,repositioningLeft);
-                    repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
-                    //autoOuterOneBlockRepoRed.playProgram(variableMap);
-
-                } else if (isRepo == false && isOneStone == true && isBlue == false && isOuter == false && isPark == false) {
-                    telemetry.addLine("Program Playing: Red Inner One Block Repo");
-                    telemetry.update();
-                    boolean isStoneRepo = true;
-                    Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper, isBlue,repositioningRight,repositioningLeft);
-                    repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
-                    //autoInnerOneBlockRepoRed.playProgram(variableMap);
-
-                } else if (isRepo == false && isOneStone == false && isBlue == true && isOuter == false && isPark == false) {
-                    telemetry.addLine("Program Playing: Blue Inner Two Block");
-                    telemetry.update();
-                    Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue());
-                    skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), runtime);
-                    //autoInnerTwoBlocksBlue.playProgram(variableMap);
-
-                } else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false && isPark == false) {
-                    telemetry.addLine("Program Playing: Red Inner Two Block");
-                    telemetry.update();
-                    Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue());
-                    skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry,position, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue(), runtime);
-                    //autoInnerTwoBlocksRed.playProgram(variableMap);
+                    autoTwoStoneRepo.playProgram(variableMap);
                 }
-
-
             }
             webcam.closeCameraDevice();
 

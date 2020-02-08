@@ -20,7 +20,7 @@ import java.util.HashMap;
 @Disabled
 //Adding Source Code to GitHub
 
-public class AutoTwoStoneRepoBlue {
+public class AutoTwoStoneRepo {
 
 
     public void playProgram(HashMap<String, Object> pVariableMap) {
