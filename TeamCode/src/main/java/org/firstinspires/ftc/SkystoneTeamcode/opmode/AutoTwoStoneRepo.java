@@ -14,6 +14,7 @@ import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.openftc.easyopencv.OpenCvCamera;
 
 import java.util.HashMap;
 
@@ -29,7 +30,7 @@ public class AutoTwoStoneRepo {
 
 
         Telemetry telemetry = (Telemetry) pVariableMap.get(Constants12907.TELEMETRY);
-        WebcamName webcam = (WebcamName) pVariableMap.get(Constants12907.WEBCAM);
+        OpenCvCamera webcam = (OpenCvCamera) pVariableMap.get(Constants12907.WEBCAM);
         VuforiaLocalizer.Parameters parameters = (VuforiaLocalizer.Parameters) pVariableMap.get(Constants12907.PARAMETERS);
         ElapsedTime runtime = (ElapsedTime) pVariableMap.get(Constants12907.ELAPSEDTIME);
 

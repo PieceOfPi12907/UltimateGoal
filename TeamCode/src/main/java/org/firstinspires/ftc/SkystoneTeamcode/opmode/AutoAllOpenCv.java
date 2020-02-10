@@ -3,6 +3,7 @@ package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -43,7 +44,7 @@ import java.util.List;
 
 import java.util.HashMap;
 
-@Autonomous(name = "Autonomous All TESTER", group = "autonomous")
+@Autonomous(name = "Auto OpenCV All TESTER", group = "autonomous")
 
 public class AutoAllOpenCv extends LinearOpMode {
 
@@ -51,7 +52,7 @@ public class AutoAllOpenCv extends LinearOpMode {
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
     ElapsedTime detection = new ElapsedTime();
-    String position = "RIGHT";
+    //String position = "RIGHT";
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -310,9 +311,9 @@ public class AutoAllOpenCv extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        //initialize more back so it's within the 18 by 18 limit
-        pivotGrabber.setPosition(0.35);
-        //blockClamper.setPosition(0.3);
+        //initialize stone grabbing arm more back so it's within the 18 by 18 limit
+        blockClamper.setPosition(0.5);
+        pivotGrabber.setPosition(0.4);
         slideServo.setPosition(0.1);
 
         //braking
@@ -438,7 +439,7 @@ public class AutoAllOpenCv extends LinearOpMode {
                         /*if(isBlue == true){
                         driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imuBase);
                         }*/
-                    try {
+                    /*try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -449,18 +450,34 @@ public class AutoAllOpenCv extends LinearOpMode {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    */
                     //webcamThread.requestStop();
                     //closes webcam
-                    //webcamThread.interrupt();
+                    //webcamThread.interrupt();telemetry.addData("val left = ", leftVal);
+                    //            telemetry.addData("val mid = ", midVal);
+                    //            telemetry.addData("val right = ", rightVal);
 
                     //skystone position
                     Constants12907.SkystonePosition skystonePosition = detectUsingOpenCV();
 
-                    rightStrafeWithCorrection(10, 0.4, backLeft, backRight, frontRight, frontLeft, imuBase, telemetry);
+                    telemetry.addData("skystone position: ", skystonePosition);
+                    telemetry.addData("val left = ", OpenCvTester.leftVal);
+                    telemetry.addData("val mid = ",OpenCvTester.midVal);
+                    telemetry.addData("val right = ", OpenCvTester.rightVal);
+                    telemetry.update();
+                    /*try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    */
 
-                    if(isBlue == true){
+                    //rightStrafeWithCorrection(10, 0.4, backLeft, backRight, frontRight, frontLeft, imuBase, telemetry);
+
+                    /*if(isBlue == true){
                         driveStraight(-4.5, -0.4, backLeft, backRight, frontRight, frontLeft, telemetry, imuBase);
                     }
+                    */
                     if (skystonePosition.equals(Constants12907.SkystonePosition.LEFT)) {
                         telemetry.addLine("LEFT");
 
@@ -885,6 +902,13 @@ public class AutoAllOpenCv extends LinearOpMode {
     public Constants12907.SkystonePosition detectUsingOpenCV(){
 
         int index = returnSkystoneIndex();
+        telemetry.addData("Index: ",index);
+        telemetry.update();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         if (index == 0){
             return Constants12907.SkystonePosition.LEFT;
@@ -923,9 +947,10 @@ public class AutoAllOpenCv extends LinearOpMode {
     }
 
     public int returnSkystoneIndex() {
-        if(valLeft == 0) {
+
+        if( OpenCvTester.leftVal== 0) {
             return 0;
-        } else if(valMid == 0) {
+        } else if(OpenCvTester.midVal == 0) {
             return 1;
         } else {
             return 2;
@@ -998,11 +1023,21 @@ public class AutoAllOpenCv extends LinearOpMode {
             double[] pixMid = thresholdMat.get((int)(input.rows()* midPos[1]), (int)(input.cols()* midPos[0]));//gets value at circle
             valMid = (int)pixMid[0];
 
+
             double[] pixLeft = thresholdMat.get((int)(input.rows()* leftPos[1]), (int)(input.cols()* leftPos[0]));//gets value at circle
             valLeft = (int)pixLeft[0];
 
+
             double[] pixRight = thresholdMat.get((int)(input.rows()* rightPos[1]), (int)(input.cols()* rightPos[0]));//gets value at circle
             valRight = (int)pixRight[0];
+
+            /*telemetry.addData("valLeft,valMid,valRight ",valLeft+" "+valMid+" "+valRight);
+            telemetry.update();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }  */
 
             //create three points
             Point pointMid = new Point((int)(input.cols()* midPos[0]), (int)(input.rows()* midPos[1]));

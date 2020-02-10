@@ -43,6 +43,9 @@ public class OpenCvTester extends LinearOpMode {
     private static int valMid = -1;
     private static int valLeft = -1;
     private static int valRight = -1;
+    static int midVal;
+    static int leftVal;
+    static int rightVal;
 
     private static float rectHeight = .6f/8f;
     private static float rectWidth = 1.5f/8f;
@@ -166,13 +169,13 @@ public class OpenCvTester extends LinearOpMode {
             //get values from frame
             double[] pixMid = thresholdMat.get((int)(input.rows()* midPos[1]), (int)(input.cols()* midPos[0]));//gets value at circle
             valMid = (int)pixMid[0];
-
+             midVal = valMid;
             double[] pixLeft = thresholdMat.get((int)(input.rows()* leftPos[1]), (int)(input.cols()* leftPos[0]));//gets value at circle
             valLeft = (int)pixLeft[0];
-
+            leftVal = valLeft;
             double[] pixRight = thresholdMat.get((int)(input.rows()* rightPos[1]), (int)(input.cols()* rightPos[0]));//gets value at circle
             valRight = (int)pixRight[0];
-
+            rightVal = valRight;
             //create three points
             Point pointMid = new Point((int)(input.cols()* midPos[0]), (int)(input.rows()* midPos[1]));
             Point pointLeft = new Point((int)(input.cols()* leftPos[0]), (int)(input.rows()* leftPos[1]));
