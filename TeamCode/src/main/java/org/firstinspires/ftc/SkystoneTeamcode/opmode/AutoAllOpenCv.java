@@ -904,11 +904,11 @@ public class AutoAllOpenCv extends LinearOpMode {
         int index = returnSkystoneIndex();
         telemetry.addData("Index: ",index);
         telemetry.update();
-        try {
+        /*try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
         if (index == 0){
             return Constants12907.SkystonePosition.LEFT;
