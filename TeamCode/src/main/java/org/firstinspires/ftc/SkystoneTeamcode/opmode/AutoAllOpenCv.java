@@ -17,6 +17,7 @@ import org.firstinspires.ftc.SkystoneTeamcode.utillities.PIDController;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -44,7 +45,7 @@ import java.util.List;
 
 import java.util.HashMap;
 
-@Autonomous(name = "Auto OpenCV All TESTER", group = "autonomous")
+@Autonomous(name = "AUTO ALL (opencv)", group = "autonomous")
 
 public class AutoAllOpenCv extends LinearOpMode {
 
@@ -81,12 +82,13 @@ public class AutoAllOpenCv extends LinearOpMode {
      */
     private TFObjectDetector tfod;
 
-    Boolean isPark = false;
+    Boolean isPark = true;
     Boolean isBlue = false;
     Boolean isOuter= false;
     Boolean isTwoStoneRepo = false;
-    Boolean isRepo = true;
+    Boolean isRepo = false;
     long delay = 0;
+    long parkDist = 0;
 
     ElapsedTime runtime = new ElapsedTime();
 
@@ -124,20 +126,6 @@ public class AutoAllOpenCv extends LinearOpMode {
     final float mmPerInch = 25.4f;
     double y_value = 0;
 
-    TensorTesterClass tensor = new TensorTesterClass();
-
-    AutoInnerRepoBlue autoInnerRepoBlue;
-    AutoInnerRepoRed autoInnerRepoRed;
-    AutoOuterRepoBlue autoOuterRepoBlue;
-    AutoOuterRepoRed autoOuterRepoRed;
-
-    AutoTwoStoneRepo autoTwoStoneRepo;
-
-    AutoParking autoParking;
-
-    Repositioning repositioning;
-
-
 
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
 
@@ -165,6 +153,7 @@ public class AutoAllOpenCv extends LinearOpMode {
 
 
     boolean isDelayed = false;
+    boolean isDistAdd = false;
 
 
     public void initialize() {
@@ -175,6 +164,7 @@ public class AutoAllOpenCv extends LinearOpMode {
         isTwoStoneRepo = false;
         isRepo = true;
         delay = 0;
+        parkDist = 0;
 
         telemetry.addLine("reached initialization");
         telemetry.update();
@@ -201,6 +191,28 @@ public class AutoAllOpenCv extends LinearOpMode {
             if(gamepad2.x){
                 delay = 0;
                 telemetry.addLine("DELAY: " + delay + " seconds");
+                telemetry.update();
+            }
+
+            if((gamepad2.dpad_up) && (isDistAdd == false)){
+                isDistAdd = true;
+                parkDist += 5;
+                /*if(delay > 10){
+                    delay = 10;
+                }*/
+                telemetry.addLine("Park Distance: " + parkDist + " inches");
+                telemetry.update();
+            }
+
+            if(gamepad2.dpad_down){
+                isDistAdd = false;
+                telemetry.addLine("Park Distance: " + parkDist + " inches");
+                telemetry.update();
+            }
+
+            if(gamepad2.dpad_left){
+                parkDist = 0;
+                telemetry.addLine("Park Distance: " + parkDist + " inches");
                 telemetry.update();
             }
 
@@ -276,6 +288,7 @@ public class AutoAllOpenCv extends LinearOpMode {
             //y on gamepad 1 CONFIRMS decisions
             if (gamepad1.a){
                 telemetry.addData("DELAY: ", delay);
+                telemetry.addData("Park Distance: ", parkDist);
                 telemetry.addData("COLOR: ", (isBlue == true)? "blue" : "red");
                 telemetry.addData("ROUTE: ", (isOuter == true)? "outer" : "inner");
                 telemetry.addData("STONES: ", (isTwoStoneRepo == true)? "two stone + repo" : "no stones");
@@ -312,9 +325,15 @@ public class AutoAllOpenCv extends LinearOpMode {
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
         //initialize stone grabbing arm more back so it's within the 18 by 18 limit
-        blockClamper.setPosition(0.5);
-        pivotGrabber.setPosition(0.4);
-        slideServo.setPosition(0.1);
+
+        if(isPark == true){
+            blockClamper.setPosition(0.8);
+            pivotGrabber.setPosition(0.4);
+        } else {
+            blockClamper.setPosition(0.5);
+            pivotGrabber.setPosition(0.4);
+            slideServo.setPosition(0.1);
+        }
 
         //braking
         //frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -340,6 +359,8 @@ public class AutoAllOpenCv extends LinearOpMode {
         //Start thread
         //webcamThread.start();
 
+        //createVariableMap();
+
         //Initializing the IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -363,6 +384,7 @@ public class AutoAllOpenCv extends LinearOpMode {
 
 
     private void createVariableMap(){
+        variableMap.put(Constants12907.PARK_DISTANCE, this.parkDist);
         variableMap.put(Constants12907.BLUE_FLAG, this.isBlue);
         variableMap.put(Constants12907.OUTER_FLAG, this.isOuter);
 
@@ -400,21 +422,18 @@ public class AutoAllOpenCv extends LinearOpMode {
 
             initialize();
 
-            autoInnerRepoBlue = new AutoInnerRepoBlue();
-            autoInnerRepoRed = new AutoInnerRepoRed();
-            autoOuterRepoBlue = new AutoOuterRepoBlue();
-            autoOuterRepoRed = new AutoOuterRepoRed();
 
-            autoParking = new AutoParking();
 
-            autoTwoStoneRepo = new AutoTwoStoneRepo();
+
+
+
 
 
             Repositioning repositioning = new Repositioning();
             Parking parkingClass = new Parking();
             SkystoneDetection skystoneDetection = new SkystoneDetection();
 
-            createVariableMap();
+            //createVariableMap();
 
             while(!isStopRequested() && !imuBase.isGyroCalibrated()){
                 sleep(50);
@@ -424,6 +443,7 @@ public class AutoAllOpenCv extends LinearOpMode {
             telemetry.addData("imu calib status: ", imuBase.getCalibrationStatus().toString());
             telemetry.update();
 
+            createVariableMap();
 
             waitForStart();
 
@@ -500,29 +520,34 @@ public class AutoAllOpenCv extends LinearOpMode {
                 }
 
                 if (isPark == true) {
+                    AutoParking autoParking = new AutoParking();
                     telemetry.addLine("Program Playing: Park");
                     telemetry.update();
                     //parkingClass.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue);
                     autoParking.playProgram(variableMap);
                 } else if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {
+                    AutoOuterRepoBlue autoOuterRepoBlue = new AutoOuterRepoBlue();
                     telemetry.addLine("Program Playing: Blue Outer Repo");
                     telemetry.update();
                     boolean isStoneRepo = false;
                     //repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
                     autoOuterRepoBlue.playProgram(variableMap);
                 } else if (isRepo == true && isBlue == true && isOuter == false && isPark == false) {
+                    AutoInnerRepoBlue autoInnerRepoBlue = new AutoInnerRepoBlue();
                     telemetry.addLine("Program Playing: Blue Inner Repo");
                     telemetry.update();
                     boolean isStoneRepo = false;
                     //repositioning.doAngleRepositioning (frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
                     autoInnerRepoBlue.playProgram(variableMap);
                 } else if (isRepo == true && isBlue == false && isOuter == true && isPark == false) {
+                    AutoOuterRepoRed autoOuterRepoRed = new AutoOuterRepoRed();
                     telemetry.addLine("Program Playing: Red Outer Repo");
                     telemetry.update();
                     boolean isStoneRepo = false;
                     //repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
                     autoOuterRepoRed.playProgram(variableMap);
                 } else if (isRepo == true && isBlue == false && isOuter == false && isPark == false) {
+                    AutoInnerRepoRed autoInnerRepoRed = new AutoInnerRepoRed();
                     telemetry.addLine("Program Playing: Red Inner Repo");
                     telemetry.update();
                     boolean isStoneRepo = false;
@@ -530,6 +555,7 @@ public class AutoAllOpenCv extends LinearOpMode {
                     autoInnerRepoRed.playProgram(variableMap);
 
                 } else if(isTwoStoneRepo == true && isPark == false && isRepo == false){
+                    AutoTwoStoneRepo autoTwoStoneRepo = new AutoTwoStoneRepo();
                     telemetry.addLine("Program Playing: Two Stone Repo");
                     telemetry.update();
                     autoTwoStoneRepo.playProgram(variableMap);

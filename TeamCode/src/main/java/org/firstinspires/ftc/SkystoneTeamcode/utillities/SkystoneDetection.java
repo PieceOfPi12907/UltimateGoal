@@ -523,7 +523,8 @@ public class SkystoneDetection {
     //double centerDistance = 4;
     double centerDistance = 5;
     //double rightDistance = -1;
-    double rightDistance = -2;
+    double rightDistance = -4;
+    double armOffset = 7.5;
 
 
     //SET 'DIRECTION' FLAG TO -1 OR 1 BASED ON IF BLUE OR NOT AND PASS 'DIRECTION' INSTEAD OF IFBLUE
@@ -554,8 +555,14 @@ public class SkystoneDetection {
             imu_correct = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
             //secondStoneDistance = 4;
-            secondStoneDistance = 0;
-            firstStoneDistance = 0;
+
+            if(isBlue){
+                secondStoneDistance = 0;
+                firstStoneDistance = 0;
+            } else{
+                secondStoneDistance = 20;
+                firstStoneDistance = 17;
+            }
         }
         if(pSkystonePosition.equals(Constants12907.SkystonePosition.CENTER)) {
             pTelemetry.addLine("position --> CENTER");
@@ -567,48 +574,84 @@ public class SkystoneDetection {
         }
         if(pSkystonePosition.equals(Constants12907.SkystonePosition.RIGHT)) {
             pTelemetry.addLine("position --> RIGHT");
-            pNavigate.navigate(rightDistance*direction, Constants12907.Direction.STRAIGHT, 0, 0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //pNavigate.navigate(rightDistance*direction, Constants12907.Direction.STRAIGHT, 0, 0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            if(isBlue){
+                pNavigate.navigate(rightDistance, Constants12907.Direction.STRAIGHT, 0, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            }
+            else if(!isBlue){
+                pNavigate.navigate(rightDistance-armOffset, Constants12907.Direction.STRAIGHT, 0, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            }
             imu_correct = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
-            secondStoneDistance = 20;
-            firstStoneDistance = 17;
+            if(isBlue){
+                secondStoneDistance = 20;
+                firstStoneDistance = 17;
+            } else {
+                secondStoneDistance = 0;
+                firstStoneDistance = 0;
+            }
 
         }
 
 
         //MOVE TO GRAB using fixed distance for now to get to quarry
         //(47" (wall to quarry) - 18" (robot) = 29" (move) - 3" (gap btwn quarry & robot) = 26" (final))
-        pNavigate.navigate(26, Constants12907.Direction.RIGHT, 0, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        //pNavigate.navigate(26, Constants12907.Direction.RIGHT, 0, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        rightStrafeWithoutCorrection(20, 0.75,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        double currentDistance1 = quarryDistance.getDistance(DistanceUnit.INCH);
 
-        //GRAB skystone
-        intakeSkystone(blockClamper, pivotGrabber);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(currentDistance1 > 5.5){
+            double targetDistance = 5;
+            double toGoDistance = currentDistance1 - targetDistance;
+            rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        } else if (currentDistance1 < 4.5){
+            double targetDistance = 5;
+            double toGoDistance = targetDistance - currentDistance1;
+            leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        }
 
         double imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
         pTelemetry.update();
         navigater.turnWithEncoders(pFrontRight, pFrontLeft,pBackRight, pBackLeft, -imuCorrection, 0.25, pImu, pTelemetry);
 
+        //GRAB skystone
+        intakeSkystone(blockClamper, pivotGrabber);
 
         //DELIVER skystone (to far side of foundation)
         //pNavigate.navigate((77 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        pNavigate.navigate((81 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        pNavigate.navigate((78 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
         pTelemetry.update();
         navigater.turnWithEncoders(pFrontRight, pFrontLeft,pBackRight, pBackLeft, -imuCorrection, 0.25, pImu, pTelemetry);
 
         //STRAFE to foundation
-        rightStrafeWithoutCorrection(3.5, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        //rightStrafeWithoutCorrection(0, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        double currentFoundationDistance1 = quarryDistance.getDistance(DistanceUnit.INCH);
+        rightStrafeWithoutCorrection(currentFoundationDistance1, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
         //PLACE skystone (on foundation - so it may require a strafe right before dropping, then a strafe left to come back to the same spot)
         extakeSkystone(blockClamper, pivotGrabber);
 
+
         //STRAFE away from foundation
-        leftStrafeWithoutCorrection(3.5, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        leftStrafeWithoutCorrection(currentFoundationDistance1+0.5, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
+        pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
+        pTelemetry.update();
+        navigater.turnWithEncoders(pFrontRight, pFrontLeft,pBackRight, pBackLeft, -imuCorrection, 0.25, pImu, pTelemetry);
+
 
         //ALIGN back to second set of stones of quarry
         //pNavigate.navigate((-101 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        pNavigate.navigate((-105 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        pNavigate.navigate((-102 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
         pTelemetry.update();
@@ -616,20 +659,33 @@ public class SkystoneDetection {
 
         //MOVE to second skystone
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
-        if(currentDistance > 4){
-            double targetDistance = 4;
-            double toGoDistance = currentDistance - targetDistance;
-            rightStrafeWithoutCorrection(toGoDistance, 0.2, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        } else if (currentDistance < 3){
-            double targetDistance = 4;
-            double toGoDistance = currentDistance - targetDistance;
-            leftStrafeWithoutCorrection(toGoDistance, 0.2, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        if(currentDistance > 5.5){
+            double targetDistance = 5;
+            double toGoDistance = currentDistance - targetDistance;
+            rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        } else if (currentDistance < 4.5){
+            double targetDistance = 5;
+            double toGoDistance = targetDistance - currentDistance;
+            leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        }
+       /* pTelemetry.addData("After Distance to Quarry", currentDistance);
+        pTelemetry.update();
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
 
         //if stone is in right position on blue side and left position on red side, move towards wall more
         /*if((pSkystonePosition.equals(Constants12907.SkystonePosition.RIGHT) && isBlue == true) || (pSkystonePosition.equals(Constants12907.SkystonePosition.LEFT)&& isBlue == false)){
             pNavigate.navigate(-2*direction, Constants12907.Direction.STRAIGHT, 0, -0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }*/
+
 
         imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
@@ -638,6 +694,7 @@ public class SkystoneDetection {
 
         //GRAB second skystone
         intakeSkystone(blockClamper, pivotGrabber);
+
 
         //DELIVER second skystone (to close side of foundation)
         pNavigate.navigate((89.5 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
@@ -648,13 +705,23 @@ public class SkystoneDetection {
 
         //Strafe to foundation
         //pNavigate.navigate(4, Constants12907.Direction.RIGHT, 0, 0.75*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        rightStrafeWithoutCorrection(10, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        rightStrafeWithoutCorrection(4, 0.25, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        //rightStrafeWithoutCorrection(10, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        //rightStrafeWithoutCorrection(4, 0.25, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+
+        double currentFoundationDistance = quarryDistance.getDistance(DistanceUnit.INCH);
+        pTelemetry.addData("Distance to Foundation",currentFoundationDistance);
+        pTelemetry.update();
+
+
+        //if(currentFoundationDistance > 2){
+            rightStrafeWithoutCorrection(currentFoundationDistance+1, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            pTelemetry.addData("Distance to Foundation After",quarryDistance.getDistance(DistanceUnit.INCH));
+        //}
 
         //LATCH repositioning arms on to foundation
         repositioningLeft.setPosition(leftServoDown);
         try {
-            //500 --> 250
+            //500 --> 2500
             Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -668,7 +735,10 @@ public class SkystoneDetection {
         }
 
         //PLACE second skystone
-        extakeSkystone(blockClamper, pivotGrabber);
+       extakeSkystone(blockClamper, pivotGrabber);
+
+
+
 
 
     } //End of TwoStoneRepo Method

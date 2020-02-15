@@ -699,7 +699,7 @@ public class AutoAllTensor extends LinearOpMode {
                 if (isPark == true) {
                     telemetry.addLine("Program Playing: Park");
                     telemetry.update();
-                    parkingClass.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue);
+                    parkingClass.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, variableMap);
                     // autoParking.playProgram(variableMap);
                 }
                 if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {

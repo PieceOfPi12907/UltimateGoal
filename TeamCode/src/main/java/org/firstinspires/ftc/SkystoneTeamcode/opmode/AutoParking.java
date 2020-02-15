@@ -99,7 +99,7 @@ public class AutoParking {
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
 
-            parking.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue);
+            parking.moveToPark(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, pVariableMap);
 
         } catch (Exception bad) {
             telemetry.addData("EXCEPTION:", bad.toString());

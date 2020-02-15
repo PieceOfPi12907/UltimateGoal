@@ -7,12 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name = "Navigation Test", group = "autonomous")
-public class NavigationTester extends LinearOpMode {
+@Autonomous(name = "Auto Arm Test", group = "autonomous")
+public class AutoArmTester extends LinearOpMode {
     DcMotor frontLeft;
     DcMotor backLeft;
     DcMotor frontRight;
@@ -45,15 +43,29 @@ public class NavigationTester extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
 
-        /*frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);*/
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        sideClampServo.setPosition(0.5);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        sideArmServo.setPosition(0.4);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -75,20 +87,44 @@ public class NavigationTester extends LinearOpMode {
 
             //navigateTest.navigate(31, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
-
-
-            //navigateTest.navigate(5, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-           navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
+            sideArmServo.setPosition(0.8);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(250);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-           navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            sideClampServo.setPosition(1);
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
+            sideArmServo.setPosition(0.4);
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+
+            //navigateTest.navigate(5, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+
+           /* navigateTest.navigate(23, Constants12907.Direction.STRAIGHT,0,0.65, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            navigateTest.navigate(11, Constants12907.Direction.STRAIGHT,0,0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+
+            navigateTest.navigate(-41, Constants12907.Direction.STRAIGHT,0,-0.65, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            navigateTest.navigate(-21, Constants12907.Direction.STRAIGHT,0,-0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+
+            //navigateTest.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+
+            navigateTest.navigate(66, Constants12907.Direction.STRAIGHT,0,0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            navigateTest.navigate(-20, Constants12907.Direction.STRAIGHT,0,-0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+
+            navigateTest.navigate(3, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+*/
                    /* navigateTest.navigate(23, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
                     navigateTest.navigate(11, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 

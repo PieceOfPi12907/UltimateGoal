@@ -7,12 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
-import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-@Autonomous(name = "Navigation Test", group = "autonomous")
-public class NavigationTester extends LinearOpMode {
+@Autonomous(name = "Robot All Test", group = "autonomous")
+public class RobotAllTest extends LinearOpMode {
     DcMotor frontLeft;
     DcMotor backLeft;
     DcMotor frontRight;
@@ -50,6 +46,16 @@ public class NavigationTester extends LinearOpMode {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         /*frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -71,39 +77,74 @@ public class NavigationTester extends LinearOpMode {
         waitForStart();
 
         if(opModeIsActive()) {
-            NavigationHelper navigateTest = new NavigationHelper();
 
-            //navigateTest.navigate(31, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            backLeft.setTargetPosition(1000);
+            backRight.setTargetPosition(1000);
+            frontLeft.setTargetPosition(1000);
+            frontRight.setTargetPosition(1000);
 
+            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backLeft.setPower(.5);
 
+            telemetry.addData("Back Left",
+                    backLeft.getCurrentPosition());
+            telemetry.update();
 
-            //navigateTest.navigate(5, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            while (backLeft.isBusy()) {
 
-           navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
+            }
+            backLeft.setPower(0);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-           navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backRight.setPower(.5);
+            telemetry.addData("Back Right",
+                    backRight.getCurrentPosition());
+            telemetry.update();
+            while (backRight.isBusy()) {
 
-                   /* navigateTest.navigate(23, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-                    navigateTest.navigate(11, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            }
+            backRight.setPower(0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-                    navigateTest.navigate(-41, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-                    navigateTest.navigate(-21, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontLeft.setPower(.5);
+            telemetry.addData("Front Left",
+                    frontLeft.getCurrentPosition());
+            telemetry.update();
+            while (frontLeft.isBusy()) {
 
-                    //navigateTest.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            }
+            frontLeft.setPower(0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-                    navigateTest.navigate(66, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-                    navigateTest.navigate(-20, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontRight.setPower(.5);
+            telemetry.addData("Front Right",
+                    frontRight.getCurrentPosition());
+            telemetry.update();
+            while (frontRight.isBusy()) {
 
-                    navigateTest.navigate(3, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-                    */
+            }
+            frontRight.setPower(0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-            //backLeft.setPower(0);
         }
     }
 }

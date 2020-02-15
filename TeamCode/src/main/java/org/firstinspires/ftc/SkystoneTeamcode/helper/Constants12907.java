@@ -29,6 +29,7 @@ public class Constants12907 {
     public static String OUTER_FLAG = "outerFlag";
     public static String TELEMETRY = "telemetry";
 
+    public static String PARK_DISTANCE = "parkDistance";
 
     public static String SKY_POSITION = "skystonePosition";
 
