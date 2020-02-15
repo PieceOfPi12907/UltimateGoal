@@ -56,7 +56,7 @@ public class Repositioning {
         if(isStoneRepo == true){
             //leftStrafeWithoutCorrection(34, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             //leftStrafeWithoutCorrection(30, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            leftStrafeWithoutCorrection(26, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            leftStrafeWithoutCorrection(20, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
         } else {
             leftStrafeWithoutCorrection(30, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
@@ -83,19 +83,32 @@ public class Repositioning {
             e.printStackTrace();
         }
 
-        rightStrafeWithoutCorrection(20,0.75,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
+        rightStrafeWithoutCorrection(20,0.8,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
 
-
+        /*repositioningLeft.setPosition(leftServoDown);
+        try {
+            //500 --> 2500
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        repositioningRight.setPosition(rightServoDown);
+        try {
+            //500 --> 250
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
         //if(isStoneRepo == false || runtime.seconds()<=26 ) {
       //  if(isStoneRepo == false) {
 
-            if (isOuter == true && runtime.seconds()<=28) {
+            if (isOuter == true && runtime.seconds()<=28 && isStoneRepo == false) {
                 /*pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
 
-                leftStrafeWithoutCorrection(5, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+                leftStrafeWithoutCorrection(5, 0.8, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
                 /*try {
                     Thread.sleep(250);
@@ -110,12 +123,12 @@ public class Repositioning {
                 parameters.mode = BNO055IMU.SensorMode.IMU;
                 pImu.initialize(parameters);
 
-                pNavigate.navigate(24 * direction, Constants12907.Direction.STRAIGHT, 0, 0.75 * direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+                pNavigate.navigate(14 * direction, Constants12907.Direction.STRAIGHT, 0, 0.8 * direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
                 leftStrafeWithoutCorrection(40, 0.99, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
 
-            } else if (isOuter == false && runtime.seconds()<=28) {
+            } else if ((isOuter == false || isStoneRepo == true) && runtime.seconds()<=28) {
                 /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
                 parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
                 parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode

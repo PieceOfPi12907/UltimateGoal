@@ -326,6 +326,8 @@ public class AutoAllOpenCv extends LinearOpMode {
 
         //initialize stone grabbing arm more back so it's within the 18 by 18 limit
 
+        repositioningLeft.setPosition(0.1);
+        repositioningRight.setPosition(0.85);
         if(isPark == true){
             blockClamper.setPosition(0.8);
             pivotGrabber.setPosition(0.4);
@@ -590,6 +592,8 @@ public class AutoAllOpenCv extends LinearOpMode {
 
             telemetry.addLine("PROGRAM END");
             telemetry.update();
+
+            idle();
 
 
         } catch (Exception bad){
