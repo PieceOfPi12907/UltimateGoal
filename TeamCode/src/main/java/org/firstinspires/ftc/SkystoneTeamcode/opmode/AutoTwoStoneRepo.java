@@ -24,6 +24,7 @@ import java.util.HashMap;
 public class AutoTwoStoneRepo {
 
 
+
     public void playProgram(HashMap<String, Object> pVariableMap) {
 
         Boolean isStoneRepo = true;

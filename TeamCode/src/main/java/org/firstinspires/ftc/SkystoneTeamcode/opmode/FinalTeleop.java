@@ -49,8 +49,8 @@ public class FinalTeleop extends LinearOpMode {
     int isSideArmDown = 1;
     boolean isSideArmClamped = false;
     boolean isIntakeSpinning = false;
-    double scaleFactor = 0.9;
-    double intakeSpeed = 0;
+    double scaleFactor = 0.999;
+    double intakeSpeed = 0.8;
     boolean closed = false;
     boolean spinningForward = false;
     boolean slideOut = false;
@@ -73,7 +73,7 @@ public class FinalTeleop extends LinearOpMode {
     final double INTAKE_LEFT_OPEN = 0.64; //0.68;
     final double INTAKE_RIGHT_OPEN = 0.8; //0.78;
     final double INTAKE_RIGHT_CLOSE = 0.50;
-    final double INTAKE_LEFT_CLOSE = 0.85;
+    final double INTAKE_LEFT_CLOSE = 0.43;
 
     final double LEFT_REPOSITIONING_DOWN = 0.92;
     final double LEFT_REPOSITIONING_UP = 0.1;
@@ -192,6 +192,7 @@ public class FinalTeleop extends LinearOpMode {
             }
              */
             if(gamepad2.y&&y_time.seconds()>0.25){
+                y_time.reset();
                 if(!backSpinning){
                     leftIntakeMotor.setPower(0.4);
                     rightIntakeMotor.setPower(-0.4);
@@ -429,7 +430,7 @@ public class FinalTeleop extends LinearOpMode {
                 scaleFactor=0.6;
             }
             if(gamepad1.y){
-                scaleFactor=0.9;
+                scaleFactor=0.99;
             }
             repositioningControl();
             sideArmControl();
