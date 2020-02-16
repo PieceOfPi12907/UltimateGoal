@@ -608,12 +608,15 @@ public class SkystoneDetection {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if(currentDistance1 > 7){
-            double targetDistance = 6.5;
+        if((currentDistance1>20)||(currentDistance1<0)){
+            rightStrafeWithoutCorrection(6, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        }
+        else if(currentDistance1 > 6.5){
+            double targetDistance = 6;
             double toGoDistance = currentDistance1 - targetDistance;
             rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        } else if (currentDistance1 < 6){
-            double targetDistance = 6.5;
+        } else if (currentDistance1 < 5.5){
+            double targetDistance = 6;
             double toGoDistance = targetDistance - currentDistance1;
             leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }
@@ -626,7 +629,7 @@ public class SkystoneDetection {
         //GRAB skystone
         intakeSkystone(blockClamper, pivotGrabber);
 
-        leftStrafeWithoutCorrection(2, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        leftStrafeWithoutCorrection(3, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
         //DELIVER skystone (to far side of foundation)
         //pNavigate.navigate((78 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
@@ -639,6 +642,11 @@ public class SkystoneDetection {
         //STRAFE to foundation
         //rightStrafeWithoutCorrection(0, 0.8, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
         double currentFoundationDistance1 = quarryDistance.getDistance(DistanceUnit.INCH);
+
+        if(currentFoundationDistance1>10){
+            currentFoundationDistance1=10;
+        }
+
         rightStrafeWithoutCorrection(currentFoundationDistance1, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
         //PLACE skystone (on foundation - so it may require a strafe right before dropping, then a strafe left to come back to the same spot)

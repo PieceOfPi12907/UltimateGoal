@@ -328,14 +328,15 @@ public class AutoAllOpenCv extends LinearOpMode {
 
         repositioningLeft.setPosition(0.1);
         repositioningRight.setPosition(0.85);
-        if(isPark == true){
+        if(isPark == true || isRepo == true){
             blockClamper.setPosition(0.8);
             pivotGrabber.setPosition(0.4);
         } else {
             blockClamper.setPosition(0.5);
             pivotGrabber.setPosition(0.4);
-            slideServo.setPosition(0.1);
         }
+
+        slideServo.setPosition(0.1);
 
         //braking
         //frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
