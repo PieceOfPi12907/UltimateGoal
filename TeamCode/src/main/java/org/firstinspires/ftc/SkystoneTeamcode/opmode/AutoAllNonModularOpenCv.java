@@ -126,9 +126,6 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
     final float mmPerInch = 25.4f;
     double y_value = 0;
 
-
-    HashMap<String, Object> variableMap = new HashMap<String, Object>();
-
     VuforiaTrackables targetsSkyStone;
     VectorF translation;
 
@@ -366,36 +363,6 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
 
 
 
-
-    private void createVariableMap(){
-        variableMap.put(Constants12907.PARK_DISTANCE, this.parkDist);
-        variableMap.put(Constants12907.BLUE_FLAG, this.isBlue);
-        variableMap.put(Constants12907.OUTER_FLAG, this.isOuter);
-
-        variableMap.put(Constants12907.BACK_LEFT_MOTOR,this.backLeft);
-        variableMap.put(Constants12907.FRONT_LEFT_MOTOR,this.frontLeft);
-        variableMap.put(Constants12907.BACK_RIGHT_MOTOR,this.backRight);
-        variableMap.put(Constants12907.FRONT_RIGHT_MOTOR,this.frontRight);
-
-        variableMap.put(Constants12907.BLOCK_CLAMPER_SERVO, this.blockClamper);
-        variableMap.put(Constants12907.PIVOT_GRABBER_SERVO, this.pivotGrabber);
-        variableMap.put(Constants12907.RIGHT_REPOSITIONING_SERVO, this.repositioningRight);
-        variableMap.put(Constants12907.LEFT_REPOSITIONING_SERVO, this.repositioningLeft);
-
-        variableMap.put(Constants12907.TELEMETRY, this.telemetry);
-        //variableMap.put(Constants12907.IMU, this.imu);
-        variableMap.put(Constants12907.IMU, this.imuBase);
-
-        variableMap.put(Constants12907.QUARRY_DISTANCE_SENSOR, this.quarryDistance);
-        variableMap.put(Constants12907.FRONT_COLOR_SENSOR, this.frontColor);
-        variableMap.put(Constants12907.BACK_COLOR_SENSOR, this.backColor);
-        variableMap.put(Constants12907.WEBCAM, this.webcam);
-        variableMap.put(Constants12907.PARAMETERS, this.parametersWebcam);
-
-        variableMap.put(Constants12907.ELAPSEDTIME, this.runtime);
-    }
-
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -413,8 +380,6 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
 
             telemetry.addData("imu calib status: ", imuBase.getCalibrationStatus().toString());
             telemetry.update();
-
-            createVariableMap();
 
             waitForStart();
 
@@ -452,40 +417,37 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
 
 
                     //inputs skystone position into the hashmap "variableMap"
-                    variableMap.put(Constants12907.SKY_POSITION, skystonePosition);
                 } else {
 
                 }
 
+                double direction;
+                if(isBlue == true){
+                    direction = 1;
+                } else {
+                    direction = -1;
+                }
+
                 if (isPark == true) {
-                    AutoParking autoParking = new AutoParking();
                     telemetry.addLine("Program Playing: Park");
                     telemetry.update();
-                    autoParking.playProgram(variableMap);
+                    moveToPark();
                 } else if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {
-                    AutoOuterRepoBlue autoOuterRepoBlue = new AutoOuterRepoBlue();
                     telemetry.addLine("Program Playing: Blue Outer Repo");
                     telemetry.update();
-                    boolean isStoneRepo = false;
-                    autoOuterRepoBlue.playProgram(variableMap);
+                    doAngleRepositioning(direction,false);
                 } else if (isRepo == true && isBlue == true && isOuter == false && isPark == false) {
-                    AutoInnerRepoBlue autoInnerRepoBlue = new AutoInnerRepoBlue();
                     telemetry.addLine("Program Playing: Blue Inner Repo");
                     telemetry.update();
-                    boolean isStoneRepo = false;
-                    autoInnerRepoBlue.playProgram(variableMap);
+                    doAngleRepositioning(direction,false);
                 } else if (isRepo == true && isBlue == false && isOuter == true && isPark == false) {
-                    AutoOuterRepoRed autoOuterRepoRed = new AutoOuterRepoRed();
                     telemetry.addLine("Program Playing: Red Outer Repo");
                     telemetry.update();
-                    boolean isStoneRepo = false;
-                    autoOuterRepoRed.playProgram(variableMap);
+                    doAngleRepositioning(direction,false);
                 } else if (isRepo == true && isBlue == false && isOuter == false && isPark == false) {
-                    AutoInnerRepoRed autoInnerRepoRed = new AutoInnerRepoRed();
                     telemetry.addLine("Program Playing: Red Inner Repo");
                     telemetry.update();
-                    boolean isStoneRepo = false;
-                    autoInnerRepoRed.playProgram(variableMap);
+                    doAngleRepositioning(direction,false);
 
                 } else if(isTwoStoneRepo == true && isPark == false && isRepo == false){
                     //AutoTwoStoneRepo autoTwoStoneRepo = new AutoTwoStoneRepo();
@@ -541,6 +503,13 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
 
 
 
+
+
+    public void moveToPark(){
+
+        navigate(parkDist, Constants12907.Direction.STRAIGHT,0,0.5, true);
+
+    }//moveToPark
 
     private void autoTwoStoneRepoPlayProgram(){
 
@@ -775,8 +744,8 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
         navigate(2,Constants12907.Direction.LEFT,0,0.5,false);
 
         //DELIVER skystone (to far side of foundation)
-        //pNavigate.navigate((77 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        navigate((78 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
+        //pNavigate.navigate((78 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        navigate((67 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
@@ -802,8 +771,8 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
 
 
         //ALIGN back to second set of stones of quarry
-        //pNavigate.navigate((-101 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        navigate((-102 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, true);
+        //pNavigate.navigate((-102 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        navigate((-91 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, true);
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();

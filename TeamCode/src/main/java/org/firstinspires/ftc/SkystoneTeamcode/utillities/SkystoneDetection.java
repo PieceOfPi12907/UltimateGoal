@@ -629,8 +629,8 @@ public class SkystoneDetection {
         leftStrafeWithoutCorrection(2, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
         //DELIVER skystone (to far side of foundation)
-        //pNavigate.navigate((77 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        pNavigate.navigate((78 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        //pNavigate.navigate((78 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        pNavigate.navigate((67 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
         pTelemetry.update();
@@ -654,8 +654,8 @@ public class SkystoneDetection {
 
 
         //ALIGN back to second set of stones of quarry
-        //pNavigate.navigate((-101 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        pNavigate.navigate((-102 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        //pNavigate.navigate((-102 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        pNavigate.navigate((-91 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
         pTelemetry.update();
