@@ -79,7 +79,7 @@ public class NavigationTester extends LinearOpMode {
 
             //navigateTest.navigate(5, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
-           navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+           navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,0.8, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
             try {
                 Thread.sleep(1000);
@@ -87,7 +87,7 @@ public class NavigationTester extends LinearOpMode {
                 e.printStackTrace();
             }
 
-           navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+           navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
                    /* navigateTest.navigate(23, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
                     navigateTest.navigate(11, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);

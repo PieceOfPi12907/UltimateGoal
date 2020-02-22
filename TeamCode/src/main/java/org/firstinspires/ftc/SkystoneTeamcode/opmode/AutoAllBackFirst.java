@@ -10,12 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
-import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.PIDController;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.Parking;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.Repositioning;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -39,12 +35,11 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-@Autonomous(name = "non modular - AUTO ALL (opencv)", group = "autonomous")
+@Autonomous(name = "non modular - AUTO Back First", group = "autonomous")
 
-public class AutoAllNonModularOpenCv extends LinearOpMode {
+public class AutoAllBackFirst extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
@@ -118,6 +113,8 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
     Servo repositioningRight;
     Servo repositioningLeft;
     Servo slideServo;
+    Servo leftIntakeServo;
+    Servo rightIntakeServo;
 
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
@@ -315,6 +312,9 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
         repositioningRight = hardwareMap.get(Servo.class, "rightRepositioningServo");
         repositioningLeft = hardwareMap.get(Servo.class, "leftRepositioningServo");
         slideServo = hardwareMap.get(Servo.class,"slideServo");
+        leftIntakeServo = hardwareMap.get(Servo.class,"leftIntakeServo");
+        rightIntakeServo = hardwareMap.get(Servo.class,"rightIntakeServo");
+
 
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -333,7 +333,9 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
             blockClamper.setPosition(0.5);
             pivotGrabber.setPosition(0.4);
             slideServo.setPosition(0.1);
+
         }
+
 
 
         frontColor=hardwareMap.get(ColorSensor.class,"frontColor");
@@ -653,8 +655,8 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
         double leftDistance = 12;
         //double centerDistance = 4;
         double centerDistance = 5;
-        //double rightDistance = -1;
-        double rightDistance = -4;
+        //double rightDistance = -4;
+        double rightDistance = -27;
         double armOffset = 6;
 
 
@@ -686,18 +688,19 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
             firstStoneDistance = 11;
         }
         if(skystonePosition.equals(Constants12907.SkystonePosition.RIGHT)) {
+            //pos from initial setup to reference point is 13
             telemetry.addLine("position --> RIGHT");
             //pNavigate.navigate(rightDistance*direction, Constants12907.Direction.STRAIGHT, 0, 00.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             if(isBlue){
-                navigate(rightDistance, Constants12907.Direction.STRAIGHT, 0, 0.8, true);
+                navigate(rightDistance, Constants12907.Direction.STRAIGHT, 0, -0.8, true);
             }
             else if(!isBlue){
                 navigate(rightDistance-armOffset, Constants12907.Direction.STRAIGHT, 0, 0.8, true);
             }
-
+            //fixed
             if(isBlue){
-                secondStoneDistance = 20;
-                firstStoneDistance = 17;
+                secondStoneDistance = 17;
+                firstStoneDistance = 40;
             } else {
                 secondStoneDistance = 2;
                 firstStoneDistance = 0;
@@ -779,7 +782,7 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
 
         //ALIGN back to second set of stones of quarry
         //pNavigate.navigate((-102 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        navigate((-91 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, true);
+        navigate((-67 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, true);
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
@@ -817,7 +820,7 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
         navigate(2,Constants12907.Direction.LEFT,0,0.5,false);
 
         //DELIVER second skystone (to close side of foundation)
-        navigate((93 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
+        navigate((67 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
@@ -842,6 +845,7 @@ public class AutoAllNonModularOpenCv extends LinearOpMode {
         double currentFoundationDistance = quarryDistance.getDistance(DistanceUnit.INCH);
         telemetry.addData("Distance to Foundation",currentFoundationDistance);
         telemetry.update();
+
 
 
         //if(currentFoundationDistance > 2){
