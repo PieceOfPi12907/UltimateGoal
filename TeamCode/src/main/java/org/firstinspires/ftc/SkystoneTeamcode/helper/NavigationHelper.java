@@ -46,6 +46,9 @@ public class NavigationHelper {
 
     // This is the method that gets called if constant is STRAIGHT
     private void forwardDrive (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry, BNO055IMU pImu) {
+        if(pSpeed<0){
+
+        }
         ElapsedTime runtime = new ElapsedTime();
 
         PIDController pidDrive = new PIDController(.05, 0, 0);
