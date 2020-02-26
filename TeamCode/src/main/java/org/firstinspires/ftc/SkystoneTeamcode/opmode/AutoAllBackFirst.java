@@ -37,7 +37,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "non modular - AUTO Back First", group = "autonomous")
+@Autonomous(name = "Auto Back First", group = "autonomous")
 
 public class AutoAllBackFirst extends LinearOpMode {
 
@@ -93,7 +93,6 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     ElapsedTime runtime = new ElapsedTime();
 
-
     DcMotor frontLeft;
     DcMotor backLeft;
     DcMotor frontRight;
@@ -106,6 +105,7 @@ public class AutoAllBackFirst extends LinearOpMode {
     ColorSensor backColor;
 
     DistanceSensor quarryDistance;
+    DistanceSensor backDistance;
     OpenCvCamera webcam;
 
     Servo pivotGrabber;
@@ -331,7 +331,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             pivotGrabber.setPosition(0.4);
         } else {
             blockClamper.setPosition(0.5);
-            pivotGrabber.setPosition(0.4);
+            pivotGrabber.setPosition(0.5);
             slideServo.setPosition(0.1);
 
         }
@@ -341,6 +341,7 @@ public class AutoAllBackFirst extends LinearOpMode {
         frontColor=hardwareMap.get(ColorSensor.class,"frontColor");
         backColor=hardwareMap.get(ColorSensor.class,"backColor");
         quarryDistance=hardwareMap.get(DistanceSensor.class,"quarryDistance");
+        backDistance=hardwareMap.get(DistanceSensor.class, "backDistance");
 
 
 
@@ -362,7 +363,6 @@ public class AutoAllBackFirst extends LinearOpMode {
         webcam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);
 
     }
-
 
 
     @Override
@@ -521,11 +521,11 @@ public class AutoAllBackFirst extends LinearOpMode {
         try {
 
 
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*    frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+*/
 
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
@@ -590,10 +590,10 @@ public class AutoAllBackFirst extends LinearOpMode {
         if(isStoneRepo == true){
             //leftStrafeWithoutCorrection(20, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             //navigate(20, Constants12907.Direction.LEFT,0,0.75,false);
-            navigate(24, Constants12907.Direction.LEFT,0,0.75,false);
+            navigate(24, Constants12907.Direction.LEFT,0,0.9,false);
         } else {
             //leftStrafeWithoutCorrection(30, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            navigate(30, Constants12907.Direction.LEFT,0,0.75,false);
+            navigate(30, Constants12907.Direction.LEFT,0,0.9,false);
         }
 
         turnWithEncoders(90*direction, 0.75);
@@ -614,37 +614,8 @@ public class AutoAllBackFirst extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        /*
-        //rightStrafeWithoutCorrection(20,0.8,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
-        navigate(20, Constants12907.Direction.RIGHT,0,0.8,false);
+        navigate(10, Constants12907.Direction.LEFT,0,1.0,false);
 
-        if (isOuter == true && runtime.seconds()<=28 && isStoneRepo == false) {
-
-            //leftStrafeWithoutCorrection(5, 0.8, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            navigate(20, Constants12907.Direction.RIGHT,0,0.8,false);
-
-
-            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-            parameters.mode = BNO055IMU.SensorMode.IMU;
-            imuBase.initialize(parameters);
-
-            //pNavigate.navigate(14 * direction, Constants12907.Direction.STRAIGHT, 0, 0.8 * direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            navigate(14 * direction, Constants12907.Direction.STRAIGHT, 0, 0.8 * direction, true);
-
-            //leftStrafeWithoutCorrection(40, 0.99, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            navigate(40, Constants12907.Direction.LEFT,0,0.99,false);
-
-        } else if ((isOuter == false || isStoneRepo == true) && runtime.seconds()<=28) {
-
-
-            navigate(45, Constants12907.Direction.LEFT, 0, 0.99, true);
-
-        }
-        // }
-        */
     }//doAngleRepositioning
 
 
@@ -656,7 +627,7 @@ public class AutoAllBackFirst extends LinearOpMode {
         //double centerDistance = 4;
         double centerDistance = 5;
         //double rightDistance = -4;
-        double rightDistance = -27;
+        double rightDistance = -20;
         double armOffset = 6;
 
 
@@ -692,15 +663,15 @@ public class AutoAllBackFirst extends LinearOpMode {
             telemetry.addLine("position --> RIGHT");
             //pNavigate.navigate(rightDistance*direction, Constants12907.Direction.STRAIGHT, 0, 00.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             if(isBlue){
-                navigate(rightDistance, Constants12907.Direction.STRAIGHT, 0, -0.8, true);
+                navigate(rightDistance, Constants12907.Direction.STRAIGHT, 0, -0.5, true);
             }
             else if(!isBlue){
                 navigate(rightDistance-armOffset, Constants12907.Direction.STRAIGHT, 0, 0.8, true);
             }
             //fixed
             if(isBlue){
-                secondStoneDistance = 17;
-                firstStoneDistance = 40;
+                secondStoneDistance = 21;
+                firstStoneDistance = 37;
             } else {
                 secondStoneDistance = 2;
                 firstStoneDistance = 0;
@@ -715,9 +686,9 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         //instead of making a new method control using flag
         //rightStrafeWithoutCorrection(20, 0.8,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        navigate(20,Constants12907.Direction.RIGHT,0,0.8,false);
-        double currentDistance1 = quarryDistance.getDistance(DistanceUnit.INCH);
 
+        navigate(20,Constants12907.Direction.RIGHT,0,0.5,false);
+        double currentDistance1 = quarryDistance.getDistance(DistanceUnit.INCH);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -726,13 +697,13 @@ public class AutoAllBackFirst extends LinearOpMode {
         if((currentDistance1>20)||(currentDistance1<0)){
             navigate(6,Constants12907.Direction.RIGHT,0,0.8,false);
         }
-        else if(currentDistance1 > 6.5){
-            double targetDistance = 6;
+        else if(currentDistance1 > 5){
+            double targetDistance = 5;
             double toGoDistance = currentDistance1 - targetDistance;
             //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.RIGHT,0,0.25,false);
-        } else if (currentDistance1 < 5.5){
-            double targetDistance = 6;
+        } else if (currentDistance1 < 5){
+            double targetDistance = 5;
             double toGoDistance = targetDistance - currentDistance1;
             //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.LEFT,0,0.25,false);
@@ -743,16 +714,26 @@ public class AutoAllBackFirst extends LinearOpMode {
         telemetry.update();
         turnWithEncoders(-imuCorrection, 0.25);
 
+        if((skystonePosition.equals(Constants12907.SkystonePosition.RIGHT))&&((1-backDistance.getDistance(DistanceUnit.INCH))<-1)){
+            navigate(1-backDistance.getDistance(DistanceUnit.INCH),Constants12907.Direction.STRAIGHT,0,-0.4,false);
+        }
+
         SkystoneDetection skyStoneDetection = new SkystoneDetection();
         //GRAB skystone
         skyStoneDetection.intakeSkystone(blockClamper, pivotGrabber);
-
+        try {
+            //500 --> 250
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //leftStrafeWithoutCorrection(2, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        navigate(3,Constants12907.Direction.LEFT,0,0.5,false);
+        navigate(3.5,Constants12907.Direction.LEFT,0,0.5,false);
 
         //DELIVER skystone (to far side of foundation)
         //pNavigate.navigate((78 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         navigate((67 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
+
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
@@ -769,20 +750,20 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         //PLACE skystone (on foundation - so it may require a strafe right before dropping, then a strafe left to come back to the same spot)
         skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
+        /*try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
 
-        //STRAFE away from foundation
-        //leftStrafeWithoutCorrection(currentFoundationDistance1+0.5, 0.8, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
-        navigate(currentFoundationDistance1+0.5,Constants12907.Direction.LEFT,0,0.8,false);
+        navigate(currentFoundationDistance1+0.6,Constants12907.Direction.LEFT,0,0.8,false);
 
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
         turnWithEncoders(-imuCorrection, 0.25);
 
-
-        //ALIGN back to second set of stones of quarry
-        //pNavigate.navigate((-102 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        navigate((-67 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, true);
+        navigate((-60 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.6*direction, true);
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
@@ -796,31 +777,31 @@ public class AutoAllBackFirst extends LinearOpMode {
             e.printStackTrace();
         }
         if(currentDistance > 6.3){
-            double targetDistance = 6;
+            double targetDistance = 4.5;
             double toGoDistance = currentDistance - targetDistance;
             //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.RIGHT,0,0.25,false);
         } else if (currentDistance < 6){
-            double targetDistance = 6;
+            double targetDistance = 4.5;
             double toGoDistance = targetDistance - currentDistance;
             //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.LEFT,0,0.25,false);
         }
 
 
-        imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
-        telemetry.addData("IMU CORRECTION: ", imuCorrection);
-        telemetry.update();
-        turnWithEncoders(-imuCorrection, 0.25);
+
 
         //GRAB second skystone
         skyStoneDetection.intakeSkystone(blockClamper, pivotGrabber);
 
         //leftStrafeWithoutCorrection(2, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        navigate(2,Constants12907.Direction.LEFT,0,0.5,false);
-
+        navigate(3.25,Constants12907.Direction.LEFT,0,0.5,false);
+        imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
+        telemetry.addData("IMU CORRECTION: ", imuCorrection);
+        telemetry.update();
+        turnWithEncoders(-imuCorrection, 0.25);
         //DELIVER second skystone (to close side of foundation)
-        navigate((67 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
+        navigate((63 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
@@ -905,6 +886,18 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     // This is the method that gets called if constant is STRAIGHT
     private void forwardDrive (double pTgtDistance, double pSpeed) {
+        if(pSpeed<0){
+            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }else if(pSpeed>0){
+            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        }
         ElapsedTime runtime = new ElapsedTime();
 
         PIDController pidDrive = new PIDController(.05, 0, 0);

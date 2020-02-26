@@ -45,15 +45,6 @@ public class NavigationTester extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        /*frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);*/
     }
 
     @Override
@@ -79,7 +70,7 @@ public class NavigationTester extends LinearOpMode {
 
             //navigateTest.navigate(5, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
-            navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-1.0, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
             try {
                 Thread.sleep(2000);
@@ -87,12 +78,7 @@ public class NavigationTester extends LinearOpMode {
                 e.printStackTrace();
             }
 
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-            navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,1.0, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
 
                    /* navigateTest.navigate(23, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);

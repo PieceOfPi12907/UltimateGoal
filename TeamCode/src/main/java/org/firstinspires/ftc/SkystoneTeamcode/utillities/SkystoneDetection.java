@@ -36,9 +36,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 public class SkystoneDetection {
 
-    final double PIVOT_LOWERED = 0.8;
+    final double PIVOT_LOWERED = 0.85;
     final double PIVOT_MID = 0.7;
-    final double PIVOT_RAISED = 0.42;
+    final double PIVOT_RAISED = 0.5;
 
     final double CLAMP_OPENED = 0.5;
     //final double CLAMP_CLOSED = 0.8;

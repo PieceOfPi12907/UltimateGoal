@@ -47,6 +47,15 @@ public class NavigationHelper {
     // This is the method that gets called if constant is STRAIGHT
     private void forwardDrive (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry, BNO055IMU pImu) {
         if(pSpeed<0){
+            pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            pFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }else if(pSpeed>=0){
+            pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            pFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         }
         ElapsedTime runtime = new ElapsedTime();
