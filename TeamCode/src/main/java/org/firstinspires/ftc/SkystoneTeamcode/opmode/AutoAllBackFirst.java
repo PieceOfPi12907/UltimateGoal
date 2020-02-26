@@ -52,6 +52,7 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     double leftServoUp = 0.1;
     double rightServoUp = 0.85;
+    SkystoneDetection skyStoneDetection = new SkystoneDetection();
 
 
     //String position = "RIGHT";
@@ -619,6 +620,23 @@ public class AutoAllBackFirst extends LinearOpMode {
     }//doAngleRepositioning
 
 
+    private class SkystoneDropThread extends Thread {
+
+        public void SkystoneDropThread() {
+            this.setName("Attachments Thread");
+        }
+
+        @Override
+        public void run() {
+
+            try {
+                skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
+
+            } catch (Exception e) {
+
+            }
+        }
+    }
 
     private void twoStonePlaceMethod(double direction){
         double firstStoneDistance = 0;
@@ -718,7 +736,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             navigate(1-backDistance.getDistance(DistanceUnit.INCH),Constants12907.Direction.STRAIGHT,0,-0.4,false);
         }
 
-        SkystoneDetection skyStoneDetection = new SkystoneDetection();
+
         //GRAB skystone
         skyStoneDetection.intakeSkystone(blockClamper, pivotGrabber);
         try {
@@ -853,7 +871,10 @@ public class AutoAllBackFirst extends LinearOpMode {
         }
 
         //PLACE second skystone
-        skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
+        //Trying out Thread instead of calling this directly
+        //skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
+        Thread SkystoneDropThread = new SkystoneDropThread();
+        SkystoneDropThread.start();
 
     } //twoStonePlaceMethod
 
