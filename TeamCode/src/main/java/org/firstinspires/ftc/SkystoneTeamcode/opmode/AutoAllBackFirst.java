@@ -557,9 +557,6 @@ public class AutoAllBackFirst extends LinearOpMode {
 
 
 
-
-
-
     public void doAngleRepositioning(double direction, boolean isStoneRepo) {
 
         if(isStoneRepo != true){
@@ -597,25 +594,15 @@ public class AutoAllBackFirst extends LinearOpMode {
             navigate(30, Constants12907.Direction.LEFT,0,0.9,false);
         }
 
-        turnWithEncoders(90*direction, 0.75);
+        turnWithEncoders(90*direction, 1.0);
 
 
         repositioningLeft.setPosition(leftServoUp);
-        try {
-            //500 --> 250
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         repositioningRight.setPosition(rightServoUp);
-        try {
-            //750 --> 250
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        navigate(10, Constants12907.Direction.LEFT,0,1.0,false);
+
+        navigate(45, Constants12907.Direction.LEFT,0,1.0,false);
 
     }//doAngleRepositioning
 
@@ -761,10 +748,10 @@ public class AutoAllBackFirst extends LinearOpMode {
         //rightStrafeWithoutCorrection(0, 0.8, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
         double currentFoundationDistance1 = quarryDistance.getDistance(DistanceUnit.INCH);
         if(currentFoundationDistance1>10){
-            currentFoundationDistance1=10;
+            currentFoundationDistance1=12;
         }
         //rightStrafeWithoutCorrection(currentFoundationDistance1, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-        navigate(currentFoundationDistance1,Constants12907.Direction.RIGHT,0,0.25,false);
+        navigate(currentFoundationDistance1,Constants12907.Direction.RIGHT,0,0.9,false);
 
         //PLACE skystone (on foundation - so it may require a strafe right before dropping, then a strafe left to come back to the same spot)
         skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
@@ -774,7 +761,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             e.printStackTrace();
         }*/
 
-        navigate(currentFoundationDistance1+0.6,Constants12907.Direction.LEFT,0,0.8,false);
+        navigate(currentFoundationDistance1+1,Constants12907.Direction.LEFT,0,0.9,false);
 
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
@@ -808,16 +795,17 @@ public class AutoAllBackFirst extends LinearOpMode {
 
 
 
+        imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
+        telemetry.addData("IMU CORRECTION: ", imuCorrection);
+        telemetry.update();
+        turnWithEncoders(-imuCorrection, 0.25);
 
         //GRAB second skystone
         skyStoneDetection.intakeSkystone(blockClamper, pivotGrabber);
 
         //leftStrafeWithoutCorrection(2, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         navigate(3.25,Constants12907.Direction.LEFT,0,0.5,false);
-        imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
-        telemetry.addData("IMU CORRECTION: ", imuCorrection);
-        telemetry.update();
-        turnWithEncoders(-imuCorrection, 0.25);
+
         //DELIVER second skystone (to close side of foundation)
         navigate((63 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
