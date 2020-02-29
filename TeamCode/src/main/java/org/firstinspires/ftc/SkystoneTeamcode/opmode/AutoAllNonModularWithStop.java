@@ -2,6 +2,7 @@ package org.firstinspires.ftc.SkystoneTeamcode.opmode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,9 +38,12 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Auto Back First", group = "autonomous")
+@Disabled
 
-public class AutoAllBackFirst extends LinearOpMode {
+@Autonomous(name = "non modular STOP AutoAll (opencv)", group = "autonomous")
+
+
+public class AutoAllNonModularWithStop extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
@@ -52,7 +56,6 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     double leftServoUp = 0.1;
     double rightServoUp = 0.85;
-    SkystoneDetection skyStoneDetection = new SkystoneDetection();
 
 
     //String position = "RIGHT";
@@ -94,6 +97,7 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     ElapsedTime runtime = new ElapsedTime();
 
+
     DcMotor frontLeft;
     DcMotor backLeft;
     DcMotor frontRight;
@@ -106,7 +110,6 @@ public class AutoAllBackFirst extends LinearOpMode {
     ColorSensor backColor;
 
     DistanceSensor quarryDistance;
-    DistanceSensor backDistance;
     OpenCvCamera webcam;
 
     Servo pivotGrabber;
@@ -114,8 +117,6 @@ public class AutoAllBackFirst extends LinearOpMode {
     Servo repositioningRight;
     Servo repositioningLeft;
     Servo slideServo;
-    Servo leftIntakeServo;
-    Servo rightIntakeServo;
 
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
@@ -145,6 +146,8 @@ public class AutoAllBackFirst extends LinearOpMode {
     private final int rows = 640;
     private final int cols = 480;
 
+
+
     boolean isDelayed = false;
     boolean isDistAdd = false;
     Constants12907.SkystonePosition skystonePosition;
@@ -167,6 +170,7 @@ public class AutoAllBackFirst extends LinearOpMode {
         while(true){
             //add delay parameter to gamepads
             if((gamepad2.a) && (isDelayed == false)){
+                isDelayed = true;
                 isDelayed = true;
                 delay += 5;
                 /*if(delay > 10){
@@ -311,9 +315,6 @@ public class AutoAllBackFirst extends LinearOpMode {
         repositioningRight = hardwareMap.get(Servo.class, "rightRepositioningServo");
         repositioningLeft = hardwareMap.get(Servo.class, "leftRepositioningServo");
         slideServo = hardwareMap.get(Servo.class,"slideServo");
-        leftIntakeServo = hardwareMap.get(Servo.class,"leftIntakeServo");
-        rightIntakeServo = hardwareMap.get(Servo.class,"rightIntakeServo");
-
 
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -330,17 +331,14 @@ public class AutoAllBackFirst extends LinearOpMode {
             pivotGrabber.setPosition(0.4);
         } else {
             blockClamper.setPosition(0.5);
-            pivotGrabber.setPosition(0.5);
+            pivotGrabber.setPosition(0.4);
             slideServo.setPosition(0.1);
-
         }
-
 
 
         frontColor=hardwareMap.get(ColorSensor.class,"frontColor");
         backColor=hardwareMap.get(ColorSensor.class,"backColor");
         quarryDistance=hardwareMap.get(DistanceSensor.class,"quarryDistance");
-        backDistance=hardwareMap.get(DistanceSensor.class, "backDistance");
 
 
 
@@ -362,6 +360,7 @@ public class AutoAllBackFirst extends LinearOpMode {
         webcam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);
 
     }
+
 
 
     @Override
@@ -390,6 +389,10 @@ public class AutoAllBackFirst extends LinearOpMode {
                 //delay set (if not set in init: delay is 0)
                 sleep(delay * 1000);
 
+                if(isStopRequested()){
+                    stop();
+                }
+
                 if (!isRepo) {
 
 
@@ -414,7 +417,13 @@ public class AutoAllBackFirst extends LinearOpMode {
                         telemetry.addLine("CENTER");
 
                     }
+
+
                     telemetry.update();
+
+                    if(isStopRequested()){
+                        stop();
+                    }
 
 
                     //inputs skystone position into the hashmap "variableMap"
@@ -429,61 +438,99 @@ public class AutoAllBackFirst extends LinearOpMode {
                     direction = -1;
                 }
 
+                if(isStopRequested()){
+                    stop();
+                }
+
                 if (isPark == true) {
                     telemetry.addLine("Program Playing: Park");
                     telemetry.update();
                     moveToPark();
+
+                    if(isStopRequested()){
+                        stop();
+                    }
                 } else if (isRepo == true && isBlue == true && isOuter == true && isPark == false) {
                     telemetry.addLine("Program Playing: Blue Outer Repo");
                     telemetry.update();
                     doAngleRepositioning(direction,false);
+                    if(isStopRequested()){
+                        stop();
+                    }
                 } else if (isRepo == true && isBlue == true && isOuter == false && isPark == false) {
                     telemetry.addLine("Program Playing: Blue Inner Repo");
                     telemetry.update();
                     doAngleRepositioning(direction,false);
+                    if(isStopRequested()){
+                        stop();
+                    }
                 } else if (isRepo == true && isBlue == false && isOuter == true && isPark == false) {
                     telemetry.addLine("Program Playing: Red Outer Repo");
                     telemetry.update();
                     doAngleRepositioning(direction,false);
+                    if(isStopRequested()){
+                        stop();
+                    }
                 } else if (isRepo == true && isBlue == false && isOuter == false && isPark == false) {
                     telemetry.addLine("Program Playing: Red Inner Repo");
                     telemetry.update();
                     doAngleRepositioning(direction,false);
-
+                    if(isStopRequested()){
+                        stop();
+                    }
                 } else if(isTwoStoneRepo == true && isPark == false && isRepo == false){
                     //AutoTwoStoneRepo autoTwoStoneRepo = new AutoTwoStoneRepo();
                     telemetry.addLine("Program Playing: Two Stone Repo");
                     telemetry.update();
                     autoTwoStoneRepoPlayProgram();
+                    if(isStopRequested()){
+                        stop();
+                    }
                 }
             }
-
-            //try commenting out line 464 to 489
             webcam.closeCameraDevice();
 
+            if(isStopRequested()){
+                stop();
+            }
             //reset imu
-            /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
             parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
             parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
             parameters.mode = BNO055IMU.SensorMode.IMU;
             imuBase.initialize(parameters);
 
-            imuSide.initialize(parameters);*/
+            imuSide.initialize(parameters);
+
+            if(isStopRequested()){
+                stop();
+            }
 
             backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+            if(isStopRequested()){
+                stop();
+            }
+
             backLeft.setPower(0);
             backRight.setPower(0);
             frontLeft.setPower(0);
             frontRight.setPower(0);
 
+            if(isStopRequested()){
+                stop();
+            }
             // Disable Tracking when we are done;
             if(targetsSkyStone !=null){
                 targetsSkyStone.deactivate();
+            }
+
+            if(isStopRequested()){
+                stop();
             }
 
             telemetry.addLine("PROGRAM END");
@@ -504,12 +551,15 @@ public class AutoAllBackFirst extends LinearOpMode {
 
 
 
+
+
+
+
     public void moveToPark(){
 
         navigate(parkDist, Constants12907.Direction.STRAIGHT,0,0.5, true);
 
     }//moveToPark
-
 
     private void autoTwoStoneRepoPlayProgram(){
 
@@ -519,11 +569,11 @@ public class AutoAllBackFirst extends LinearOpMode {
         try {
 
 
-        /*    frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-*/
+
 
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
@@ -552,16 +602,36 @@ public class AutoAllBackFirst extends LinearOpMode {
     }//autoTwoStoneRepoPlayProgram
 
 
+
+
+
+
+
     public void doAngleRepositioning(double direction, boolean isStoneRepo) {
 
         if(isStoneRepo != true){
+            if(isStopRequested()){
+                stop();
+            }
+
             navigate(10*direction, Constants12907.Direction.STRAIGHT,0,0.5*direction,true);
 
-
+            if(isStopRequested()){
+                stop();
+            }
             //rightStrafeWithoutCorrection(31, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
             //rightStrafeWithoutCorrection(10, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
             navigate(31, Constants12907.Direction.RIGHT,0,0.75,false);
+
+            if(isStopRequested()){
+                stop();
+            }
+
             navigate(10, Constants12907.Direction.RIGHT,0,0.75,false);
+
+            if(isStopRequested()){
+                stop();
+            }
 
             repositioningLeft.setPosition(leftServoDown);
             try {
@@ -571,6 +641,11 @@ public class AutoAllBackFirst extends LinearOpMode {
                 e.printStackTrace();
             }
 
+            if(isStopRequested()){
+                stop();
+            }
+
+
             repositioningRight.setPosition(rightServoDown);
             try {
                 //750 --> 250
@@ -578,18 +653,33 @@ public class AutoAllBackFirst extends LinearOpMode {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            if(isStopRequested()){
+                stop();
+            }
         }
 
         if(isStoneRepo == true){
             //leftStrafeWithoutCorrection(20, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             //navigate(20, Constants12907.Direction.LEFT,0,0.75,false);
-            navigate(24, Constants12907.Direction.LEFT,0,0.9,false);
+            navigate(24, Constants12907.Direction.LEFT,0,0.75,false);
+
+            if(isStopRequested()){
+                stop();
+            }
         } else {
             //leftStrafeWithoutCorrection(30, 0.75, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
-            navigate(30, Constants12907.Direction.LEFT,0,0.9,false);
+            navigate(30, Constants12907.Direction.LEFT,0,0.75,false);
+
+            if(isStopRequested()){
+                stop();
+            }
         }
 
         turnWithEncoders(90*direction, 0.75);
+        if(isStopRequested()){
+            stop();
+        }
 
 
         repositioningLeft.setPosition(leftServoUp);
@@ -600,6 +690,10 @@ public class AutoAllBackFirst extends LinearOpMode {
             e.printStackTrace();
         }
 
+        if(isStopRequested()){
+            stop();
+        }
+
         repositioningRight.setPosition(rightServoUp);
         try {
             //750 --> 250
@@ -607,172 +701,273 @@ public class AutoAllBackFirst extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        navigate(10, Constants12907.Direction.LEFT,0,1.0,false);
 
+        if(isStopRequested()){
+            stop();
+        }
+
+        //rightStrafeWithoutCorrection(20,0.8,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry );
+        navigate(20, Constants12907.Direction.RIGHT,0,0.8,false);
+
+        if(isStopRequested()){
+            stop();
+        }
+
+        if (isOuter == true && runtime.seconds()<=28 && isStoneRepo == false) {
+
+            //leftStrafeWithoutCorrection(5, 0.8, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            navigate(20, Constants12907.Direction.RIGHT,0,0.8,false);
+
+
+            if(isStopRequested()){
+                stop();
+            }
+
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.mode = BNO055IMU.SensorMode.IMU;
+            imuBase.initialize(parameters);
+
+            if(isStopRequested()){
+                stop();
+            }
+
+            //pNavigate.navigate(14 * direction, Constants12907.Direction.STRAIGHT, 0, 0.8 * direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            navigate(14 * direction, Constants12907.Direction.STRAIGHT, 0, 0.8 * direction, true);
+
+            if(isStopRequested()){
+                stop();
+            }
+
+            //leftStrafeWithoutCorrection(40, 0.99, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            navigate(40, Constants12907.Direction.LEFT,0,0.99,false);
+            if(isStopRequested()){
+                stop();
+            }
+
+        } else if ((isOuter == false || isStoneRepo == true) && runtime.seconds()<=28) {
+
+
+            navigate(45, Constants12907.Direction.LEFT, 0, 0.99, true);
+            if(isStopRequested()){
+                stop();
+            }
+
+        }
+        // }
     }//doAngleRepositioning
 
 
-    private class SkystoneDropThread extends Thread {
-
-        public void SkystoneDropThread() {
-            this.setName("Attachments Thread");
-        }
-
-        @Override
-        public void run() {
-
-            try {
-                skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
-
-            } catch (Exception e) {
-
-            }
-        }
-    }
-
 
     private void twoStonePlaceMethod(double direction){
-
-        //initializing variables:
         double firstStoneDistance = 0;
         double secondStoneDistance = 0;
+        double leftDistance = 12;
+        //double centerDistance = 4;
+        double centerDistance = 5;
+        //double rightDistance = -1;
+        double rightDistance = -4;
+        double armOffset = 6;
 
-        double leftDistance = -8;
-        double centerDistance = -16;
-        double rightDistance = -20;
-
+        if(isStopRequested()){
+            stop();
+        }
+        //getting initial angle
         double imu_correct = imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         //ALIGN to skystone based on if it's in the left, center, or right position
         if(skystonePosition.equals(Constants12907.SkystonePosition.LEFT)) {
             telemetry.addLine("position --> LEFT");
+            if(isBlue){
+                navigate(leftDistance, Constants12907.Direction.STRAIGHT, 0, 0.8,true);
+                if(isStopRequested()){
+                    stop();
+                }
+            }else if (!isBlue){
+                navigate((leftDistance-armOffset)-2, Constants12907.Direction.STRAIGHT, 0, 0.8,true);
+                if(isStopRequested()){
+                    stop();
+                }
+            }
+
 
             if(isBlue){
-                navigate(leftDistance, Constants12907.Direction.STRAIGHT, 0, -0.8,true);
-                firstStoneDistance = 24;
                 secondStoneDistance = 0;
-            } else {
-                navigate(rightDistance * direction, Constants12907.Direction.STRAIGHT, 0, -0.8 * direction,true);
-                firstStoneDistance = 37;
-                secondStoneDistance = 21;
+                firstStoneDistance = 0;
+            } else{
+                secondStoneDistance = 20;
+                firstStoneDistance = 17;
             }
         }
-
         if(skystonePosition.equals(Constants12907.SkystonePosition.CENTER)) {
             telemetry.addLine("position --> CENTER");
             navigate(centerDistance*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
-
-            firstStoneDistance = 32;
-            secondStoneDistance = 8;
+            if(isStopRequested()){
+                stop();
+            }
+            secondStoneDistance = 12;
+            firstStoneDistance = 11;
         }
-
         if(skystonePosition.equals(Constants12907.SkystonePosition.RIGHT)) {
-            //pos from initial setup to reference point is 13
             telemetry.addLine("position --> RIGHT");
             //pNavigate.navigate(rightDistance*direction, Constants12907.Direction.STRAIGHT, 0, 00.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            if(isBlue){
+                navigate(rightDistance, Constants12907.Direction.STRAIGHT, 0, 0.8, true);
+                if(isStopRequested()){
+                    stop();
+                }
+            }
+            else if(!isBlue){
+                navigate(rightDistance-armOffset, Constants12907.Direction.STRAIGHT, 0, 0.8, true);
+                if(isStopRequested()){
+                    stop();
+                }
+            }
 
             if(isBlue){
-                navigate((rightDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
-                firstStoneDistance = 37;
-                secondStoneDistance = 21;
+                secondStoneDistance = 20;
+                firstStoneDistance = 17;
             } else {
-                navigate((leftDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
-                firstStoneDistance = 24;
-                secondStoneDistance = 0;
+                secondStoneDistance = 2;
+                firstStoneDistance = 0;
             }
+
         }
 
 
-        //MOVE TO GRAB
-            //instead of making a new method control using flag
-        navigate(20,Constants12907.Direction.RIGHT,0,0.5,false);
+        //MOVE TO GRAB using fixed distance for now to get to quarry
+        //(47" (wall to quarry) - 18" (robot) = 29" (move) - 3" (gap btwn quarry & robot) = 26" (final))
+        //pNavigate.navigate(26, Constants12907.Direction.RIGHT, 0, 00.8, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
-        //get distance to move MORE towards quarry
+        //instead of making a new method control using flag
+        //rightStrafeWithoutCorrection(20, 0.8,pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        navigate(20,Constants12907.Direction.RIGHT,0,0.8,false);
+        if(isStopRequested()){
+            stop();
+        }
+
         double currentDistance1 = quarryDistance.getDistance(DistanceUnit.INCH);
+
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        //based on the distance sensed, move a certain distance
         if((currentDistance1>20)||(currentDistance1<0)){
             navigate(6,Constants12907.Direction.RIGHT,0,0.8,false);
-        } else if(currentDistance1 > 5){
-            double targetDistance = 5;
+            if(isStopRequested()){
+                stop();
+            }
+        }
+        else if(currentDistance1 > 6.5){
+            double targetDistance = 6;
             double toGoDistance = currentDistance1 - targetDistance;
-                //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.RIGHT,0,0.25,false);
-        } else if (currentDistance1 < 5){
-            double targetDistance = 5;
+            if(isStopRequested()){
+                stop();
+            }
+        } else if (currentDistance1 < 5.5){
+            double targetDistance = 6;
             double toGoDistance = targetDistance - currentDistance1;
-                //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.LEFT,0,0.25,false);
+            if(isStopRequested()){
+                stop();
+            }
         }
 
-        //angle correction
         double imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
         turnWithEncoders(-imuCorrection, 0.25);
-
-        //move MORE towards the wall if the skystone position is right on the blue side & left on the red side
-        if( isBlue && (skystonePosition.equals(Constants12907.SkystonePosition.RIGHT))&&((1-backDistance.getDistance(DistanceUnit.INCH)) < -1)){
-            navigate(1-backDistance.getDistance(DistanceUnit.INCH),Constants12907.Direction.STRAIGHT,0,-0.4,false);
+        if(isStopRequested()){
+            stop();
         }
 
+        SkystoneDetection skyStoneDetection = new SkystoneDetection();
         //GRAB skystone
         skyStoneDetection.intakeSkystone(blockClamper, pivotGrabber);
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(isStopRequested()){
+            stop();
         }
 
-        //strafe away from stones
-        navigate(3.5,Constants12907.Direction.LEFT,0,0.5,false);
+        //leftStrafeWithoutCorrection(2, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        navigate(3,Constants12907.Direction.LEFT,0,0.5,false);
+        if(isStopRequested()){
+            stop();
+        }
 
-        //DELIVER skystone (to close side of foundation)
-        //navigate((67 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
-        navigate((65 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
-
-
-        //angle correction
+        //DELIVER skystone (to far side of foundation)
+        //pNavigate.navigate((78 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        navigate((67 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
+        if(isStopRequested()){
+            stop();
+        }
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
+        if(isStopRequested()){
+            stop();
+        }
         turnWithEncoders(-imuCorrection, 0.25);
+        if(isStopRequested()){
+            stop();
+        }
 
-        //STRAFE to foundation with distance sensor
+        //STRAFE to foundation
+        //rightStrafeWithoutCorrection(0, 0.8, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
         double currentFoundationDistance1 = quarryDistance.getDistance(DistanceUnit.INCH);
         if(currentFoundationDistance1>10){
             currentFoundationDistance1=10;
         }
+        if(isStopRequested()){
+            stop();
+        }
+        //rightStrafeWithoutCorrection(currentFoundationDistance1, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         navigate(currentFoundationDistance1,Constants12907.Direction.RIGHT,0,0.25,false);
-
-        //PLACE skystone
+        if(isStopRequested()){
+            stop();
+        }
+        //PLACE skystone (on foundation - so it may require a strafe right before dropping, then a strafe left to come back to the same spot)
         skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
+        if(isStopRequested()){
+            stop();
+        }
 
         //STRAFE away from foundation
-        navigate(currentFoundationDistance1+0.6,Constants12907.Direction.LEFT,0,0.8,false);
+        //leftStrafeWithoutCorrection(currentFoundationDistance1+0.5, 0.8, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+        navigate(currentFoundationDistance1+0.5,Constants12907.Direction.LEFT,0,0.8,false);
 
-        //angle correction
+        if(isStopRequested()){
+            stop();
+        }
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
         turnWithEncoders(-imuCorrection, 0.25);
 
-        //Navigate across field to get to second stone
-        //navigate((-67 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.6*direction, true);
-        navigate((-65 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.6*direction, true);
+        if(isStopRequested()){
+            stop();
+        }
 
-        //angle correction
+        //ALIGN back to second set of stones of quarry
+        //pNavigate.navigate((-102 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        navigate((-91 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, true);
+        if(isStopRequested()){
+            stop();
+        }
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
         turnWithEncoders(-imuCorrection, 0.25);
+        if(isStopRequested()){
+            stop();
+        }
 
-        //MOVE towards second skystone in quarry using distance sensor
+        //MOVE to second skystone
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
         try {
             Thread.sleep(100);
@@ -780,41 +975,61 @@ public class AutoAllBackFirst extends LinearOpMode {
             e.printStackTrace();
         }
         if(currentDistance > 6.3){
-            double targetDistance = 4.5;
+            double targetDistance = 6;
             double toGoDistance = currentDistance - targetDistance;
-                //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.RIGHT,0,0.25,false);
+            if(isStopRequested()){
+                stop();
+            }
         } else if (currentDistance < 6){
-            double targetDistance = 4.5;
+            double targetDistance = 6;
             double toGoDistance = targetDistance - currentDistance;
-                //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.LEFT,0,0.25,false);
+            if(isStopRequested()){
+                stop();
+            }
         }
 
-        //GRAB second skystone
-        skyStoneDetection.intakeSkystone(blockClamper, pivotGrabber);
 
-        //Strafe away from quarry
-        navigate(3.25,Constants12907.Direction.LEFT,0,0.5,false);
-
-        //angle correction
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
         turnWithEncoders(-imuCorrection, 0.25);
+        if(isStopRequested()){
+            stop();
+        }
+
+        //GRAB second skystone
+        skyStoneDetection.intakeSkystone(blockClamper, pivotGrabber);
+        if(isStopRequested()){
+            stop();
+        }
+
+        //leftStrafeWithoutCorrection(2, 0.5, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+        navigate(2,Constants12907.Direction.LEFT,0,0.5,false);
+        if(isStopRequested()){
+            stop();
+        }
 
         //DELIVER second skystone (to close side of foundation)
-        navigate((65 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
-
-        //angle correction
+        navigate((93 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
+        if(isStopRequested()){
+            stop();
+        }
         imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         telemetry.addData("IMU CORRECTION: ", imuCorrection);
         telemetry.update();
         turnWithEncoders(-imuCorrection, 0.25 );
+        if(isStopRequested()){
+            stop();
+        }
 
-        //set repo hooks to mid position (to move any stones on the foundation in the way)
+
         repositioningLeft.setPosition(0.45);
         try {
+            //500 --> 2500
             Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -826,43 +1041,58 @@ public class AutoAllBackFirst extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        if(isStopRequested()){
+            stop();
+        }
 
-        //get distance to quarry
         double currentFoundationDistance = quarryDistance.getDistance(DistanceUnit.INCH);
         telemetry.addData("Distance to Foundation",currentFoundationDistance);
         telemetry.update();
+        if(isStopRequested()){
+            stop();
+        }
 
-        //move towards quarry with an extra one inch assurance
+
+        //if(currentFoundationDistance > 2){
+        //rightStrafeWithoutCorrection(currentFoundationDistance+1, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         navigate(currentFoundationDistance+1,Constants12907.Direction.RIGHT,0,0.25,false);
+        if(isStopRequested()){
+            stop();
+        }
         telemetry.addData("Distance to Foundation After",quarryDistance.getDistance(DistanceUnit.INCH));
+        //}
 
 
         //LATCH repositioning arms on to foundation
         repositioningLeft.setPosition(leftServoDown);
         try {
+            //500 --> 2500
             Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         repositioningRight.setPosition(rightServoDown);
         try {
+            //500 --> 250
             Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        if(isStopRequested()){
+            stop();
+        }
 
         //PLACE second skystone
-            //Trying out Thread instead of calling this directly
-            //skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
-        Thread SkystoneDropThread = new SkystoneDropThread();
-        SkystoneDropThread.start();
+        skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
+        if(isStopRequested()){
+            stop();
+        }
 
     } //twoStonePlaceMethod
 
 
 
 
-//NAVIGATION HELPER &  OPEN CV METHODS BELOW
 
     private void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, boolean pCorrection){
         if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
@@ -884,24 +1114,11 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     }//navigate
 
-
     Orientation lastAngles = new Orientation();
     double globalAngle;
 
     // This is the method that gets called if constant is STRAIGHT
     private void forwardDrive (double pTgtDistance, double pSpeed) {
-        if(pSpeed<0){
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }else if(pSpeed>0){
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        }
         ElapsedTime runtime = new ElapsedTime();
 
         PIDController pidDrive = new PIDController(.05, 0, 0);
@@ -959,6 +1176,9 @@ public class AutoAllBackFirst extends LinearOpMode {
             backRight.setPower(pSpeed + correction);
             frontLeft.setPower(pSpeed - correction);
             backLeft.setPower(pSpeed - correction);
+            if(isStopRequested()){
+                stop();
+            }
         }
 
         //stop motors
@@ -1053,6 +1273,9 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         while (backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy() && opModeIsActive()) {
             // Display it for the driver.
+            if(isStopRequested()){
+                stop();
+            }
         }
 
         //stop motors
@@ -1143,7 +1366,9 @@ public class AutoAllBackFirst extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
-
+            if(isStopRequested()){
+                stop();
+            }
         }
 
         //stop motors
@@ -1192,6 +1417,9 @@ public class AutoAllBackFirst extends LinearOpMode {
                 backLeft.setPower(-pSpeed);
                 computedAngle = ((imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                         AngleUnit.DEGREES)).firstAngle) - currentAngle;
+                if(isStopRequested()){
+                    stop();
+                }
             }
         } else {
             while (computedAngle > pRotation && opModeIsActive()) {
@@ -1203,6 +1431,9 @@ public class AutoAllBackFirst extends LinearOpMode {
                 backLeft.setPower(pSpeed);
                 computedAngle = ((imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                         AngleUnit.DEGREES)).firstAngle) - currentAngle;
+                if(isStopRequested()){
+                    stop();
+                }
             }
 
         }
@@ -1232,6 +1463,28 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         }
     }//turnWithEncodersWithCorrection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

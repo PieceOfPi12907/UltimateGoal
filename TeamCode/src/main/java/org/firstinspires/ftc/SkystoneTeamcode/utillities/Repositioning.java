@@ -30,6 +30,7 @@ public class Repositioning {
             direction = 1;
         }
 
+
         if(isStoneRepo != true){
             pNavigate.navigate(10*direction, Constants12907.Direction.STRAIGHT,0,0.5*direction,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
