@@ -732,7 +732,7 @@ public class AutoAllTensor extends LinearOpMode {
                     telemetry.update();
                     boolean isStoneRepo = true;
                     Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue, repositioningRight,repositioningLeft);
+                    //skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue, repositioningRight,repositioningLeft);
                     repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
                     //  autoOuterOneBlockRepoBlue.playProgram(variableMap);
 
@@ -741,7 +741,7 @@ public class AutoAllTensor extends LinearOpMode {
                     telemetry.update();
                     boolean isStoneRepo = true;
                     Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue, repositioningRight, repositioningLeft);
+                    //skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue, repositioningRight, repositioningLeft);
                     repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
                     //  autoInnerOneBlockRepoBlue.playProgram(variableMap);
 
@@ -750,7 +750,7 @@ public class AutoAllTensor extends LinearOpMode {
                     telemetry.update();
                     boolean isStoneRepo = true;
                     Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue,repositioningRight,repositioningLeft);
+                    //skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue,repositioningRight,repositioningLeft);
                     repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
                     //autoOuterOneBlockRepoRed.playProgram(variableMap);
 
@@ -759,7 +759,7 @@ public class AutoAllTensor extends LinearOpMode {
                     telemetry.update();
                     boolean isStoneRepo = true;
                     Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper, isBlue,repositioningRight,repositioningLeft);
+                    //skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper, isBlue,repositioningRight,repositioningLeft);
                     repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imuBase, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
                     //autoInnerOneBlockRepoRed.playProgram(variableMap);
 
@@ -767,16 +767,16 @@ public class AutoAllTensor extends LinearOpMode {
                     telemetry.addLine("Program Playing: Blue Inner Two Block");
                     telemetry.update();
                     Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue());
-                    skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), runtime);
+                    //skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue());
+                    //skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), runtime);
                     //autoInnerTwoBlocksBlue.playProgram(variableMap);
 
                 } else if (isRepo == false && isOneStone == false && isBlue == false && isOuter == false && isPark == false) {
                     telemetry.addLine("Program Playing: Red Inner Two Block");
                     telemetry.update();
                     Constants12907.SkystonePosition position = (Constants12907.SkystonePosition) variableMap.get(Constants12907.SKY_POSITION);
-                    skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue());
-                    skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry,position, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue(), runtime);
+                    //skystoneDetection.moveToSkystoneOne(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry, position, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue());
+                    //skystoneDetection.moveToSkystoneTwo(backLeft, backRight, frontRight, frontLeft, navigationHelper, imuBase, telemetry,position, quarryDistance, pivotGrabber, blockClamper, isBlue.booleanValue(), runtime);
                     //autoInnerTwoBlocksRed.playProgram(variableMap);
                 }
 

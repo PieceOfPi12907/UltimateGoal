@@ -66,7 +66,7 @@ public class AutoInnerOneBlockRepoRed {
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
 
-            skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, isBlue,repositioningRight,repositioningLeft);
+            //skystoneDetection.moveToSkystoneOneWithREPO(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper, isBlue,repositioningRight,repositioningLeft);
 
             repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
 

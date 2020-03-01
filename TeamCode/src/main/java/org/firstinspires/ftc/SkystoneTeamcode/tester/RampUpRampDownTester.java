@@ -68,35 +68,55 @@ public class RampUpRampDownTester extends LinearOpMode{
 
         @Override
         public void runOpMode() throws InterruptedException {
-            initialize();
 
-            while (!isStopRequested() && !imu.isGyroCalibrated()) {
-                sleep(50);
-                idle();
-            }
-            telemetry.addData("imu calibration status: ", imu.getCalibrationStatus().toString());
-            telemetry.update();
+            try {
 
-            waitForStart();
+                initialize();
 
-            if (opModeIsActive()) {
-                forwardDrive(90);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while (!isStopRequested() && !imu.isGyroCalibrated()) {
+                    sleep(50);
+                    idle();
                 }
-                forwardDrive(-90);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                telemetry.addData("imu calibration status: ", imu.getCalibrationStatus().toString());
+                telemetry.update();
+
+                waitForStart();
+
+                if (opModeIsActive()) {
+                    forwardDrive(90, 1);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    forwardDrive(-90, -1);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    forwardDrive(90, 1);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    forwardDrive(-90, -1);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //forwardDrive(90);
                 }
-                forwardDrive(90);
+            } catch (Exception bad){
+                telemetry.addData("EXCEPTION!!!:", bad.getMessage());
+                bad.printStackTrace();
+                telemetry.update();
             }
         }
 
-            private void forwardDrive (double pTgtDistance) {
+            private void forwardDrive (double pTgtDistance, int direction) {
                 ElapsedTime runtime = new ElapsedTime();
 
                 //Variables used for converting inches to Encoder dounts
@@ -147,15 +167,28 @@ public class RampUpRampDownTester extends LinearOpMode{
                 pidDrive.setOutputRange(0,0.5);
                 pidDrive.setInputRange(90, 90);
                 pidDrive.enable();
-                while ((backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy())) {
 
-                    double power = setRampPower(newTargetPositionRight);
+                int count = 0;
+
+                while ((backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy() && opModeIsActive()) || isStopRequested()) {
+
+                    double power = direction * setRampPower(newTargetPositionRight);
 
                     double correction = pidDrive.performPID(getAngle(imu));
-                    frontRight.setPower(power + correction);
-                    backRight.setPower(power + correction);
-                    frontLeft.setPower(power - correction);
-                    backLeft.setPower(power - correction);
+
+                    if(isStopRequested()){
+                        frontRight.setPower(0);
+                        backRight.setPower(0);
+                        frontLeft.setPower(0);
+                        backLeft.setPower(0);
+                        break;
+                    } else{
+                        frontRight.setPower(power + correction);
+                        backRight.setPower(power + correction);
+                        frontLeft.setPower(power - correction);
+                        backLeft.setPower(power - correction);
+                    }
+
                 }
 
                 //stop motors
@@ -163,6 +196,12 @@ public class RampUpRampDownTester extends LinearOpMode{
                 frontRight.setPower(0);
                 backLeft.setPower(0);
                 backRight.setPower(0);
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 telemetry.addData("Final Position", "Running at %7d :%7d : %7d: %7d",
                         backLeft.getCurrentPosition(),
@@ -173,17 +212,20 @@ public class RampUpRampDownTester extends LinearOpMode{
             }
 
             public double setRampPower (int totalEncoders) {
-                int rampUp = totalEncoders / 10;
-                int constantSpeed = (totalEncoders / 10) * 7;
-                int rampDown = totalEncoders / 5;
+                double rampUp = Math.abs(totalEncoders / 10);
+                double constantSpeed = Math.abs((totalEncoders / 10) * 6);
+                double rampDown = Math.abs((totalEncoders/ 10)*3);
                 double power;
 
-                if (backRight.getCurrentPosition()<rampUp) {
-                     power = 0.5 + (backRight.getCurrentPosition() / rampUp);
+                if (Math.abs(backRight.getCurrentPosition())<rampUp) {
+                     //power = 0.5 + ((backRight.getCurrentPosition() / rampUp)/2);
+                    power = 0.75;
                 }
-                else if(backRight.getCurrentPosition()>totalEncoders-rampDown){
-                     power = 1.0 - (0.8*(((backRight.getCurrentPosition()-(rampUp+constantSpeed))/rampDown)/(rampDown)));
-
+                else if(Math.abs(backRight.getCurrentPosition())>(Math.abs(totalEncoders)-rampDown)){
+                     //power = 1.0 - (0.8*(((backRight.getCurrentPosition()-(rampUp+constantSpeed))/rampDown)));
+                    power = 0.4;
+                     telemetry.addLine("PHASE 3");
+                     telemetry.update();
                 }
                 else{
                      power = 1.0;

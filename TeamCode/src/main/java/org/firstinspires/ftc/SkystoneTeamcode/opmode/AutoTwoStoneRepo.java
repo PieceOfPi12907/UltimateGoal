@@ -70,7 +70,7 @@ public class AutoTwoStoneRepo {
             telemetry.addLine("********* PROGRAM RUNNING! ********** ");
             telemetry.update();
 
-            skystoneDetection.twoStonePlaceMethod(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), runtime, repositioningRight,repositioningLeft);
+            //skystoneDetection.twoStonePlaceMethod(backLeft, backRight, frontRight, frontLeft, navigationHelper, imu, telemetry, skystonePosition, quarryDistance, pivotGrabber, blockClamper,  isBlue.booleanValue(), runtime, repositioningRight,repositioningLeft);
             repositioning.doAngleRepositioning(frontLeft, frontRight, backLeft, backRight, navigationHelper, imu, telemetry, isBlue, isOuter, isStoneRepo, repositioningRight, repositioningLeft, runtime);
 
         } catch (Exception bad){

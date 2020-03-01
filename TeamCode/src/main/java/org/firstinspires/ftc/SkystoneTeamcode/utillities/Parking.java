@@ -18,7 +18,7 @@ public class Parking {
 
        Long parkDistance = (long) pVariableMap.get(Constants12907.PARK_DISTANCE);
 
-       pNavigate.navigate(parkDistance, Constants12907.Direction.STRAIGHT,0,0.5, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+       //pNavigate.navigate(parkDistance, Constants12907.Direction.STRAIGHT,0,0.5, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
    }
 }

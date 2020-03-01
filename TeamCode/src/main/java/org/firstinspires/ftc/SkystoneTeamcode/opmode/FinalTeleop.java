@@ -86,10 +86,10 @@ public class FinalTeleop extends LinearOpMode {
     final double DUMPER_CLAMP_INSIDE_UP = 0.875;
     final double DUMPER_CLAMP_INSIDE_DOWN = 0.38;
     final double DUMPER_CLAMP_OUTSIDE_UP = 0.1;
-    final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.55;
+    final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.60;
 
-    final double SLIDE_SERVO_OUT = 0.58;
-    final double SLIDE_SERVO_IN = 0.005;
+    double SLIDE_SERVO_OUT = 0.58;
+    double SLIDE_SERVO_IN = 0.005;
 
     final double CAP_UP = 0.49;
 
@@ -262,18 +262,20 @@ public class FinalTeleop extends LinearOpMode {
         }
         private void newIntakeControl() {
             if(gamepad2.dpad_left&&test_time.seconds()>0.25){
-                if(intakeSpeed<1){
-                    test_time.reset();
-                    intakeSpeed=intakeSpeed+0.05;
-                    telemetry.addData("intake speed: ", intakeSpeed);
+                test_time.reset();
+                if(SLIDE_SERVO_OUT<=0.99){
+                    SLIDE_SERVO_OUT+=0.02;
+                    slideServo.setPosition(SLIDE_SERVO_OUT);
+                    telemetry.addData("New Servo OUT Position",SLIDE_SERVO_OUT);
                     telemetry.update();
                 }
             }
             if(gamepad2.dpad_right&&test_time.seconds()>0.25){
-                if(intakeSpeed>0){
-                    test_time.reset();
-                    intakeSpeed=intakeSpeed-0.05;
-                    telemetry.addData("intake speed: ", intakeSpeed);
+                test_time.reset();
+                if(SLIDE_SERVO_OUT<=0.99) {
+                    SLIDE_SERVO_OUT -= 0.02;
+                    slideServo.setPosition(SLIDE_SERVO_OUT);
+                    telemetry.addData("New Servo OUT Position", SLIDE_SERVO_OUT);
                     telemetry.update();
                 }
             }

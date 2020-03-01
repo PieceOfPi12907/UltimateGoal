@@ -49,7 +49,7 @@ public class WebcamThreadTester extends LinearOpMode {
         initialize();
         waitForStart();
         if(opModeIsActive()) {
-            navigationHelper.navigate(11, Constants12907.Direction.RIGHT, 0, 0.5, movementMotor1, movementMotor1, movementMotor1, movementMotor1, imu, telemetry);
+            //navigationHelper.navigate(11, Constants12907.Direction.RIGHT, 0, 0.5, movementMotor1, movementMotor1, movementMotor1, movementMotor1, imu, telemetry);
             webcamInit.interrupt();
             Constants12907.SkystonePosition skystonePosition = detectSkystoneWithWebcam(lastLocation);
 
