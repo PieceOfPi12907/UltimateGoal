@@ -53,7 +53,14 @@ public class AutoArmTester extends LinearOpMode {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        sideClampServo.setPosition(0.5);
+        /*sideClampServo.setPosition(0.5);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        sideClampServo.setPosition(0.3);
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
@@ -87,26 +94,28 @@ public class AutoArmTester extends LinearOpMode {
 
             //navigateTest.navigate(31, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
-            sideArmServo.setPosition(0.8);
+            sideArmServo.setPosition(0.9);
             try {
-                Thread.sleep(250);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             sideClampServo.setPosition(1);
             try {
-                Thread.sleep(250);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            sideArmServo.setPosition(0.4);
+            sideArmServo.setPosition(0.3);
             try {
                 Thread.sleep(250);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+
 
 
 

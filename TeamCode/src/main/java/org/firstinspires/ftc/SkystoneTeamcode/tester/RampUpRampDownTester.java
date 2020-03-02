@@ -143,7 +143,7 @@ public class RampUpRampDownTester extends LinearOpMode{
                     }
 
                     forwardDrive(90, 1);
-                    
+
 
                     sideArmServo.setPosition(0.8);
                     try {

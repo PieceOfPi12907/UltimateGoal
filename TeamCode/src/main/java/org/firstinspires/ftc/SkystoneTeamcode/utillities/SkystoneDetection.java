@@ -56,7 +56,7 @@ public class SkystoneDetection {
     NavigationHelper navigater = new NavigationHelper();
     SensorHelper sensorHelper = new SensorHelper();
 
-    public void intakeSkystone(Servo blockClamper, Servo pivotGrabber) {
+    /*public void intakeSkystone(Servo blockClamper, Servo pivotGrabber) {
         //Intake skystone  Code
         blockClamper.setPosition(CLAMP_OPENED);
         try {
@@ -82,9 +82,71 @@ public class SkystoneDetection {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }*/
+
+    public void intakeSkystone(Servo blockClamper, Servo pivotGrabber) {
+        blockClamper.setPosition(0.3);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pivotGrabber.setPosition(0.8);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        blockClamper.setPosition(1);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pivotGrabber.setPosition(0.3);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void extakeSkystone(Servo blockClamper, Servo pivotGrabber) {
+        pivotGrabber.setPosition(0.8);
+        try {
+            Thread.sleep(25);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        blockClamper.setPosition(0);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pivotGrabber.setPosition(0.4);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        blockClamper.setPosition(1);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /*public void extakeSkystone(Servo blockClamper, Servo pivotGrabber) {
         pivotGrabber.setPosition(PIVOT_LOWERED);
         try {
             Thread.sleep(150);
@@ -109,7 +171,7 @@ public class SkystoneDetection {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }*'
 
 
     /*public void moveToSkystoneOne(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, Boolean isBlue){
