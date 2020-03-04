@@ -21,9 +21,9 @@ public class NavigationHelper {
 
 
     // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
-    public void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry ){
+    public void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry, boolean isForward ){
         if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
-            forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry, pImu);
+            forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry, pImu, isForward );
         }
 
         else if(pDirection.equals(Constants12907.Direction.LEFT)){
@@ -45,19 +45,35 @@ public class NavigationHelper {
 
 
     // This is the method that gets called if constant is STRAIGHT
-    private void forwardDrive (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry, BNO055IMU pImu) {
-        if(pSpeed<0){
+    private void forwardDrive (double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, Telemetry telemetry, BNO055IMU pImu, boolean isForward) {
+        /*if(pSpeed<0){
             pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             pFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }else if(pSpeed>=0){
             pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             pFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }*/
+        /*if(!isForward){
+            pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            pFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }else if(isForward){
+            pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            pFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }*/
 
-        }
+        pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         ElapsedTime runtime = new ElapsedTime();
 
         PIDController pidDrive = new PIDController(.05, 0, 0);

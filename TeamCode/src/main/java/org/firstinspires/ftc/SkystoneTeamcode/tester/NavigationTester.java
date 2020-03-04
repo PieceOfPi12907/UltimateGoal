@@ -10,6 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 @Autonomous(name = "Navigation Test", group = "autonomous")
 public class NavigationTester extends LinearOpMode {
@@ -45,6 +48,11 @@ public class NavigationTester extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 
     @Override
@@ -66,19 +74,30 @@ public class NavigationTester extends LinearOpMode {
 
             //navigateTest.navigate(31, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
 
+           double imu_correct = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+            navigateTest.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
+
+            double imuCorrection = (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
+            telemetry.addData("IMU CORRECTION: ", imuCorrection);
+            telemetry.update();
+            navigateTest.turnWithEncoders(frontRight, frontLeft, backRight, backLeft, -imuCorrection, 0.25, imu, telemetry);
 
 
-            //navigateTest.navigate(5, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-            navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
 
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
-            navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
                    /* navigateTest.navigate(23, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);

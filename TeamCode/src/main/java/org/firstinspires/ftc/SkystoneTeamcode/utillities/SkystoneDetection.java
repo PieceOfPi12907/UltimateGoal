@@ -56,7 +56,7 @@ public class SkystoneDetection {
     NavigationHelper navigater = new NavigationHelper();
     SensorHelper sensorHelper = new SensorHelper();
 
-    public void intakeSkystone(Servo blockClamper, Servo pivotGrabber) {
+    /*public void intakeSkystone(Servo blockClamper, Servo pivotGrabber) {
         //Intake skystone  Code
         blockClamper.setPosition(CLAMP_OPENED);
         try {
@@ -82,9 +82,71 @@ public class SkystoneDetection {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }*/
+
+    public void intakeSkystone(Servo blockClamper, Servo pivotGrabber) {
+        blockClamper.setPosition(0.3);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pivotGrabber.setPosition(0.8);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        blockClamper.setPosition(1);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pivotGrabber.setPosition(0.3);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void extakeSkystone(Servo blockClamper, Servo pivotGrabber) {
+        pivotGrabber.setPosition(0.8);
+        try {
+            Thread.sleep(25);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        blockClamper.setPosition(0);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pivotGrabber.setPosition(0.4);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        blockClamper.setPosition(1);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /*public void extakeSkystone(Servo blockClamper, Servo pivotGrabber) {
         pivotGrabber.setPosition(PIVOT_LOWERED);
         try {
             Thread.sleep(150);
@@ -109,10 +171,10 @@ public class SkystoneDetection {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }*'
 
 
-    public void moveToSkystoneOne(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, Boolean isBlue){
+    /*public void moveToSkystoneOne(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, Boolean isBlue){
 
         if(isBlue == true){
             negative = 1;
@@ -133,7 +195,8 @@ public class SkystoneDetection {
         pNavigate.navigate(11*negative, Constants12907.Direction.STRAIGHT, 0, 0.40*negative, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         extakeSkystone(blockClamper, pivotGrabber);
     }
-
+*/
+    /*
     private void moveWithDistanceOne(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper,  Boolean isBlue){
         pivotGrabber.setPosition(0.45);
 
@@ -514,7 +577,7 @@ public class SkystoneDetection {
         extakeSkystone(blockClamper, pivotGrabber);
 
     }
-
+*/
 
     double direction;
     double firstStoneDistance = 0;
@@ -541,7 +604,7 @@ public class SkystoneDetection {
     place,
      */
 
-    public void twoStonePlaceMethod(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, Boolean isBlue, ElapsedTime pRuntime, Servo repositioningRight, Servo repositioningLeft){
+   /* public void twoStonePlaceMethod(DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, NavigationHelper pNavigate, BNO055IMU pImu, Telemetry pTelemetry, Constants12907.SkystonePosition pSkystonePosition, DistanceSensor quarryDistance, Servo pivotGrabber, Servo blockClamper, Boolean isBlue, ElapsedTime pRuntime, Servo repositioningRight, Servo repositioningLeft){
         if(isBlue == true){
             direction = 1;
         } else {
@@ -698,7 +761,7 @@ public class SkystoneDetection {
             pNavigate.navigate(-2*direction, Constants12907.Direction.STRAIGHT, 0, -0.8*direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
         }*/
 
-
+/*
         imuCorrection = (pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
         pTelemetry.addData("IMU CORRECTION: ", imuCorrection);
         pTelemetry.update();
@@ -771,7 +834,7 @@ public class SkystoneDetection {
 
     } //End of TwoStoneRepo Method
 
-
+*/
     private void leftStrafeWithoutCorrection(double pTgtDistance, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft,  BNO055IMU pImu, Telemetry telemetry) {
         ElapsedTime runtime = new ElapsedTime();
 

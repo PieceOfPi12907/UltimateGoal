@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 @TeleOp(name="TankDriveTeleop", group = "teleop")
 public class TankDriveTeleop extends LinearOpMode {
 
@@ -13,6 +15,11 @@ public class TankDriveTeleop extends LinearOpMode {
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight= hardwareMap.get(DcMotor.class, "backRight");
+
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
@@ -21,10 +28,10 @@ public class TankDriveTeleop extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            frontRight.setPower(-gamepad1.right_stick_y);
-            frontLeft.setPower(gamepad1.left_stick_y);
-            backRight.setPower(-gamepad1.right_stick_y);
-            backLeft.setPower(gamepad1.left_stick_y);
+            frontRight.setPower(-gamepad1.left_stick_y);
+            frontLeft.setPower(-gamepad1.right_stick_y);
+            backRight.setPower(-gamepad1.left_stick_y);
+            backLeft.setPower(-gamepad1.right_stick_y);
             }
         }
 

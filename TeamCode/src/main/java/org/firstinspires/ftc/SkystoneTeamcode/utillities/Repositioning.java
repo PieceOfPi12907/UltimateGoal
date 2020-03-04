@@ -30,8 +30,9 @@ public class Repositioning {
             direction = 1;
         }
 
+
         if(isStoneRepo != true){
-            pNavigate.navigate(10*direction, Constants12907.Direction.STRAIGHT,0,0.5*direction,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
+           // pNavigate.navigate(10*direction, Constants12907.Direction.STRAIGHT,0,0.5*direction,pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
 
             //rightStrafeWithoutCorrection(38, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
             rightStrafeWithoutCorrection(31, 0.75, pBackLeft,pBackRight,pFrontRight,pFrontLeft,pImu,pTelemetry);
@@ -124,7 +125,7 @@ public class Repositioning {
                 parameters.mode = BNO055IMU.SensorMode.IMU;
                 pImu.initialize(parameters);
 
-                pNavigate.navigate(14 * direction, Constants12907.Direction.STRAIGHT, 0, 0.8 * direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+                //pNavigate.navigate(14 * direction, Constants12907.Direction.STRAIGHT, 0, 0.8 * direction, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
                 leftStrafeWithoutCorrection(40, 0.99, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
@@ -137,7 +138,7 @@ public class Repositioning {
                 parameters.mode = BNO055IMU.SensorMode.IMU;
                 pImu.initialize(parameters);*/
 
-                pNavigate.navigate(45, Constants12907.Direction.LEFT, 0, 0.99, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+               // pNavigate.navigate(45, Constants12907.Direction.LEFT, 0, 0.99, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
 
             }
        // }

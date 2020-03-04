@@ -64,7 +64,7 @@ public class StopDebug extends LinearOpMode {
             else{
                 direction = -1;
             }
-            navigate.navigate( 90*direction, Constants12907.Direction.STRAIGHT ,  0,  0.5*direction,  backLeft,  backRight, frontRight, frontLeft, imu, telemetry);
+            //navigate.navigate( 90*direction, Constants12907.Direction.STRAIGHT ,  0,  0.5*direction,  backLeft,  backRight, frontRight, frontLeft, imu, telemetry);
         }
     }
 }
