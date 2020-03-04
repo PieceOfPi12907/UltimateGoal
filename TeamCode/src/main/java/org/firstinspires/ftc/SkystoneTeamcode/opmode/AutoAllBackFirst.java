@@ -37,11 +37,10 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Auto Back First", group = "autonomous")
+@Autonomous(name = "Auto Back First State", group = "autonomous")
 
 public class AutoAllBackFirst extends LinearOpMode {
 
-    //class var
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
@@ -145,6 +144,8 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     private final int rows = 640;
     private final int cols = 480;
+
+
 
     boolean isDelayed = false;
     boolean isDistAdd = false;
@@ -331,7 +332,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             pivotGrabber.setPosition(0.4);
         } else {
             blockClamper.setPosition(0.5);
-            pivotGrabber.setPosition(0.5);
+            pivotGrabber.setPosition(0.6);
             slideServo.setPosition(0.1);
 
         }
@@ -458,8 +459,6 @@ public class AutoAllBackFirst extends LinearOpMode {
                     autoTwoStoneRepoPlayProgram();
                 }
             }
-
-            //try commenting out line 464 to 489
             webcam.closeCameraDevice();
 
             //reset imu
@@ -505,12 +504,15 @@ public class AutoAllBackFirst extends LinearOpMode {
 
 
 
+
+
+
+
     public void moveToPark(){
 
         navigate(parkDist, Constants12907.Direction.STRAIGHT,0,0.5, true);
 
     }//moveToPark
-
 
     private void autoTwoStoneRepoPlayProgram(){
 
@@ -538,7 +540,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             }
 
             twoStonePlaceMethod(direction);
-            doAngleRepositioning(direction,true);
+            //doAngleRepositioning(direction,true);
 
         } catch (Exception bad){
             telemetry.addData("EXCEPTION:", bad.toString());
@@ -551,6 +553,8 @@ public class AutoAllBackFirst extends LinearOpMode {
         }
 
     }//autoTwoStoneRepoPlayProgram
+
+
 
 
     public void doAngleRepositioning(double direction, boolean isStoneRepo) {
@@ -590,25 +594,15 @@ public class AutoAllBackFirst extends LinearOpMode {
             navigate(30, Constants12907.Direction.LEFT,0,0.9,false);
         }
 
-        turnWithEncoders(90*direction, 0.75);
+        turnWithEncoders(90*direction, 1.0);
 
 
         repositioningLeft.setPosition(leftServoUp);
-        try {
-            //500 --> 250
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         repositioningRight.setPosition(rightServoUp);
-        try {
-            //750 --> 250
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        navigate(10, Constants12907.Direction.LEFT,0,1.0,false);
+
+        navigate(45, Constants12907.Direction.LEFT,0,1.0,false);
 
     }//doAngleRepositioning
 
@@ -631,7 +625,6 @@ public class AutoAllBackFirst extends LinearOpMode {
         }
     }
 
-
     private void twoStonePlaceMethod(double direction){
 
         //initializing variables:
@@ -639,8 +632,14 @@ public class AutoAllBackFirst extends LinearOpMode {
         double secondStoneDistance = 0;
 
         double leftDistance = -8;
-        double centerDistance = -16;
-        double rightDistance = -20;
+        double centerDistance = -11;//-16
+        double rightDistance = -14;
+
+        if(isBlue){
+            direction = 1;
+        } else {
+            direction = -1;
+        }
 
         double imu_correct = imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
@@ -661,7 +660,7 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         if(skystonePosition.equals(Constants12907.SkystonePosition.CENTER)) {
             telemetry.addLine("position --> CENTER");
-            navigate(centerDistance*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
+            navigate((centerDistance*direction), Constants12907.Direction.STRAIGHT, 0, (0.8*direction),true);
 
             firstStoneDistance = 32;
             secondStoneDistance = 8;
@@ -685,7 +684,7 @@ public class AutoAllBackFirst extends LinearOpMode {
 
 
         //MOVE TO GRAB
-            //instead of making a new method control using flag
+        //instead of making a new method control using flag
         navigate(20,Constants12907.Direction.RIGHT,0,0.5,false);
 
         //get distance to move MORE towards quarry
@@ -699,15 +698,15 @@ public class AutoAllBackFirst extends LinearOpMode {
         //based on the distance sensed, move a certain distance
         if((currentDistance1>20)||(currentDistance1<0)){
             navigate(6,Constants12907.Direction.RIGHT,0,0.8,false);
-        } else if(currentDistance1 > 5){
-            double targetDistance = 5;
+        } else if(currentDistance1 > 6){
+            double targetDistance = 6;
             double toGoDistance = currentDistance1 - targetDistance;
-                //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.RIGHT,0,0.25,false);
-        } else if (currentDistance1 < 5){
-            double targetDistance = 5;
+        } else if (currentDistance1 < 6){
+            double targetDistance = 6;
             double toGoDistance = targetDistance - currentDistance1;
-                //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.LEFT,0,0.25,false);
         }
 
@@ -721,7 +720,7 @@ public class AutoAllBackFirst extends LinearOpMode {
         if( isBlue && (skystonePosition.equals(Constants12907.SkystonePosition.RIGHT))&&((1-backDistance.getDistance(DistanceUnit.INCH)) < -1)){
             navigate(1-backDistance.getDistance(DistanceUnit.INCH),Constants12907.Direction.STRAIGHT,0,-0.4,false);
         }
-
+        /*
         //GRAB skystone
         skyStoneDetection.intakeSkystone(blockClamper, pivotGrabber);
         try {
@@ -783,12 +782,12 @@ public class AutoAllBackFirst extends LinearOpMode {
         if(currentDistance > 6.3){
             double targetDistance = 4.5;
             double toGoDistance = currentDistance - targetDistance;
-                //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.RIGHT,0,0.25,false);
         } else if (currentDistance < 6){
             double targetDistance = 4.5;
             double toGoDistance = targetDistance - currentDistance;
-                //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
+            //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.LEFT,0,0.25,false);
         }
 
@@ -853,21 +852,25 @@ public class AutoAllBackFirst extends LinearOpMode {
         }
 
         //PLACE second skystone
-            //Trying out Thread instead of calling this directly
-            //skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
+        //Trying out Thread instead of calling this directly
+        //skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
         Thread SkystoneDropThread = new SkystoneDropThread();
-        SkystoneDropThread.start();
+        SkystoneDropThread.start();*/
 
     } //twoStonePlaceMethod
 
 
 
 
-//NAVIGATION HELPER &  OPEN CV METHODS BELOW
 
     private void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, boolean pCorrection){
+
         if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
-            forwardDrive(pTgtDistance, pSpeed);
+            if(pSpeed > 0){
+                forwardDrive(pTgtDistance, 1);
+            } else if(pSpeed < 0){
+                forwardDrive(pTgtDistance, -1);
+            }
         }
 
         else if(pDirection.equals(Constants12907.Direction.LEFT)){
@@ -885,21 +888,20 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     }//navigate
 
-
     Orientation lastAngles = new Orientation();
     double globalAngle;
 
     // This is the method that gets called if constant is STRAIGHT
-    private void forwardDrive (double pTgtDistance, double pSpeed) {
+    /*private void forwardDrive (double pTgtDistance, double pSpeed) {
         if(pSpeed<0){
             frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }else if(pSpeed>0){
             frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         }
@@ -976,8 +978,8 @@ public class AutoAllBackFirst extends LinearOpMode {
         telemetry.update();
 
     }//forwardDrive
-
-
+*/
+/*
     private double getAngle()
     {
         // We experimentally determined the Z axis is the axis we want to use for heading angle.
@@ -1000,10 +1002,151 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         return globalAngle;
     }//getAngle
+*/
+
+    private void forwardDrive (double pTgtDistance, int direction) {
+        ElapsedTime runtime = new ElapsedTime();
+
+        PIDController pidDrive = new PIDController(.05, 0, 0);
+
+        //Variables used for converting inches to Encoder dounts
+        final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
+        final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
+        final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
+        final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
+                (WHEEL_DIAMETER_INCHES * 3.1415);
+        // newTargetPosition is the target position after it has been converted
+        int newTargetPositionRight;
+        int newTargetPositionLeft;
+        // Sets all encoder values to 0 as we are moving robot with all 4 encoders
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Determine new target position, converts it, and pass to motor controller
+        newTargetPositionLeft = backLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionRight = backRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionLeft = frontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        newTargetPositionRight = frontRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
+        backLeft.setTargetPosition(newTargetPositionLeft);
+        backRight.setTargetPosition(newTargetPositionRight);
+        frontLeft.setTargetPosition(newTargetPositionLeft);
+        frontRight.setTargetPosition(newTargetPositionRight);
+        runtime.reset();
+
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                backLeft.getCurrentPosition(), backRight.getCurrentPosition());
+        telemetry.addData("New Target Position","Left %7d : Right %7d", newTargetPositionLeft,newTargetPositionRight);
+        telemetry.addData("Initial Value", "Running at %7d :%7d",
+                frontLeft.getCurrentPosition(), frontRight.getCurrentPosition());
+        telemetry.update();
+
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    /*frontRight.setPower((pSpeed));
+    backRight.setPower((pSpeed));
+    frontLeft.setPower((pSpeed));
+    backLeft.setPower((pSpeed));*/
+
+        //This while loop will keep the motors running to the target position until one of the motors have reached the final encoder count
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0,0.5);
+        pidDrive.setInputRange(90, 90);
+        pidDrive.enable();
+
+        int count = 0;
+
+        while ((backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy() && opModeIsActive()) || isStopRequested()) {
+
+            double power = direction * setRampPower(newTargetPositionRight);
+
+            double correction = pidDrive.performPID(getAngle(imuBase));
+
+            if(isStopRequested()){
+                frontRight.setPower(0);
+                backRight.setPower(0);
+                frontLeft.setPower(0);
+                backLeft.setPower(0);
+                break;
+            } else{
+                frontRight.setPower(power + correction);
+                backRight.setPower(power + correction);
+                frontLeft.setPower(power - correction);
+                backLeft.setPower(power - correction);
+            }
+
+        }
+
+        //stop motors
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        telemetry.addData("Final Position", "Running at %7d :%7d : %7d: %7d",
+                backLeft.getCurrentPosition(),
+                backRight.getCurrentPosition(),
+                frontLeft.getCurrentPosition(),
+                frontRight.getCurrentPosition());
+        telemetry.update();
+    }
+
+    public double setRampPower (int totalEncoders) {
+        double rampUp = Math.abs(totalEncoders / 10);
+        double constantSpeed = Math.abs((totalEncoders / 10) * 6);
+        double rampDown = Math.abs((totalEncoders/ 10)*3);
+        double power;
+
+        if (Math.abs(backRight.getCurrentPosition())<rampUp) {
+            //power = 0.5 + ((backRight.getCurrentPosition() / rampUp)/2);
+            power = 0.75;
+        }
+        else if(Math.abs(backRight.getCurrentPosition())>(Math.abs(totalEncoders)-rampDown)){
+            //power = 1.0 - (0.8*(((backRight.getCurrentPosition()-(rampUp+constantSpeed))/rampDown)));
+            power = 0.4;
+            telemetry.addLine("PHASE 3");
+            telemetry.update();
+        }
+        else{
+            power = 1.0;
+        }
+        return power;
+    }
 
 
-    //leftStrafe
-    /*private void leftStrafe(double pTgtDistance, double pSpeed, boolean pCorrection) {
+    private double getAngle(BNO055IMU pImu){
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    private void leftStrafe(double pTgtDistance, double pSpeed, boolean pCorrection) {
         ElapsedTime runtime = new ElapsedTime();
 
         final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
@@ -1076,8 +1219,6 @@ public class AutoAllBackFirst extends LinearOpMode {
         }
     }//leftStrafe
 
-     */
-
     private void strafeCorrection (double pStartAngle) {
 
         double currentAngle = imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
@@ -1094,155 +1235,6 @@ public class AutoAllBackFirst extends LinearOpMode {
     }//strafeCorrection
 
 
-    //rightStrafe
-    /* private void rightStrafe(double pTgtDistance, double pSpeed, boolean pCorrection) {
-
-        ElapsedTime runtime = new ElapsedTime();
-
-        final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
-        final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
-        final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
-        final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
-                (WHEEL_DIAMETER_INCHES * 3.1415);
-        int newTargetPositionFrontRight;
-        int newTargetPositionFrontLeft;
-        int newTargetPositionBackRight;
-        int newTargetPositionBackLeft;
-
-        double startingAngle = imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
-                AngleUnit.DEGREES).firstAngle;
-
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Determine new target position, and pass to motor controller
-        newTargetPositionBackLeft = backLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
-        newTargetPositionBackRight = backRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
-        newTargetPositionFrontLeft = frontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
-        newTargetPositionFrontRight = frontRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
-        backLeft.setTargetPosition(-(newTargetPositionBackLeft));
-        backRight.setTargetPosition(newTargetPositionBackRight);
-        frontRight.setTargetPosition(-(newTargetPositionFrontRight));
-        frontLeft.setTargetPosition(newTargetPositionBackLeft);
-        runtime.reset();
-
-        telemetry.addData("Initial Value", "Running at %7d :%7d",
-                backLeft.getCurrentPosition(), backRight.getCurrentPosition(), frontLeft.getCurrentPosition(), frontRight.getCurrentPosition());
-        telemetry.update();
-
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        frontRight.setPower(-(pSpeed));
-        backRight.setPower((pSpeed));
-        frontLeft.setPower((pSpeed));
-        backLeft.setPower(-(pSpeed));
-
-        telemetry.addData("Path1", "Target Position %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
-        telemetry.update();
-
-        while (opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
-
-        }
-
-        //stop motors
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-
-        telemetry.addData("Final Position", "Running at %7d :%7d",
-                backLeft.getCurrentPosition(),
-                backRight.getCurrentPosition(),
-                frontLeft.getCurrentPosition(),
-                frontRight.getCurrentPosition());
-        telemetry.update();
-
-        if(pCorrection) {
-            this.strafeCorrection(startingAngle);
-        }
-
-    }//rightStrafe */
-
-    private void leftStrafe(double pTgtDistance, double pSpeed, boolean pCorrection) {
-        ElapsedTime runtime = new ElapsedTime();
-
-        final double COUNTS_PER_MOTOR_DCMOTOR = 1120;    // eg: TETRIX Motor Encoder
-        final double DRIVE_GEAR_REDUCTION = 0.5;     // This is < 1.0 if geared UP
-        final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
-        final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
-                (WHEEL_DIAMETER_INCHES * 3.1415);
-        int newTargetPositionFrontRight;
-        int newTargetPositionFrontLeft;
-        int newTargetPositionBackRight;
-        int newTargetPositionBackLeft;
-
-        double startingAngle = imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
-                AngleUnit.DEGREES).firstAngle;
-
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Determine new target position, and pass to motor controller
-        newTargetPositionBackLeft = backLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
-        newTargetPositionBackRight = backRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
-        newTargetPositionFrontLeft = frontLeft.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
-        newTargetPositionFrontRight = frontRight.getCurrentPosition() + (int) (pTgtDistance * COUNTS_PER_INCH);
-        backLeft.setTargetPosition(newTargetPositionBackLeft);
-        backRight.setTargetPosition(-(newTargetPositionBackRight));
-        frontRight.setTargetPosition(newTargetPositionFrontRight);
-        frontLeft.setTargetPosition(-(newTargetPositionBackLeft));
-        runtime.reset();
-
-        telemetry.addData("Initial Value", "Running at %7d :%7d",
-                backLeft.getCurrentPosition(), backRight.getCurrentPosition(), frontLeft.getCurrentPosition(), frontRight.getCurrentPosition());
-        telemetry.update();
-
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        frontRight.setPower((pSpeed));
-        backRight.setPower(-(pSpeed));
-        frontLeft.setPower(-(pSpeed));
-        backLeft.setPower((pSpeed));
-
-        telemetry.addData("Path1", "Target Position %7d :%7d", newTargetPositionBackLeft, newTargetPositionBackRight, newTargetPositionFrontLeft, newTargetPositionFrontRight);
-
-        telemetry.update();
-
-        while (backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy() && opModeIsActive()) {
-            if (isStopRequested()) {
-                stop();
-            }
-
-        }
-
-        //stop motors
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-
-        telemetry.addData("Final Position", "Running at %7d :%7d",
-                backLeft.getCurrentPosition(),
-                backRight.getCurrentPosition(),
-                frontLeft.getCurrentPosition(),
-                frontRight.getCurrentPosition());
-        telemetry.update();
-
-
-        if(pCorrection) {
-            this.strafeCorrection(startingAngle);
-        }
-    }//leftStrafe
 
 
     private void rightStrafe(double pTgtDistance, double pSpeed, boolean pCorrection) {
@@ -1296,9 +1288,7 @@ public class AutoAllBackFirst extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
-            if (isStopRequested()) {
-                stop();
-            }
+
         }
 
         //stop motors
@@ -1387,6 +1377,28 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         }
     }//turnWithEncodersWithCorrection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

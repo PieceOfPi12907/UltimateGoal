@@ -41,6 +41,7 @@ public class FinalTeleop extends LinearOpMode {
     Servo slideServo;
 
     Servo capServo;
+    Servo backRepo;
 
     boolean isInsideClampUp = true;
     boolean isOutsideClampUp = false;
@@ -83,13 +84,17 @@ public class FinalTeleop extends LinearOpMode {
     final double RIGHT_REPOSITIONING_MID = 0.45;
     final double RIGHT_REPOSITIONING_UP = 0.85;
 
+    final double BACK_REPO_DOWN = 0.01;
+    final double BACK_REPO_MID = 0.5;
+    final double BACK_REPO_UP = 1.0;
+
     final double DUMPER_CLAMP_INSIDE_UP = 0.875;
     final double DUMPER_CLAMP_INSIDE_DOWN = 0.38;
     final double DUMPER_CLAMP_OUTSIDE_UP = 0.1;
     final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.60;
 
-     double SLIDE_SERVO_OUT = 0.58;
-     double SLIDE_SERVO_IN = 0.005;
+    double SLIDE_SERVO_OUT = 0.58;
+    double SLIDE_SERVO_IN = 0.005;
 
     final double CAP_UP = 0.49;
 
@@ -123,6 +128,7 @@ public class FinalTeleop extends LinearOpMode {
         sideClampServo = hardwareMap.get(Servo.class, "blockClamper");
         slideServo = hardwareMap.get(Servo.class,"slideServo");
         capServo = hardwareMap.get(Servo.class,"capServo");
+        backRepo = hardwareMap.get(Servo.class,"backRepo");
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -142,6 +148,7 @@ public class FinalTeleop extends LinearOpMode {
         dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
         dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
         leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
+        backRepo.setPosition(BACK_REPO_UP);
         repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
 
         sideArmServo.setPosition(SIDE_ARM_RAISED);
@@ -262,11 +269,22 @@ public class FinalTeleop extends LinearOpMode {
         }
         private void newIntakeControl() {
             if(gamepad2.dpad_left&&test_time.seconds()>0.25){
-                SLIDE_SERVO_OUT+=0.01;
-
+                test_time.reset();
+                if(SLIDE_SERVO_OUT<=0.99){
+                    SLIDE_SERVO_OUT+=0.02;
+                    slideServo.setPosition(SLIDE_SERVO_OUT);
+                    telemetry.addData("New Servo OUT Position",SLIDE_SERVO_OUT);
+                    telemetry.update();
+                }
             }
             if(gamepad2.dpad_right&&test_time.seconds()>0.25){
-                SLIDE_SERVO_IN-=0.01;;
+                test_time.reset();
+                if(SLIDE_SERVO_OUT<=0.99) {
+                    SLIDE_SERVO_OUT -= 0.02;
+                    slideServo.setPosition(SLIDE_SERVO_OUT);
+                    telemetry.addData("New Servo OUT Position", SLIDE_SERVO_OUT);
+                    telemetry.update();
+                }
             }
             if(gamepad1.left_bumper&&lb_time.seconds()<0.25){
                 lb_time.reset();
@@ -361,15 +379,18 @@ public class FinalTeleop extends LinearOpMode {
             if(Constants12907.RepositioningServoPositions.UP.equals(repositioningServoPos)){
                 leftRepositionServo.setPosition(LEFT_REPOSITIONING_MID);
                 rightRepositionServo.setPosition(RIGHT_REPOSITIONING_MID);
+                backRepo.setPosition(BACK_REPO_MID);
                 repositioningServoPos = Constants12907.RepositioningServoPositions.MID;
             }else if(Constants12907.RepositioningServoPositions.MID.equals(repositioningServoPos)){
                 leftRepositionServo.setPosition(LEFT_REPOSITIONING_DOWN);
                 rightRepositionServo.setPosition(RIGHT_REPOSITIONING_DOWN);
+                backRepo.setPosition(BACK_REPO_DOWN);
                 repositioningServoPos = Constants12907.RepositioningServoPositions.DOWN;
 
             }else if(Constants12907.RepositioningServoPositions.DOWN.equals(repositioningServoPos)){
                 leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
                 rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
+                backRepo.setPosition(BACK_REPO_UP);
                 repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
 
             }
