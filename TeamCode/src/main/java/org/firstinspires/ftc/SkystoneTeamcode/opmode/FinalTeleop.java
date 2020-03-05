@@ -71,8 +71,8 @@ public class FinalTeleop extends LinearOpMode {
     final double AUTO_CLAMP_OPENED = 0.5;
     final double AUTO_CLAMP_CLOSED = 0.8;
 
-    final double INTAKE_LEFT_OPEN = 0.66; //0.68;
-    final double INTAKE_RIGHT_OPEN = 0.84; //0.78;
+    final double INTAKE_LEFT_OPEN = 0.65; //0.66 //0.68;
+    final double INTAKE_RIGHT_OPEN = 0.83; //0.84 //0.78;
     final double INTAKE_RIGHT_CLOSE = 0.50;
     final double INTAKE_LEFT_CLOSE = 0.43;
 
