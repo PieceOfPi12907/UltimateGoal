@@ -94,14 +94,14 @@ public class SkystoneDetection {
 
         pivotGrabber.setPosition(0.8);
         try {
-            Thread.sleep(500);
+            Thread.sleep(400);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         blockClamper.setPosition(1);
         try {
-            Thread.sleep(500);
+            Thread.sleep(400);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
