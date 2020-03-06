@@ -594,7 +594,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             navigate(30, Constants12907.Direction.LEFT,0,0.9,false);
         }
 
-        turnWithEncoders(65*direction, 0.5 );
+        turnWithEncoders(70*direction, 0.8 );
 
 
         repositioningLeft.setPosition(leftServoUp);
@@ -602,7 +602,7 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         repositioningRight.setPosition(rightServoUp);
 
-        navigate(30, Constants12907.Direction.LEFT,0,1.0,false);
+        navigate(37, Constants12907.Direction.LEFT,0,1.0,false);
 
     }//doAngleRepositioning
 
@@ -631,9 +631,9 @@ public class AutoAllBackFirst extends LinearOpMode {
         double firstStoneDistance = 0;
         double secondStoneDistance = 0;
 
-        double leftDistance = -8;
-        double centerDistance = -11;//-16
-        double rightDistance = -14;
+        double leftDistance = -9;
+        double centerDistance = -12;//-16
+        double rightDistance = -15;
 
         if(isBlue){
             direction = 1;
@@ -663,6 +663,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             navigate((centerDistance*direction), Constants12907.Direction.STRAIGHT, 0, (0.8*direction),true);
 
             firstStoneDistance = 32;
+
             secondStoneDistance = 8;//4
         }
 
@@ -677,7 +678,7 @@ public class AutoAllBackFirst extends LinearOpMode {
                 secondStoneDistance = 13;//21
             } else {
                 navigate((leftDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
-                firstStoneDistance = 24;
+                firstStoneDistance = 26;
                 secondStoneDistance = -2;//0
             }
         }
@@ -692,25 +693,18 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         //based on the distance sensed, move a certain distance
         if((currentDistance1>20)||(currentDistance1<0)){
-            navigate(6,Constants12907.Direction.RIGHT,0,0.8,false);
-        } else if(currentDistance1 > 6){
-            double targetDistance = 6;
+            navigate(6.5,Constants12907.Direction.RIGHT,0,0.8,false);
+        } else if(currentDistance1 > 6.5){
+            double targetDistance = 6.5;
             double toGoDistance = currentDistance1 - targetDistance;
             //rightStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.RIGHT,0,0.25,false);
-        } else if (currentDistance1 < 6){
-            double targetDistance = 6;
+        } else if (currentDistance1 < 6.5){
+            double targetDistance = 6.5;
             double toGoDistance = targetDistance - currentDistance1;
             //leftStrafeWithoutCorrection(toGoDistance, 0.25, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, pTelemetry);
             navigate(toGoDistance,Constants12907.Direction.LEFT,0,0.25,false);
         }
-
-        //angle correction
-        /*double imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
-        telemetry.addData("IMU CORRECTION: ", imuCorrection);
-        telemetry.update();
-        turnWithEncoders(-imuCorrection, 0.25);*/
-
         //move MORE towards the wall if the skystone position is right on the blue side & left on the red side
         if( isBlue && (skystonePosition.equals(Constants12907.SkystonePosition.RIGHT))&&((1-backDistance.getDistance(DistanceUnit.INCH)) < -1)){
             navigate(1-backDistance.getDistance(DistanceUnit.INCH),Constants12907.Direction.STRAIGHT,0,-0.4,false);
@@ -725,8 +719,8 @@ public class AutoAllBackFirst extends LinearOpMode {
         }
 
 
-        navigate((80 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
-        navigate(5, Constants12907.Direction.RIGHT,0,1.0,false);
+        navigate((70 + firstStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction, true);
+        navigate(6, Constants12907.Direction.RIGHT,0,1.0,false);
 
         //angle correction
         /*double imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
@@ -744,18 +738,20 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         //PLACE skystone
         skyStoneDetection.extakeSkystone(blockClamper, pivotGrabber);
-        navigate(-5, Constants12907.Direction.RIGHT,0,-1.0,false);
+        navigate(-6, Constants12907.Direction.RIGHT,0,-1.0,false);
 
         //STRAFE away from foundation
         //navigate(currentFoundationDistance1+0.6,Constants12907.Direction.LEFT,0,0.8,false);
 
 
-        navigate((-80 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.6*direction, true);
+        navigate((-70 - secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, -0.6*direction, true);
 
 
 
         //MOVE towards second skystone in quarry using distance sensor
         double currentDistance = quarryDistance.getDistance(DistanceUnit.INCH);
+        telemetry.addData("current distance",currentDistance);
+        telemetry.update();
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -763,13 +759,13 @@ public class AutoAllBackFirst extends LinearOpMode {
         }
 
         if((currentDistance>20)||(currentDistance<0)){
-            navigate(7,Constants12907.Direction.RIGHT,0,0.8,false);
-        } else if(currentDistance > 7){
-            double targetDistance = 7;
+            navigate(6.5,Constants12907.Direction.RIGHT,0,0.8,false);
+        } else if(currentDistance > 6.5){
+            double targetDistance = 6.5;
             double toGoDistance = currentDistance - targetDistance;
             navigate(toGoDistance,Constants12907.Direction.RIGHT,0,0.25,false);
-        } else if (currentDistance < 7){
-            double targetDistance = 7;
+        } else if (currentDistance < 6.5){
+            double targetDistance = 6.5;
             double toGoDistance = targetDistance - currentDistance;
             navigate(toGoDistance,Constants12907.Direction.LEFT,0,0.25,false);
         }
@@ -783,8 +779,12 @@ public class AutoAllBackFirst extends LinearOpMode {
 
 
         //DELIVER second skystone (to close side of foundation)
-        navigate((72 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
+        navigate((75 + secondStoneDistance)*direction, Constants12907.Direction.STRAIGHT, 0, 0.8*direction,true);
 
+        double imuCorrection = (imuBase.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
+        telemetry.addData("IMU CORRECTION: ", imuCorrection);
+        telemetry.update();
+        turnWithEncoders(-imuCorrection, 0.25);
         //set repo hooks to mid position (to move any stones on the foundation in the way)
         repositioningLeft.setPosition(0.45);
         try {
@@ -806,7 +806,7 @@ public class AutoAllBackFirst extends LinearOpMode {
         telemetry.update();
 
         //move towards quarry with an extra one inch assurance
-        navigate(currentFoundationDistance+1,Constants12907.Direction.RIGHT,0,0.25,false);
+        navigate(currentFoundationDistance+2,Constants12907.Direction.RIGHT,0,0.25,false);
         telemetry.addData("Distance to Foundation After",quarryDistance.getDistance(DistanceUnit.INCH));
 
 
@@ -1061,7 +1061,7 @@ public class AutoAllBackFirst extends LinearOpMode {
         backRight.setPower(0);
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
