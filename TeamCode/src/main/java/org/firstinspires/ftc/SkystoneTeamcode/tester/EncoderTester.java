@@ -94,7 +94,9 @@ public class EncoderTester extends LinearOpMode {
             telemetry.update();
 
             while (backLeft.isBusy()) {
-
+                telemetry.addData("Back Left",
+                        backLeft.getCurrentPosition());
+                telemetry.update();
             }
             backLeft.setPower(0);
             try {
@@ -110,6 +112,9 @@ public class EncoderTester extends LinearOpMode {
             telemetry.update();
             while (backRight.isBusy()) {
 
+                telemetry.addData("Back Right",
+                        backRight.getCurrentPosition());
+                telemetry.update();
             }
             backRight.setPower(0);
             try {
@@ -124,6 +129,9 @@ public class EncoderTester extends LinearOpMode {
                     frontLeft.getCurrentPosition());
             telemetry.update();
             while (frontLeft.isBusy()) {
+                telemetry.addData("Front Left",
+                        frontLeft.getCurrentPosition());
+                telemetry.update();
 
             }
             frontLeft.setPower(0);
@@ -139,6 +147,9 @@ public class EncoderTester extends LinearOpMode {
                     frontRight.getCurrentPosition());
             telemetry.update();
             while (frontRight.isBusy()) {
+                telemetry.addData("Front Right",
+                        frontRight.getCurrentPosition());
+                telemetry.update();
 
             }
             frontRight.setPower(0);

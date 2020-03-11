@@ -594,6 +594,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             navigate(30, Constants12907.Direction.LEFT,0,0.9,false);
         }
 
+        //CHANGE BACK TO 90!
         turnWithEncoders(70*direction, 0.8 );
 
 
@@ -693,7 +694,7 @@ public class AutoAllBackFirst extends LinearOpMode {
 
         //based on the distance sensed, move a certain distance
         if((currentDistance1>20)||(currentDistance1<0)){
-            navigate(6.5,Constants12907.Direction.RIGHT,0,0.8,false);
+            navigate(0,Constants12907.Direction.RIGHT,0,0.8,false);
         } else if(currentDistance1 > 6.5){
             double targetDistance = 6.5;
             double toGoDistance = currentDistance1 - targetDistance;
