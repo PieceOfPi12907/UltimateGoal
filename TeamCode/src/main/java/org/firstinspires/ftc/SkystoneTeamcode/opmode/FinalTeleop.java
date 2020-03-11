@@ -90,8 +90,8 @@ public class FinalTeleop extends LinearOpMode {
 
     final double DUMPER_CLAMP_INSIDE_UP = 0.875;
     final double DUMPER_CLAMP_INSIDE_DOWN = 0.38;
-    final double DUMPER_CLAMP_OUTSIDE_UP = 0.69;
-    final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.840;
+    final double DUMPER_CLAMP_OUTSIDE_UP = 0.1;
+    final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.6;
 
     double SLIDE_SERVO_OUT = 0.58;
     double SLIDE_SERVO_IN = 0.005;
