@@ -85,7 +85,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * is explained below.
  */
 @Disabled
-//@TeleOp(name="SKYSTONE Vuforia Nav Webcam", group ="Concept")
+@TeleOp(name="SKYSTONE Vuforia Nav Webcam", group ="Concept")
 public class WebcamTester extends LinearOpMode {
 
     WebcamName webcam;

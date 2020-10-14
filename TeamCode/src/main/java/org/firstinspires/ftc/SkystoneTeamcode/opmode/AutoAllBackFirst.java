@@ -23,7 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.opencv.core.Core;
+/*import org.firstinspires.ftc.robotcore.internal.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -32,11 +32,13 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvPipeline; */
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Disabled
 @Autonomous(name = "Auto Back First State", group = "autonomous")
 
 public class AutoAllBackFirst extends LinearOpMode {
@@ -107,7 +109,7 @@ public class AutoAllBackFirst extends LinearOpMode {
 
     DistanceSensor quarryDistance;
     DistanceSensor backDistance;
-    OpenCvCamera webcam;
+    //OpenCvCamera webcam;
 
     Servo pivotGrabber;
     Servo blockClamper;
@@ -358,10 +360,10 @@ public class AutoAllBackFirst extends LinearOpMode {
         imuSide.initialize(parameters);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
+        /*webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
         webcam.openCameraDevice();//open camera
         webcam.setPipeline(new OpenCvTester.StageSwitchingPipeline());//different stages
-        webcam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);
+        webcam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);*/
 
     }
 
@@ -459,7 +461,7 @@ public class AutoAllBackFirst extends LinearOpMode {
                     autoTwoStoneRepoPlayProgram();
                 }
             }
-            webcam.closeCameraDevice();
+            //webcam.closeCameraDevice();
 
             //reset imu
             /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -1410,7 +1412,7 @@ public class AutoAllBackFirst extends LinearOpMode {
     }
 
     //detection pipeline
-    static class StageSwitchingPipeline extends OpenCvPipeline
+    /*static class StageSwitchingPipeline extends OpenCvPipeline
     {
         Mat yCbCrChan2Mat = new Mat();
         Mat thresholdMat = new Mat();
@@ -1422,12 +1424,12 @@ public class AutoAllBackFirst extends LinearOpMode {
             detection,//includes outlines
             THRESHOLD,//b&w
             RAW_IMAGE,//displays raw view
-        }
+        }*/
 
         private OpenCvTester.StageSwitchingPipeline.Stage stageToRenderToViewport = OpenCvTester.StageSwitchingPipeline.Stage.detection;
         private OpenCvTester.StageSwitchingPipeline.Stage[] stages = OpenCvTester.StageSwitchingPipeline.Stage.values();
 
-        @Override
+        //@Override
         public void onViewportTapped()
         {
             /*
@@ -1447,10 +1449,10 @@ public class AutoAllBackFirst extends LinearOpMode {
             stageToRenderToViewport = stages[nextStageNum];
         }
 
-        @Override
-        public Mat processFrame(Mat input)
+        //@Override
+        //public Mat processFrame(Mat input)
         {
-            contoursList.clear();
+          //  contoursList.clear();
             /*
              * This pipeline finds the contours of yellow blobs such as the Gold Mineral
              * from the Rover Ruckus game.
@@ -1459,7 +1461,7 @@ public class AutoAllBackFirst extends LinearOpMode {
             //color diff cb.
             //lower cb = more blue = skystone = white
             //higher cb = less blue = yellow stone = grey
-            Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
+            /*Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
             Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
 
             //b&w
@@ -1491,8 +1493,10 @@ public class AutoAllBackFirst extends LinearOpMode {
                 e.printStackTrace();
             }  */
 
+
+
             //create three points
-            Point pointMid = new Point((int)(input.cols()* midPos[0]), (int)(input.rows()* midPos[1]));
+           /* Point pointMid = new Point((int)(input.cols()* midPos[0]), (int)(input.rows()* midPos[1]));
             Point pointLeft = new Point((int)(input.cols()* leftPos[0]), (int)(input.rows()* leftPos[1]));
             Point pointRight = new Point((int)(input.cols()* rightPos[0]), (int)(input.rows()* rightPos[1]));
 
@@ -1524,7 +1528,7 @@ public class AutoAllBackFirst extends LinearOpMode {
                     all,
                     new Point(
                             input.cols()*(rightPos[0]-rectWidth/2),
-                            input.rows()*(rightPos[1]-rectHeight/2)),
+                            iput.rows()*(rightPos[1]-rectHeight/2)),
                     new Point(
                             input.cols()*(rightPos[0]+rectWidth/2),
                             input.rows()*(rightPos[1]+rectHeight/2)),
@@ -1553,8 +1557,10 @@ public class AutoAllBackFirst extends LinearOpMode {
                 }
             }
         }
+*/
 
     }
+
 
 
 } //End of Class

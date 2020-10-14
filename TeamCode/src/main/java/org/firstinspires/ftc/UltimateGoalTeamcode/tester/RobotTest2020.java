@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.UltimateGoalTeamcode;
+package org.firstinspires.ftc.UltimateGoalTeamcode.tester;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

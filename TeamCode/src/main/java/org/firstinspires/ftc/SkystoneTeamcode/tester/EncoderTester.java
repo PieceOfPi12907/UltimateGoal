@@ -10,6 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+@Disabled
 @Autonomous(name = "EN Coder Test", group = "autonomous")
 public class EncoderTester extends LinearOpMode {
     DcMotor frontLeft;
