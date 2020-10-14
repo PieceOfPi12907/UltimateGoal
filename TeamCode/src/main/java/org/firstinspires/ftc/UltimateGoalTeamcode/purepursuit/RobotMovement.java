@@ -3,12 +3,12 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.purepursuit;
 
 import java.util.ArrayList;
 
-import static org.firstinspires.ftc.PurePursuitTest.MathFunctions.AngleWrap;
-import static org.firstinspires.ftc.PurePursuitTest.MathFunctions.lineCircleIntersection;
-import static org.firstinspires.ftc.PurePursuitTest.Robot.worldAngle_rad;
-import static org.firstinspires.ftc.PurePursuitTest.Robot.worldXPosition;
-import static org.firstinspires.ftc.PurePursuitTest.Robot.worldYPosition;
-import static org.firstinspires.ftc.PurePursuitTest.MovementVars.*;
+import static org.firstinspires.ftc.UltimateGoalTeamcode.purepursuit.MathFunctions.AngleWrap;
+import static org.firstinspires.ftc.UltimateGoalTeamcode.purepursuit.MathFunctions.lineCircleIntersection;
+import static org.firstinspires.ftc.UltimateGoalTeamcode.purepursuit.Robot.worldAngle_rad;
+import static org.firstinspires.ftc.UltimateGoalTeamcode.purepursuit.Robot.worldXPosition;
+import static org.firstinspires.ftc.UltimateGoalTeamcode.purepursuit.Robot.worldYPosition;
+import static org.firstinspires.ftc.UltimateGoalTeamcode.purepursuit.MovementVars.*;
 
 
 public class RobotMovement {

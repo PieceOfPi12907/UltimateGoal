@@ -16,7 +16,7 @@ import org.firstinspires.ftc.SkystoneTeamcode.tester.WebcamTester;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp(name = "Control Hub Servo Test", group = "teleop")
+@TeleOp(name = "Control Hub Servo Test 1", group = "teleop")
 public class RobotTest2020 extends LinearOpMode {
 
     //sensors

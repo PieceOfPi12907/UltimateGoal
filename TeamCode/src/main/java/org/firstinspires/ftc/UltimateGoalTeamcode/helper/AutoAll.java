@@ -50,7 +50,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 @Disabled
-@Autonomous(name = "Autonomous All", group = "autonomous")
+@Autonomous(name = "Autonomous All 1", group = "autonomous")
 
 public class AutoAll extends LinearOpMode{
 

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.ArrayList;
 
-import static org.firstinspires.ftc.PurePursuitTest.RobotMovement.followCurve;
+import static org.firstinspires.ftc.UltimateGoalTeamcode.purepursuit.RobotMovement.followCurve;
 
 @Autonomous(name = "Pure Pursuit Test", group = "Autonomous")
 public class MyOpMode extends OpMode {
