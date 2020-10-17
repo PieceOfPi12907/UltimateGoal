@@ -49,11 +49,7 @@ public class TensorTesterClass extends LinearOpMode {
     public Constants12907.SkystonePosition detect(){
         initVuforia();
 
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
-        } else {
-            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        }
+        initTfod();
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
@@ -117,11 +113,7 @@ public class TensorTesterClass extends LinearOpMode {
         // first.
         initVuforia();
 
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
-        } else {
-            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        }
+        initTfod();
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
