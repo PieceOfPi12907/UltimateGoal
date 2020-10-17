@@ -68,8 +68,7 @@ public class DetectionTester2020 extends LinearOpMode {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY =
-            " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+    private static final String VUFORIA_KEY  = "AZ9j6gP/////AAABmQD42fl1sEkwvT3gbrdh04MTtAPJle2/pKvnHGiGD/p48t9Zby7FAXGGrmSWu3P6blfMuXb79fieGP+ZaN++oH1Fc1BXTA9kh14RTIWt1VzDK4mSp14MOOJ4nhBxdbwwvlGUzVq7paFBMX1iaNB99KyRBG18D2mbW+Cxz/R6U/2LmArhA4Ccl9AzpPGjmNfER/NtcZ8KsjOBU+cZehsKhePIn/0DtEUDvGks+Rmi5aUKbQML437osyqLpr7jdYWx+drb2tTDGnpOPPKMGgHj96e6TzH79Q2j0gPkryGrZ76MKC9DrG/kNRn7XtYrHj+KHLCOfXcMNags4ouLMAyZ1O6O5ZAv/Wi3H6a+yDdoxaVI";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
