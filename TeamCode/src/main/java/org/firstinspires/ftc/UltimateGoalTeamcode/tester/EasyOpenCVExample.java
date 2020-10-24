@@ -37,7 +37,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@TeleOp
+@TeleOp (name = "opencv tester", group = "tester")
 public class EasyOpenCVExample extends LinearOpMode
 {
     OpenCvCamera webcam;
@@ -46,7 +46,7 @@ public class EasyOpenCVExample extends LinearOpMode
     @Override
     public void runOpMode()
     {
-
+      //  telemetry.addData("")
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
         pipeline = new SkystoneDeterminationPipeline();
