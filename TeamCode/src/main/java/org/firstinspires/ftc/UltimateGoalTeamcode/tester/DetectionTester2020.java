@@ -94,7 +94,8 @@ public class DetectionTester2020 extends LinearOpMode {
          **/
         if (tfod != null) {
             tfod.activate();
-
+            telemetry.addData("tfod"," isn't null 1");
+            telemetry.update();
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
             // This can result in lower detection accuracy at longer distances (> 55cm or 22").
             // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
@@ -112,12 +113,16 @@ public class DetectionTester2020 extends LinearOpMode {
         Recognition finalr = null;
         boolean isNull = false;
         while (!opModeIsActive()) {
+
             if (tfod != null) {
+                telemetry.addData("tfod"," isn't null 2");
+                telemetry.update();
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    telemetry.addData("tfod"," isn't null 1");
+                    telemetry.update();
                     // step through the list of recognitions and display boundary info.
                     isNull = true;
                     int i = 0;
