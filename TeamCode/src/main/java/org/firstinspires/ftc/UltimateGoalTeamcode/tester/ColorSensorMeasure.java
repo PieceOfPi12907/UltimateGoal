@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 public class ColorSensorMeasure extends LinearOpMode {
 
     ColorSensor frontColor;
-    ColorSensor backColor;
+  //  ColorSensor backColor;
 
     @Override
     public void runOpMode() {
@@ -24,7 +24,7 @@ public class ColorSensorMeasure extends LinearOpMode {
         frontColor = hardwareMap.get(ColorSensor.class, "frontColor");
 
         //not used - implement if necessary
-        backColor = hardwareMap.get(ColorSensor.class, "backColor");
+       // backColor = hardwareMap.get(ColorSensor.class, "backColor");
 
 
         //special scale factor for Red so that Red can be recognized via the "value" value.
@@ -69,7 +69,7 @@ public class ColorSensorMeasure extends LinearOpMode {
             telemetry.update();
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -77,27 +77,27 @@ public class ColorSensorMeasure extends LinearOpMode {
             //if Statements - These Should Be Tested and Adjusted Accordingly
             //you could also make an additional class for this but I just put it in one
 
-         /*   if (hsvValues[0] > 0) {
-                telemetry.addLine("LINE COLOR: BLUE");
-                telemetry.update();
-
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            } else if (hsvValues[1] < 100) {
+           if (frontColor.red() > 30) {
                 telemetry.addLine("LINE COLOR: WHITE");
                 telemetry.update();
 
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-            } else if (hsvValues[2] > 100) {
+            } else if (frontColor.red() < 30) {
+                telemetry.addLine("LINE COLOR: BLACK");
+                telemetry.update();
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+           /* } else if (hsvValues[2] > 100) {
                 telemetry.addLine("LINE COLOR: RED");
                 telemetry.update();
 
@@ -106,11 +106,13 @@ public class ColorSensorMeasure extends LinearOpMode {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                
+            */
 
 
             }
 
-          */
+
 
         }
     }
