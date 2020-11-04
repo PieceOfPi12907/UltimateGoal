@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name = "ULTIMATE AUTO", group = "autonomous")
+@Autonomous(name = "ULTIMATE AUTO COPY", group = "autonomous")
 public class UltimateAutoCopy extends LinearOpMode {
 
     Boolean isBlue = false;
@@ -81,7 +81,7 @@ public class UltimateAutoCopy extends LinearOpMode {
         double begin = System.currentTimeMillis()/1000;
         double end = System.currentTimeMillis()/1000;
         DetectionHelper.RingPosition position = null;
-        while(end-begin<3) {
+        while(end-begin<1.5) {
 
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.getPosition());
