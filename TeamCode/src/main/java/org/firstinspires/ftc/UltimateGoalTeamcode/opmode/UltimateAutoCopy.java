@@ -66,12 +66,24 @@ public class UltimateAutoCopy extends LinearOpMode {
         telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
         telemetry.update();
 
+        DetectionHelper.RingPosition position = null;
+
+        while(!opModeIsActive()) {
+
+            telemetry.addData("Analysis", pipeline.getAnalysis());
+            telemetry.addData("Position", pipeline.getPosition());
+            position = pipeline.getPosition();
+            telemetry.update();
+            // Don't burn CPU cycles busy-looping in this sample
+            sleep(50);
+        }
+
         waitForStart();
 
         if (opModeIsActive()) {
             runtime.reset();
-            int num = detectionLoop();
-            telemetry.addData("Number of Rings", num);
+            //int num = detectionLoop();
+            telemetry.addData("Number of Rings", position);
             telemetry.update();
             sleep(1000);
         }
