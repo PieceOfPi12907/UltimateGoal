@@ -15,8 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-@Disabled
-@Autonomous(name = "Navigation Test", group = "autonomous")
+@Autonomous(name = "Shawty Test", group = "autonomous")
 public class NavigationTester extends LinearOpMode {
     DcMotor frontLeft;
     DcMotor backLeft;
@@ -24,8 +23,6 @@ public class NavigationTester extends LinearOpMode {
     DcMotor backRight;
     BNO055IMU imu;
 
-    Servo sideClampServo;
-    Servo sideArmServo;
     public void initialize() {
         //Configuration of the motors
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -40,10 +37,6 @@ public class NavigationTester extends LinearOpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
-
-        sideClampServo = hardwareMap.get(Servo.class, "blockClamper");
-
-        sideArmServo = hardwareMap.get(Servo.class, "pivotGrabber");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -74,26 +67,14 @@ public class NavigationTester extends LinearOpMode {
         if(opModeIsActive()) {
             NavigationHelper navigateTest = new NavigationHelper();
 
-            //navigateTest.navigate(31, Constants12907.Direction.RIGHT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-           double imu_correct = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-
-            navigateTest.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
-
-            double imuCorrection = (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-imu_correct;
-            telemetry.addData("IMU CORRECTION: ", imuCorrection);
-            telemetry.update();
-            navigateTest.turnWithEncoders(frontRight, frontLeft, backRight, backLeft, -imuCorrection, 0.25, imu, telemetry);
-
-
-            navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,-0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
+            navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,-0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
 
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
             try {
                 Thread.sleep(2000);
@@ -101,22 +82,6 @@ public class NavigationTester extends LinearOpMode {
                 e.printStackTrace();
             }
 
-
-                   /* navigateTest.navigate(23, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-                    navigateTest.navigate(11, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-                    navigateTest.navigate(-41, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-                    navigateTest.navigate(-21, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-                    //navigateTest.navigate(5, Constants12907.Direction.LEFT, 0, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-                    navigateTest.navigate(66, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-                    navigateTest.navigate(-20, Constants12907.Direction.STRAIGHT,0,-0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-
-                    navigateTest.navigate(3, Constants12907.Direction.STRAIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry);
-                    */
-
-                //backLeft.setPower(0);*/
 
         }
     }

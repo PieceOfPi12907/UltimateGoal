@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.FTCappTeamcode.helper.MotorHelper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-@Disabled
 @Autonomous(name = "MotorTester", group = "Test Programs")
 public class MotorTester extends LinearOpMode {
 
