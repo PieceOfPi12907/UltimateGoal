@@ -9,8 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.DetectionHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.utilities.WobbleGoal;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.HashMap;
 
@@ -27,6 +31,8 @@ public class UltimateAuto extends LinearOpMode {
     DcMotor backRight;
     OpenCvCamera webcam;
     WobbleGoal wobbleGoal;
+    DetectionHelper pipeline;
+
 
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
 
@@ -90,6 +96,18 @@ public class UltimateAuto extends LinearOpMode {
         parameters.mode = BNO055IMU.SensorMode.IMU;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
+        pipeline = new DetectionHelper();
+        webcam.setPipeline(pipeline);
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+            }
+        });
 
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -140,12 +158,30 @@ public class UltimateAuto extends LinearOpMode {
 
         createVariableMap();
 
+            DetectionHelper.RingPosition position = null;
+
+            while(!opModeIsActive()) {
+
+                telemetry.addData("Analysis", pipeline.getAnalysis());
+                telemetry.addData("Position", pipeline.getPosition());
+                position = pipeline.getPosition();
+                telemetry.update();
+                // Don't burn CPU cycles busy-looping in this sample
+                sleep(50);
+            }
+
         waitForStart();
 
         if (opModeIsActive()) {
             runtime.reset();
-            //wobbleGoal.moveToTgtZone(isBlue, isWall);
+            //int num = detectionLoop();
+            telemetry.addData("Number of Rings", position);
+            telemetry.update();
+            sleep(1000);
+            wobbleGoal.moveToTgtZone(isBlue, isWall);
+
         }
+
 
         //reset imu
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -179,5 +215,32 @@ public class UltimateAuto extends LinearOpMode {
                 e.printStackTrace();
             }
         }
+
+
+    }
+    public int detectionLoop(){
+        double begin = System.currentTimeMillis()/1000;
+        double end = System.currentTimeMillis()/1000;
+        DetectionHelper.RingPosition position = null;
+        while(end-begin<1.5) {
+
+            telemetry.addData("Analysis", pipeline.getAnalysis());
+            telemetry.addData("Position", pipeline.getPosition());
+            position = pipeline.getPosition();
+            telemetry.update();
+            // Don't burn CPU cycles busy-looping in this sample
+            sleep(50);
+            end = System.currentTimeMillis()/1000;
+        }
+        if(position.equals(DetectionHelper.RingPosition.FOUR)){
+            return 4;
+        }
+        else if(position.equals(DetectionHelper.RingPosition.ONE)){
+            return 1;
+        }
+        else if(position.equals(DetectionHelper.RingPosition.NONE)){
+            return 0;
+        }
+        return 3;
     }
 }
