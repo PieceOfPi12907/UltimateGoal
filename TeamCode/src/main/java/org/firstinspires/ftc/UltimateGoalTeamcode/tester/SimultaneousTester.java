@@ -18,7 +18,14 @@ public class SimultaneousTester extends LinearOpMode {
         if(opModeIsActive()){
             motor.setPower(0.5);
             while(motor.getCurrentPosition()<5000 && opModeIsActive()){
-
+                motor.setPower(0.5);
+                telemetry.addData("current pos: ", motor.getCurrentPosition());
+                telemetry.update();
+                //motor.setPower(0.5);
+                /*if(attachment.getPosition()>0.52|| attachment.getPosition()<0.48){
+                    attachment.setPosition(0.5);
+                }
+                 */
             }
         }
     }
