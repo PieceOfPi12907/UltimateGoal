@@ -18,7 +18,9 @@ public class SimultaneousTester extends LinearOpMode {
         if(opModeIsActive()){
             motor.setPower(0.5);
             motor.setTargetPosition(5000);
-            while(motor.getCurrentPosition()<5000){
+            while(motor.getCurrentPosition()<5000 && opModeIsActive()){
+                telemetry.addData("current pos: ", motor.getCurrentPosition());
+                telemetry.update();
                 motor.setPower(0.5);
                 /*if(attachment.getPosition()>0.52|| attachment.getPosition()<0.48){
                     attachment.setPosition(0.5);
@@ -31,6 +33,10 @@ public class SimultaneousTester extends LinearOpMode {
 
     public void initialize(){
         motor = hardwareMap.get(DcMotor.class, "motor");
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("Initialization: ", "is done");
+        telemetry.update();
         /*attachment = hardwareMap.get(Servo.class, "servo");
         attachment.setPosition(0.2);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
