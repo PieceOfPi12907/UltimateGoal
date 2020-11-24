@@ -178,7 +178,7 @@ public class UltimateAuto extends LinearOpMode {
             telemetry.addData("Number of Rings", position);
             telemetry.update();
             sleep(1000);
-            wobbleGoal.moveToTgtZone(isBlue, isWall);
+            wobbleGoal.moveToTgtZone(position, isBlue, isWall);
 
         }
 

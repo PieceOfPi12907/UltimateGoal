@@ -3,6 +3,7 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.tester;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name = "simultaneous", group = "auto")
@@ -32,6 +33,7 @@ public class SimultaneousTester extends LinearOpMode {
 
     public void initialize(){
         motor = hardwareMap.get(DcMotor.class, "motor");
+        motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addData("Initialization: ", "is done");
