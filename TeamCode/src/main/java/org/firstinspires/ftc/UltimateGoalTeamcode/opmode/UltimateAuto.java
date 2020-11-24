@@ -32,8 +32,7 @@ public class UltimateAuto extends LinearOpMode {
     OpenCvCamera webcam;
     WobbleGoal wobbleGoal;
     DetectionHelper pipeline;
-
-
+    Constants2020.TargetZone box;
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
 
     public void initialize() {
@@ -44,7 +43,7 @@ public class UltimateAuto extends LinearOpMode {
         telemetry.addLine("reached initialization");
         telemetry.update();
 
-        while(true) {
+        /*while(true) {
             //x on gamepad 1 sets BlUE
             if (gamepad1.x) {
                 isBlue = true;
@@ -86,7 +85,7 @@ public class UltimateAuto extends LinearOpMode {
                 telemetry.update();
                 break;
             }
-        }
+        }*/
 
         //Initializing the IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -119,12 +118,12 @@ public class UltimateAuto extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+        createVariableMap();
     }
 
     private void createVariableMap(){
-        variableMap.put(Constants2020.BLUE_FLAG, this.isBlue);
-        variableMap.put(Constants2020.WALL_FLAG, this.isWall);
-
+        variableMap.put(Constants2020.BLUE_FLAG, this.isBlue == true);
+        variableMap.put(Constants2020.WALL_FLAG, this.isWall == true);
         variableMap.put(Constants2020.BACK_LEFT_MOTOR,this.backLeft);
         variableMap.put(Constants2020.FRONT_LEFT_MOTOR,this.frontLeft);
         variableMap.put(Constants2020.BACK_RIGHT_MOTOR,this.backRight);
@@ -169,7 +168,16 @@ public class UltimateAuto extends LinearOpMode {
                 // Don't burn CPU cycles busy-looping in this sample
                 sleep(50);
             }
-
+        if (position.equals(DetectionHelper.RingPosition.NONE)){
+            box = Constants2020.TargetZone.ALPHA;
+        }
+        if (position.equals(DetectionHelper.RingPosition.ONE)){
+            box = Constants2020.TargetZone.BETA;
+        }
+        if (position.equals(DetectionHelper.RingPosition.FOUR)){
+            box = Constants2020.TargetZone.CHARLIE;
+        }
+        variableMap.put(Constants2020.POSITION, this.box);
         waitForStart();
 
         if (opModeIsActive()) {
@@ -178,7 +186,7 @@ public class UltimateAuto extends LinearOpMode {
             telemetry.addData("Number of Rings", position);
             telemetry.update();
             sleep(1000);
-            wobbleGoal.moveToTgtZone(position, isBlue, isWall);
+            wobbleGoal.moveToTgtZone(variableMap);
 
         }
 
