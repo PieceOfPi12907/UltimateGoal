@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.internal.android.dx.rop.code.ConservativeTranslationAdvice;
 
 public class NavigationHelper {
 
@@ -21,7 +22,7 @@ public class NavigationHelper {
 
 
     // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
-    public void navigate (double pTgtDistance, Constants12907.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry, boolean isForward ){
+    public void navigate (double pTgtDistance, Constants2020.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry, boolean isForward ){
         if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
             forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry, pImu, isForward );
         }
