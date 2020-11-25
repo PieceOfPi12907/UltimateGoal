@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-@Autonomous(name = "Shawty Test", group = "autonomous")
+@Autonomous(name = "Moving Test", group = "autonomous")
 public class NavigationTester extends LinearOpMode {
     DcMotor frontLeft;
     DcMotor backLeft;
@@ -67,14 +67,14 @@ public class NavigationTester extends LinearOpMode {
         if(opModeIsActive()) {
             NavigationHelper navigateTest = new NavigationHelper();
 
-            navigateTest.navigate(81, Constants12907.Direction.STRAIGHT,0,-0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
+            navigateTest.navigate(60, Constants12907.Direction.LEFT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
 
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            navigateTest.navigate(-81, Constants12907.Direction.STRAIGHT,0,0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            navigateTest.navigate(60, Constants12907.Direction.RIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
             try {
                 Thread.sleep(2000);

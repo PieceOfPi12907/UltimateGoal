@@ -30,15 +30,16 @@ public class UltimateAuto extends LinearOpMode {
     DcMotor frontRight;
     DcMotor backRight;
     OpenCvCamera webcam;
-    WobbleGoal wobbleGoal;
+    WobbleGoal wobbleGoal = new WobbleGoal();
     DetectionHelper pipeline;
     Constants2020.TargetZone box;
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
 
     public void initialize() {
 
-        isBlue = false;
-        isWall = false;
+        //change to false- only changed to true for initial tests
+        isBlue = true;
+        isWall = true;
 
         telemetry.addLine("reached initialization");
         telemetry.update();
@@ -168,6 +169,7 @@ public class UltimateAuto extends LinearOpMode {
                 // Don't burn CPU cycles busy-looping in this sample
                 sleep(50);
             }
+
         if (position.equals(DetectionHelper.RingPosition.NONE)){
             box = Constants2020.TargetZone.ALPHA;
         }
@@ -177,6 +179,7 @@ public class UltimateAuto extends LinearOpMode {
         if (position.equals(DetectionHelper.RingPosition.FOUR)){
             box = Constants2020.TargetZone.CHARLIE;
         }
+
         variableMap.put(Constants2020.POSITION, this.box);
         waitForStart();
 
@@ -186,10 +189,9 @@ public class UltimateAuto extends LinearOpMode {
             telemetry.addData("Number of Rings", position);
             telemetry.update();
             sleep(1000);
+
             wobbleGoal.moveToTgtZone(variableMap);
-
         }
-
 
         //reset imu
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

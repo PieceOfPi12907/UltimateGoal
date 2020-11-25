@@ -18,8 +18,6 @@ public class Constants2020 {
     public static String WALL_FLAG = "wallFlag";
     public static String TELEMETRY = "telemetry";
 
-    public static String SKY_POSITION = "skystonePosition";
-
     public static String IMU = "imu";
     public static String WEBCAM = "webcam";
     public static String PARAMETERS = "parametersWebcam";

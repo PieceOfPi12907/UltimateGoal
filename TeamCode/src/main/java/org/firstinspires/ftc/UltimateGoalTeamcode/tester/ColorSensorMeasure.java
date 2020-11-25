@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name = "ColorSensorMeasurer", group = "Sensor")
+@Disabled
+
+@Autonomous(name = "ColorSensorMeasurer", group = "autonomous")
 
 public class ColorSensorMeasure{
     public void redOrBlue(ColorSensor pFrontColor, boolean isRed, Telemetry telemetry){

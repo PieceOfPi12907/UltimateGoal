@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Disabled
+
 @Autonomous (name = "RampTester" ,group = "autonomous")
 public class RampUpRampDownTester extends LinearOpMode{
         NavigationHelper navigateTest = new NavigationHelper();

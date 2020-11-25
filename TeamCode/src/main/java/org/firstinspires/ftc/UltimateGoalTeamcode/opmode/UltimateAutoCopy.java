@@ -114,6 +114,4 @@ public class UltimateAutoCopy extends LinearOpMode {
         }
         return 3;
     }
-
-
 }
