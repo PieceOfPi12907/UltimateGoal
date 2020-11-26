@@ -22,12 +22,6 @@ public class WobbleGoal {
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         telemetry.addLine("Inside method in Wobble Goal Class");
         telemetry.update();
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         boolean isWall = (boolean)(variableMap.get(Constants2020.WALL_FLAG));
         boolean isBlue = (boolean)(variableMap.get(Constants2020.BLUE_FLAG));
         DcMotor backLeft = (DcMotor)variableMap.get(Constants2020.BACK_LEFT_MOTOR);
@@ -37,40 +31,29 @@ public class WobbleGoal {
         BNO055IMU imu = (BNO055IMU)variableMap.get(Constants2020.IMU);
         Constants2020.TargetZone position = (Constants2020.TargetZone)variableMap.get(Constants2020.POSITION);
 
-        if(isWall&&isBlue){
-            //skystonePosition.equals(Constants12907.SkystonePosition.LEFT)
-            if(position.equals(Constants2020.TargetZone.ALPHA)){
-                telemetry.addLine("BLUE - WALL - ALPHA");
-                telemetry.update();
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                navigater.navigate(15, Constants12907.Direction.RIGHT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
-                navigater.navigate(70.75, Constants12907.Direction.STRAIGHT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
-            }
-            if(position.equals(DetectionHelper.RingPosition.ONE)){
-                telemetry.addLine("BLUE - WALL - BETA");
-                telemetry.update();
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                navigater.navigate(70.75, Constants12907.Direction.STRAIGHT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
-            }
-            if(position.equals(DetectionHelper.RingPosition.FOUR)){
-                telemetry.addLine("BLUE - WALL - CHARLIE");
-                telemetry.update();
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                navigater.navigate(70.75, Constants12907.Direction.STRAIGHT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+        //If isWall is true, strafe right (red) or left (blue)
+        if(isBlue&&isWall){
+            navigater.navigate(6, Constants12907.Direction.LEFT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+        } else if(!isBlue&&isWall){
+            navigater.navigate(6, Constants12907.Direction.RIGHT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+        }
 
-            }
+        //move to tgt zone A, B, or C
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
+            telemetry.addLine("BLUE - WALL - ALPHA");
+            telemetry.update();
+            navigater.navigate(70.75-12.75, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            //navigater.navigate(0, Constants12907.Direction.TURN, 90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+        } else if(position.equals(Constants2020.TargetZone.BETA)){
+            telemetry.addLine("BLUE - WALL - BETA");
+            telemetry.update();
+            navigater.navigate(94.625-12.75, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            //navigater.navigate(0, Constants12907.Direction.TURN, 90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+        } else if(position.equals(Constants2020.TargetZone.CHARLIE)){
+            telemetry.addLine("BLUE - WALL - CHARLIE");
+            telemetry.update();
+            navigater.navigate(118.372-12.75, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            //navigater.navigate(0, Constants12907.Direction.TURN, 90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
         }
     }
 }

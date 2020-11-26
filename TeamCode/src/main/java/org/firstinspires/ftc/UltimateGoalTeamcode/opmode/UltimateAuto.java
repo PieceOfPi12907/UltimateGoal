@@ -37,14 +37,13 @@ public class UltimateAuto extends LinearOpMode {
 
     public void initialize() {
 
-        //change to false- only changed to true for initial tests
-        isBlue = true;
-        isWall = true;
+        isBlue = false;
+        isWall = false;
 
         telemetry.addLine("reached initialization");
         telemetry.update();
 
-        /*while(true) {
+        while(true) {
             //x on gamepad 1 sets BlUE
             if (gamepad1.x) {
                 isBlue = true;
@@ -59,17 +58,17 @@ public class UltimateAuto extends LinearOpMode {
                 telemetry.update();
             }
 
-            //left dpad on gamepad 1 sets OUTER
+            //left dpad on gamepad 1 sets WALL
             if (gamepad1.dpad_left) {
                 isWall = true;
-                telemetry.addLine("OUTER");
+                telemetry.addLine("WALL");
                 telemetry.update();
             }
 
-            //right dpad on gamepad 1 sets INNER
+            //right dpad on gamepad 1 sets NOT WALL
             if (gamepad1.dpad_right) {
                 isWall = false;
-                telemetry.addLine("INNER");
+                telemetry.addLine("NOT WALL");
                 telemetry.update();
             }
 
@@ -86,7 +85,7 @@ public class UltimateAuto extends LinearOpMode {
                 telemetry.update();
                 break;
             }
-        }*/
+        }
 
         //Initializing the IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -123,8 +122,8 @@ public class UltimateAuto extends LinearOpMode {
     }
 
     private void createVariableMap(){
-        variableMap.put(Constants2020.BLUE_FLAG, this.isBlue == true);
-        variableMap.put(Constants2020.WALL_FLAG, this.isWall == true);
+        variableMap.put(Constants2020.BLUE_FLAG, this.isBlue);
+        variableMap.put(Constants2020.WALL_FLAG, this.isWall);
         variableMap.put(Constants2020.BACK_LEFT_MOTOR,this.backLeft);
         variableMap.put(Constants2020.FRONT_LEFT_MOTOR,this.frontLeft);
         variableMap.put(Constants2020.BACK_RIGHT_MOTOR,this.backRight);
@@ -180,6 +179,7 @@ public class UltimateAuto extends LinearOpMode {
             box = Constants2020.TargetZone.CHARLIE;
         }
 
+        //CHECK FOR SYNTAX ERRORS:
         variableMap.put(Constants2020.POSITION, this.box);
         waitForStart();
 
@@ -188,7 +188,7 @@ public class UltimateAuto extends LinearOpMode {
             //int num = detectionLoop();
             telemetry.addData("Number of Rings", position);
             telemetry.update();
-            sleep(1000);
+            sleep(500);
 
             wobbleGoal.moveToTgtZone(variableMap);
         }
@@ -216,11 +216,11 @@ public class UltimateAuto extends LinearOpMode {
 
 
         } catch (Exception bad){
-            telemetry.addData("EXCEPTION (from try catch):", bad.getMessage());
+            telemetry.addData("EXCEPTION (from try-catch):", bad.getMessage());
             bad.printStackTrace();
             telemetry.update();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
