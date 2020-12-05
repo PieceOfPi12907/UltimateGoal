@@ -60,11 +60,11 @@ public class WobbleGoal {
         } else if(position.equals(Constants2020.TargetZone.BETA)){
             telemetry.addLine("RED - WALL - BETA");
             telemetry.update();
-            navigater.navigate(betaDistance-12.75, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            navigater.navigate(betaDistance+2.25, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
         } else if(position.equals(Constants2020.TargetZone.CHARLIE)){
             telemetry.addLine("RED - WALL - CHARLIE");
             telemetry.update();
-            navigater.navigate(charlieDistance-12.75, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            navigater.navigate(charlieDistance-5, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
         }
 
         resetTheImu(variableMap);
@@ -75,14 +75,16 @@ public class WobbleGoal {
                 navigater.navigate(0, Constants12907.Direction.TURN, 180,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
             } else if(!isBlue && !isWall){
                 //for RED/NOT WALL, right strafe may be needed
+                navigater.navigate(0, Constants12907.Direction.TURN, -90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
             } else if (isWall){
                 navigater.navigate(0, Constants12907.Direction.TURN, 90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
             }
         } else if(position.equals(Constants2020.TargetZone.BETA)){
-            //figure out adjustments
+            //for red wall
+            navigater.navigate(10, Constants12907.Direction.LEFT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
         } else if(position.equals(Constants2020.TargetZone.CHARLIE)){
             //figure out adjustments
-            navigater.navigate(0, Constants12907.Direction.TURN, 90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            navigater.navigate(0, Constants12907.Direction.TURN, -90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
         }
 
         //drop wobble goal
