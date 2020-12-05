@@ -66,27 +66,39 @@ public class WobbleGoal {
             telemetry.update();
             navigater.navigate(charlieDistance-5, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
         }
-
+//heloooooo its me i was wondering...
         resetTheImu(variableMap);
 
         //adjust position at tgt zone A, B, or C to drop wobble goal:
         if(position.equals(Constants2020.TargetZone.ALPHA)){
             if(isBlue && !isWall){
+                //Blue Not Wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 180,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
             } else if(!isBlue && !isWall){
-                //for RED/NOT WALL, right strafe may be needed
-                navigater.navigate(0, Constants12907.Direction.TURN, -90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+                //Red Not Wall
+                navigater.navigate(20, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+                navigater.navigate(24, Constants12907.Direction.RIGHT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+                //navigater.navigate(0, Constants12907.Direction.TURN, -90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
             } else if (isWall){
+                //Red and Blue Wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
             }
         } else if(position.equals(Constants2020.TargetZone.BETA)){
-            //for red wall
-            navigater.navigate(10, Constants12907.Direction.LEFT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            if(isWall){
+                //for Red wall
+                navigater.navigate(10, Constants12907.Direction.LEFT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            }
         } else if(position.equals(Constants2020.TargetZone.CHARLIE)){
             //figure out adjustments
-            navigater.navigate(0, Constants12907.Direction.TURN, -90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            if(isWall){
+                //red and blue wall
+                navigater.navigate(0, Constants12907.Direction.TURN, -90,0.25, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            } else if (!isWall){
+                //red not wall
+                navigater.navigate(10, Constants12907.Direction.STRAIGHT, 0,0.4, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+                navigater.navigate(24, Constants12907.Direction.RIGHT, 0,0.5, backLeft, backRight, frontRight,frontLeft, imu, telemetry,true);
+            }
         }
-
         //drop wobble goal
     }
 }

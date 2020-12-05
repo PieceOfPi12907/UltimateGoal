@@ -96,6 +96,11 @@ public class UltimateAuto extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        telemetry.addLine("about to initialize webcam");
+        telemetry.update();
+
+        try{
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
         pipeline = new DetectionHelper();
         webcam.setPipeline(pipeline);
@@ -107,6 +112,17 @@ public class UltimateAuto extends LinearOpMode {
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
             }
         });
+
+        } catch (Exception bad){
+            telemetry.addData("EXCEPTION (from try-catch):", bad.getMessage());
+            bad.printStackTrace();
+            telemetry.update();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
