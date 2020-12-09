@@ -123,6 +123,13 @@ public class UltimateAuto extends LinearOpMode {
                 e.printStackTrace();
             }
         }
+        telemetry.addLine("FINISHED INITIALIZING WEBCAM");
+        telemetry.update();
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
