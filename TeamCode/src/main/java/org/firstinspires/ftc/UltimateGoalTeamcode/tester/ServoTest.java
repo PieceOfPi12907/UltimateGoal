@@ -33,8 +33,9 @@ public class ServoTest extends LinearOpMode {
 
         while(opModeIsActive()) {
             //wobble servo
-            wobbleServo.setPosition(0.1);
+            wobbleServo.setPosition(0.2);
             sleep(1000);
+            wobbleServo.setPosition(0.8);
             telemetry.addData("WOBBLE SERVO POSITION: ", wobbleServo.getPosition());
             telemetry.update();
         }

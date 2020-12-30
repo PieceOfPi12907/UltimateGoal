@@ -6,15 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
-import org.firstinspires.ftc.UltimateGoalTeamcode.helper.DetectionHelper;
-import org.firstinspires.ftc.UltimateGoalTeamcode.opmode.UltimateAuto;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;
 
-import static java.lang.Thread.sleep;
-
-public class WobbleGoal {
+public class ShootingRings {
 
     NavigationHelper navigater = new NavigationHelper();
 
@@ -28,7 +24,7 @@ public class WobbleGoal {
         imu.initialize(parameters);
     }
 
-    public void moveToTgtZone(HashMap<String, Object> variableMap) {
+    public void moveToLaunchLine(HashMap<String, Object> variableMap) {
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         telemetry.addLine("Inside method in Wobble Goal Class");
         telemetry.update();
@@ -45,59 +41,45 @@ public class WobbleGoal {
         double betaDistance = 94.625;
         double charlieDistance = 118.372;
 
-        //If isWall is true, strafe right (red) or left (blue) to the wall
-        if (isBlue && isWall) {
-            navigater.navigate(6, Constants12907.Direction.LEFT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        } else if (!isBlue && isWall) {
-            navigater.navigate(6, Constants12907.Direction.RIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        }
-
-        //move to tgt zone A, B, or C
-        if (position.equals(Constants2020.TargetZone.ALPHA)) {
-            telemetry.addLine("RED - WALL - ALPHA");
-            telemetry.update();
-            navigater.navigate(alphaDist - 12.75, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        } else if (position.equals(Constants2020.TargetZone.BETA)) {
-            telemetry.addLine("RED - WALL - BETA");
-            telemetry.update();
-            navigater.navigate(betaDistance + 2.25, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
-            telemetry.addLine("RED - WALL - CHARLIE");
-            telemetry.update();
-            navigater.navigate(charlieDistance - 5, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        }
-
-        resetTheImu(variableMap);
-
-        //adjust position at tgt zone A, B, or C to drop wobble goal:
+        //reverse adjustments at tgt zone A, B, or C
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
                 //Blue Not Wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isBlue && !isWall) {
                 //Red Not Wall
-               navigater.navigate(20, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-               navigater.navigate(24, Constants12907.Direction.RIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(27, Constants12907.Direction.LEFT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
                 //Red and Blue Wall
-                navigater.navigate(0, Constants12907.Direction.TURN, 90, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants12907.Direction.TURN, -90, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall) {
                 //for Red wall
-                navigater.navigate(10, Constants12907.Direction.LEFT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(10, Constants12907.Direction.RIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
                 //red and blue wall
-                navigater.navigate(0, Constants12907.Direction.TURN, -90, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants12907.Direction.TURN, 90, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall) {
                 //red not wall
-                navigater.navigate(10, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                navigater.navigate(24, Constants12907.Direction.RIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(24+3, Constants12907.Direction.LEFT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
-            //drop wobble goal
+        }
+
+        //back up behind the launch line
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
+            //-13
+            navigater.navigate(-((alphaDist/4)-4.6875), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        } else if (position.equals(Constants2020.TargetZone.BETA)) {
+            //-34
+            navigater.navigate(-((betaDistance/3)+2.4583), Constants12907.Direction.STRAIGHT, 0, -0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
+            //-56
+            navigater.navigate(-((charlieDistance/2)-3.186), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
     }
+    //shoot rings
 }

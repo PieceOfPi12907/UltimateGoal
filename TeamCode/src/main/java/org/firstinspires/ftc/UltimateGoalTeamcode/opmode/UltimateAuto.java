@@ -10,6 +10,7 @@ import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.DetectionHelper;
+import org.firstinspires.ftc.UltimateGoalTeamcode.utilities.ShootingRings;
 import org.firstinspires.ftc.UltimateGoalTeamcode.utilities.WobbleGoal;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -31,6 +32,7 @@ public class UltimateAuto extends LinearOpMode {
     DcMotor backRight;
     OpenCvCamera webcam;
     WobbleGoal wobbleGoal = new WobbleGoal();
+    ShootingRings shootingRings = new ShootingRings();
     DetectionHelper pipeline;
     Constants2020.TargetZone box;
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
@@ -214,6 +216,7 @@ public class UltimateAuto extends LinearOpMode {
             sleep(500);
 
             wobbleGoal.moveToTgtZone(variableMap);
+            shootingRings.moveToLaunchLine(variableMap);
         }
 
         //reset imu
