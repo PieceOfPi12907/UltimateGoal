@@ -12,149 +12,39 @@ import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 @TeleOp(name = "FINAL TELEOP",group = "teleop")
 public class UltimateTeleop extends LinearOpMode {
 
-    Servo dumperClampInsideServo;
-    Servo dumperClampOutsideServo;
-
-    DcMotor leftIntakeMotor;
-    DcMotor rightIntakeMotor;
-
-    DcMotor dumperMotorRight;
-    DcMotor dumperMotorLeft;
+    DcMotor shooterIntake;
+    Servo shooterIntakeServo;
 
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
     DcMotor frontLeftMotor;
 
-    Servo sideArmServo;
-    Servo sideClampServo;
-
-    Servo dumperArmServo;
-
-    Servo leftIntakeServo;
-    Servo rightIntakeServo;
-
-    Servo leftRepositionServo;
-    Servo rightRepositionServo;
-
-    Servo slideServo;
-
-    Servo capServo;
-    Servo backRepo;
-
-    boolean isInsideClampUp = true;
-    boolean isOutsideClampUp = false;
-    boolean threadStarted = false;
-    Constants12907.RepositioningServoPositions repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
-    int isSideArmDown = 1;
-    boolean isSideArmClamped = false;
-    boolean isIntakeSpinning = false;
     double scaleFactor = 0.999;
-    double intakeSpeed = 0.8;
-    boolean closed = false;
-    boolean spinningForward = false;
-    boolean slideOut = false;
-    boolean clampsUp = false;
-    boolean backSpinning = false;
+    boolean shooterIntakeSpinning = false;
+    boolean shooterIntakeOpen = false;
 
-    /*final double SIDE_ARM_LOWERED = 0.75;
-    final double SIDE_ARM_RAISED = 0.45;
+    public final double SHOOTER_INTAKE_SERVO_INIT = 0.5;
+    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.4;
+    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.6;
 
-    final double AUTO_CLAMP_OPENED = 0.4;
-    final double AUTO_CLAMP_CLOSED = 0.6;*/
-
-    final double SIDE_ARM_LOWERED = 0.8;
-    final double SIDE_ARM_RAISED = 0.48;
-    final double SIDE_ARM_MID = 0.7;
-
-    final double AUTO_CLAMP_OPENED = 0.5;
-    final double AUTO_CLAMP_CLOSED = 0.8;
-
-    final double INTAKE_LEFT_OPEN = 0.65; //0.66 //0.68;
-    final double INTAKE_RIGHT_OPEN = 0.83; //0.84 //0.78;
-    final double INTAKE_RIGHT_CLOSE = 0.50;
-    final double INTAKE_LEFT_CLOSE = 0.43;
-
-    final double LEFT_REPOSITIONING_DOWN = 0.92;
-    final double LEFT_REPOSITIONING_UP = 0.1;
-    final double LEFT_REPOSITIONING_MID = 0.45;
-
-    final double RIGHT_REPOSITIONING_DOWN = 0.01;
-    final double RIGHT_REPOSITIONING_MID = 0.45;
-    final double RIGHT_REPOSITIONING_UP = 0.85;
-
-    final double BACK_REPO_DOWN = 0.01;
-    final double BACK_REPO_MID = 0.5;
-    final double BACK_REPO_UP = 1.0;
-
-    final double DUMPER_CLAMP_INSIDE_UP = 0.875;
-    final double DUMPER_CLAMP_INSIDE_DOWN = 0.38;
-    final double DUMPER_CLAMP_OUTSIDE_UP = 0.1;
-    final double DUMPER_CLAMP_OUTSIDE_DOWN = 0.6;
-
-    double SLIDE_SERVO_OUT = 0.58;
-    double SLIDE_SERVO_IN = 0.005;
-
-    final double CAP_UP = 0.49;
-
-    ElapsedTime b_time = new ElapsedTime();
-    ElapsedTime y_time = new ElapsedTime();
-    ElapsedTime x_time = new ElapsedTime();
     ElapsedTime a_time = new ElapsedTime();
-    ElapsedTime right_bumper_time = new ElapsedTime();
-    ElapsedTime a_time_two = new ElapsedTime();
-    ElapsedTime lb_time = new ElapsedTime();
-    ElapsedTime dpad_time = new ElapsedTime();
-    ElapsedTime test_time = new ElapsedTime();
+    ElapsedTime rb_time = new ElapsedTime();
 
-    private void initialize(){
-        dumperMotorRight = hardwareMap.get(DcMotor.class,"dumperMotorRight");
-        dumperMotorLeft = hardwareMap.get(DcMotor.class,"dumperMotorLeft");
+    private void initialize() {
+        shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
+        shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
+        shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
 
-        dumperClampInsideServo = hardwareMap.get(Servo.class,"dumperClampInsideServo");
-        dumperClampOutsideServo = hardwareMap.get(Servo.class,"dumperClampOutsideServo");
-        leftIntakeMotor = hardwareMap.get(DcMotor.class,"leftIntakeMotor");
-        rightIntakeMotor = hardwareMap.get(DcMotor.class,"rightIntakeMotor");
-        frontRightMotor =hardwareMap.get(DcMotor.class,"frontRight");
-        frontLeftMotor =hardwareMap.get(DcMotor.class, "frontLeft");
-        backRightMotor =hardwareMap.get(DcMotor.class,"backRight");
-        backLeftMotor =hardwareMap.get(DcMotor.class,"backLeft");
-        rightIntakeServo = hardwareMap.get(Servo.class, "rightIntakeServo");
-        leftIntakeServo = hardwareMap.get(Servo.class, "leftIntakeServo");
-        leftRepositionServo = hardwareMap.get(Servo.class, "leftRepositioningServo");
-        rightRepositionServo = hardwareMap.get(Servo.class,"rightRepositioningServo");
-        sideArmServo = hardwareMap.get(Servo.class, "pivotGrabber");
-        sideClampServo = hardwareMap.get(Servo.class, "blockClamper");
-        slideServo = hardwareMap.get(Servo.class,"slideServo");
-        capServo = hardwareMap.get(Servo.class,"capServo");
-        backRepo = hardwareMap.get(Servo.class,"backRepo");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRight");
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeft");
+        backRightMotor = hardwareMap.get(DcMotor.class, "backRight");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeft");
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        dumperMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        dumperMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        dumperMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        dumperMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
-        rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
-        leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
-        rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
-        dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
-        dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
-        leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
-        backRepo.setPosition(BACK_REPO_UP);
-        repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
-
-        sideArmServo.setPosition(SIDE_ARM_RAISED);
-        slideServo.setPosition(SLIDE_SERVO_IN);
-        capServo.setPosition(0);
-
-        //sideClampServo.setPosition(AUTO_CLAMP_OPENED);
     }
     private class AttachmentsThread extends Thread {
         boolean isIntakeSpinning = false;
@@ -168,176 +58,33 @@ public class UltimateTeleop extends LinearOpMode {
         public void run() {
             try {
                 while (!isInterrupted()) {
-                    newIntakeControl();
-                    dumperControl();
-                    testWheelControl();
-                    if(!closed){
-                        leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
-                        rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
-                    }
+                    shooterIntakeControl();
                     idle();
                 }
             } catch (Exception e) {
 
             }
         }
-        private void testWheelControl(){
-            /*if(gamepad2.y&&y_time.seconds()>0.25){
-                y_time.reset();
-                if(spinningForward!=true){
-                    leftIntakeMotor.setPower(-0.2);
-                    rightIntakeMotor.setPower(0.2);
-                    spinningForward=true;
+        private void shooterIntakeControl(){
+            if(gamepad1.a && a_time.seconds()>=0.25){
+                a_time.reset();
+                if(shooterIntakeSpinning){
+                    shooterIntake.setPower(0);
                 }
-                else if(spinningForward==true){
-                    leftIntakeMotor.setPower(0.4);
-                    rightIntakeMotor.setPower(-0.4);
-                    spinningForward=false;
+                else {
+                    shooterIntake.setPower(0.75);
                 }
-                isIntakeSpinning=true;
             }
-             */
-            if(gamepad2.y&&y_time.seconds()>0.25){
-                y_time.reset();
-                if(!backSpinning){
-                    leftIntakeMotor.setPower(0.4);
-                    rightIntakeMotor.setPower(-0.4);
-                    backSpinning = true;
+            if (gamepad1.right_bumper && rb_time.seconds()>=0.25){
+                rb_time.reset();
+                if(shooterIntakeOpen){
+                    shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
                 }
-                else if (backSpinning){
-                    leftIntakeMotor.setPower(0);
-                    rightIntakeMotor.setPower(0);
-                    backSpinning = false;
+                else{
+                    shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
                 }
             }
         }
-        private void dumperControl(){
-            if(gamepad2.x && x_time.seconds()>0.25){
-                x_time.reset();
-                if(!isInsideClampUp){
-                    dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_DOWN);
-                    isInsideClampUp = true;
-                }else if(isInsideClampUp){
-                    dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
-                    isInsideClampUp = false;
-                }
-            }
-
-            if(gamepad2.b && b_time.seconds()>0.25){
-                b_time.reset();
-                if(!isOutsideClampUp){
-                    dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
-                    isOutsideClampUp = true;
-                }else if(isOutsideClampUp){
-                    dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_UP);
-                    isOutsideClampUp = false;
-                }
-            }
-
-
-            if(gamepad2.left_stick_y>=0){
-                dumperMotorRight.setPower(Math.pow(gamepad2.left_stick_y,2));
-                dumperMotorLeft.setPower(Math.pow(gamepad2.left_stick_y,2));
-            }if(gamepad2.left_stick_y<0){
-                dumperMotorRight.setPower(-Math.pow(gamepad2.left_stick_y,2));
-                dumperMotorLeft.setPower(-Math.pow(gamepad2.left_stick_y,2));
-            }
-
-            if(gamepad2.right_bumper && right_bumper_time.seconds()>0.25){
-                right_bumper_time.reset();
-                if(!slideOut){
-                    slideServo.setPosition(SLIDE_SERVO_OUT);
-                    slideOut = true;
-                }else if(slideOut){
-                    slideServo.setPosition(SLIDE_SERVO_IN);
-                    slideOut = false;
-                }
-            }
-            if(gamepad2.dpad_up&&dpad_time.seconds()>0.25){
-                dpad_time.reset();
-                dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
-                dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_UP);
-
-            }
-            if(gamepad2.dpad_down&&dpad_time.seconds()>0.25){
-                dpad_time.reset();
-                dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
-                dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_DOWN);
-            }
-
-        }
-        private void newIntakeControl() {
-            if(gamepad2.dpad_left&&test_time.seconds()>0.25){
-                test_time.reset();
-                if(SLIDE_SERVO_OUT<=0.99){
-                    SLIDE_SERVO_OUT+=0.02;
-                    slideServo.setPosition(SLIDE_SERVO_OUT);
-                    telemetry.addData("New Servo OUT Position",SLIDE_SERVO_OUT);
-                    telemetry.update();
-                }
-            }
-            if(gamepad2.dpad_right&&test_time.seconds()>0.25){
-                test_time.reset();
-                if(SLIDE_SERVO_OUT<=0.99) {
-                    SLIDE_SERVO_OUT -= 0.02;
-                    slideServo.setPosition(SLIDE_SERVO_OUT);
-                    telemetry.addData("New Servo OUT Position", SLIDE_SERVO_OUT);
-                    telemetry.update();
-                }
-            }
-            if(gamepad1.left_bumper&&lb_time.seconds()<0.25){
-                lb_time.reset();
-                leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
-                rightIntakeServo.setPosition(INTAKE_RIGHT_OPEN);
-            }
-            if (gamepad2.a) {
-                if (!isIntakeSpinning) {
-                    leftIntakeMotor.setPower(-intakeSpeed);
-                    rightIntakeMotor.setPower(intakeSpeed);
-                    isIntakeSpinning = true;
-                    dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
-                    dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
-                    telemetry.addLine("Intake is Spinning");
-                    telemetry.update();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } else if (isIntakeSpinning) {
-                    leftIntakeMotor.setPower(0);
-                    rightIntakeMotor.setPower(0);
-                    isIntakeSpinning = false;
-                    telemetry.addLine("Intake stopped spinning");
-                    telemetry.update();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-
-
-            }
-            if(gamepad2.left_bumper&&lb_time.seconds()>0.25){
-                lb_time.reset();
-                if(closed!=true){
-                    leftIntakeServo.setPosition(INTAKE_LEFT_CLOSE);
-                    dumperClampInsideServo.setPosition(DUMPER_CLAMP_INSIDE_UP);
-                    dumperClampOutsideServo.setPosition(DUMPER_CLAMP_OUTSIDE_DOWN);
-                    isIntakeSpinning = true;
-                    closed = true;
-                }
-                else if(closed==true){
-                    leftIntakeServo.setPosition(INTAKE_LEFT_OPEN);
-                    closed = false;
-                }
-            }
-
-        }
-
-
     }//end of thread class
     private void mecanumDrive(double scale){
         double radius=Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
@@ -372,62 +119,6 @@ public class UltimateTeleop extends LinearOpMode {
         frontRightMotor.setPower((fRPower) * scale);
         backRightMotor.setPower((bRPower) * scale);
     }
-    private void repositioningControl(){
-        if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
-            right_bumper_time.reset();
-            if(Constants12907.RepositioningServoPositions.UP.equals(repositioningServoPos)){
-                leftRepositionServo.setPosition(LEFT_REPOSITIONING_MID);
-                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_MID);
-                backRepo.setPosition(BACK_REPO_MID);
-                repositioningServoPos = Constants12907.RepositioningServoPositions.MID;
-            }else if(Constants12907.RepositioningServoPositions.MID.equals(repositioningServoPos)){
-                leftRepositionServo.setPosition(LEFT_REPOSITIONING_DOWN);
-                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_DOWN);
-                backRepo.setPosition(BACK_REPO_DOWN);
-                repositioningServoPos = Constants12907.RepositioningServoPositions.DOWN;
-
-            }else if(Constants12907.RepositioningServoPositions.DOWN.equals(repositioningServoPos)){
-                leftRepositionServo.setPosition(LEFT_REPOSITIONING_UP);
-                rightRepositionServo.setPosition(RIGHT_REPOSITIONING_UP);
-                backRepo.setPosition(BACK_REPO_UP);
-                repositioningServoPos = Constants12907.RepositioningServoPositions.UP;
-
-            }
-        }
-
-    }
-    private void sideArmControl(){
-        if(gamepad1.dpad_up){
-            capServo.setPosition(CAP_UP);
-        }
-        if(gamepad1.dpad_down && a_time.seconds() >= 0.25){
-            a_time.reset();
-            if(isSideArmDown==1){
-                sideArmServo.setPosition(SIDE_ARM_LOWERED);
-                isSideArmDown = 2;
-            }
-            else if(isSideArmDown==2){
-                sideArmServo.setPosition(SIDE_ARM_RAISED);
-                isSideArmDown = 3;
-            }
-            else if(isSideArmDown==3){
-                sideArmServo.setPosition(SIDE_ARM_MID);
-                isSideArmDown = 1;
-            }
-        }
-        if(gamepad1.b && b_time.seconds() >= 0.25){
-            b_time.reset();
-            if(!isSideArmClamped){
-                sideClampServo.setPosition(AUTO_CLAMP_CLOSED);
-                isSideArmClamped = true;
-            }
-            else if(isSideArmClamped){
-                sideClampServo.setPosition(AUTO_CLAMP_OPENED);
-                isSideArmClamped = false;
-            }
-        }
-    }
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -443,9 +134,6 @@ public class UltimateTeleop extends LinearOpMode {
             if(gamepad1.y){
                 scaleFactor=0.99;
             }
-            repositioningControl();
-            sideArmControl();
-            // Code going into thread
             idle();
         }
         attachments.interrupt();
