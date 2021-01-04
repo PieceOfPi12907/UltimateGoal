@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 
-@TeleOp(name = "FINAL TELEOP",group = "teleop")
+@TeleOp(name = "FINAL ULTIMATE TELEOP",group = "teleop")
 public class UltimateTeleop extends LinearOpMode {
 
     DcMotor shooterIntake;
@@ -24,9 +24,9 @@ public class UltimateTeleop extends LinearOpMode {
     boolean shooterIntakeSpinning = false;
     boolean shooterIntakeOpen = false;
 
-    public final double SHOOTER_INTAKE_SERVO_INIT = 0.5;
-    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.4;
-    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.6;
+    public final double SHOOTER_INTAKE_SERVO_INIT = 0.3;
+    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.3;
+    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.5;
 
     ElapsedTime a_time = new ElapsedTime();
     ElapsedTime rb_time = new ElapsedTime();
@@ -72,7 +72,7 @@ public class UltimateTeleop extends LinearOpMode {
                     shooterIntake.setPower(0);
                 }
                 else {
-                    shooterIntake.setPower(0.75);
+                    shooterIntake.setPower(0.6);
                 }
             }
             if (gamepad1.right_bumper && rb_time.seconds()>=0.25){
