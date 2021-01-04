@@ -24,9 +24,9 @@ public class UltimateTeleop extends LinearOpMode {
     boolean shooterIntakeSpinning = false;
     boolean shooterIntakeOpen = false;
 
-    public final double SHOOTER_INTAKE_SERVO_INIT = 0.3;
-    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.3;
-    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.5;
+    public final double SHOOTER_INTAKE_SERVO_INIT = 0.25;
+    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.25;
+    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.6;
 
     ElapsedTime a_time = new ElapsedTime();
     ElapsedTime rb_time = new ElapsedTime();
@@ -35,6 +35,7 @@ public class UltimateTeleop extends LinearOpMode {
         shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
         shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
         shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
+        shooterIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRight");
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -69,18 +70,22 @@ public class UltimateTeleop extends LinearOpMode {
             if(gamepad1.a && a_time.seconds()>=0.25){
                 a_time.reset();
                 if(shooterIntakeSpinning){
+                    shooterIntakeSpinning = false;
                     shooterIntake.setPower(0);
                 }
                 else {
-                    shooterIntake.setPower(0.6);
+                    shooterIntakeSpinning = true;
+                    shooterIntake.setPower(1);
                 }
             }
             if (gamepad1.right_bumper && rb_time.seconds()>=0.25){
                 rb_time.reset();
                 if(shooterIntakeOpen){
+                    shooterIntakeOpen = false;
                     shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
                 }
                 else{
+                    shooterIntakeOpen = true;
                     shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
                 }
             }
