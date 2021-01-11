@@ -52,6 +52,8 @@ public class WobbleGoal {
             navigater.navigate(6, Constants12907.Direction.RIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
 
+        resetTheImu(variableMap);
+
         //move to tgt zone A, B, or C
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             telemetry.addLine("RED - WALL - ALPHA");

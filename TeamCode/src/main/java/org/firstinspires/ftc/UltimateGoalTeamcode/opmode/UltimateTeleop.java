@@ -32,10 +32,12 @@ public class UltimateTeleop extends LinearOpMode {
     ElapsedTime rb_time = new ElapsedTime();
 
     private void initialize() {
+        /*
         shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
         shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
         shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
         shooterIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+         */
 
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRight");
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -47,6 +49,7 @@ public class UltimateTeleop extends LinearOpMode {
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
+    /*
     private class AttachmentsThread extends Thread {
         boolean isIntakeSpinning = false;
         boolean isIntakeServoOpen = true;
@@ -90,7 +93,10 @@ public class UltimateTeleop extends LinearOpMode {
                 }
             }
         }
-    }//end of thread class
+    }
+    //end of thread class
+     */
+
     private void mecanumDrive(double scale){
         double radius=Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
         double angle = (Math.atan2(-(gamepad1.left_stick_y),(gamepad1.left_stick_x)))-(Math.PI/4);
@@ -124,13 +130,14 @@ public class UltimateTeleop extends LinearOpMode {
         frontRightMotor.setPower((fRPower) * scale);
         backRightMotor.setPower((bRPower) * scale);
     }
+
     @Override
     public void runOpMode() throws InterruptedException {
 
         initialize();
-        Thread attachments = new UltimateTeleop.AttachmentsThread();
+        //Thread attachments = new UltimateTeleop.AttachmentsThread();
         waitForStart();
-        attachments.start();
+       // attachments.start();
         while(opModeIsActive()){
             mecanumDrive(scaleFactor);
             if(gamepad1.x){
@@ -141,6 +148,6 @@ public class UltimateTeleop extends LinearOpMode {
             }
             idle();
         }
-        attachments.interrupt();
+        //attachments.interrupt();
     }
 }

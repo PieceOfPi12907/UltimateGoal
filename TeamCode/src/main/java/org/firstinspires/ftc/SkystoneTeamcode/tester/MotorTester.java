@@ -15,22 +15,31 @@ public class MotorTester extends LinearOpMode {
 
     //name
     DcMotor frontLeft;
-
+    DcMotor backLeft;
+    DcMotor frontRight;
+    DcMotor backRight;
     public void initializeMotor() {
         //configuring motor
         frontLeft = hardwareMap.get(DcMotor.class,"frontLeft");
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft = hardwareMap.get(DcMotor.class,"backLeft");
+        backLeft = hardwareMap.get(DcMotor.class,"frontRight");
+        backLeft = hardwareMap.get(DcMotor.class,"backRight");
+
+
     }
 
     //@Override
     public void runOpMode() throws InterruptedException {
         initializeMotor();
-        MotorHelper motorHelper = new MotorHelper();
         waitForStart();
         if(opModeIsActive()){
-            double motorPower = 0.25;
-            int targetPos = 10000;
-            motorHelper.motorMovingWithEncoders(frontLeft, motorPower, targetPos, telemetry);
+            frontLeft.setPower(0.2);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            frontLeft.setPower(0);
         }
     }
 }

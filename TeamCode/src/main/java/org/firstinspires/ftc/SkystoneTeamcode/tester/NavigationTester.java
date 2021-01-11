@@ -40,13 +40,8 @@ public class NavigationTester extends LinearOpMode {
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -67,14 +62,14 @@ public class NavigationTester extends LinearOpMode {
         if(opModeIsActive()) {
             NavigationHelper navigateTest = new NavigationHelper();
 
-            navigateTest.navigate(60, Constants12907.Direction.LEFT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
+            navigateTest.navigate(60, Constants12907.Direction.STRAIGHT,0,0.2, backLeft, backRight, frontRight, frontLeft, imu, telemetry, false);
 
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            navigateTest.navigate(60, Constants12907.Direction.RIGHT,0,0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            navigateTest.navigate(60, Constants12907.Direction.STRAIGHT,0,0.2, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
             try {
                 Thread.sleep(2000);
