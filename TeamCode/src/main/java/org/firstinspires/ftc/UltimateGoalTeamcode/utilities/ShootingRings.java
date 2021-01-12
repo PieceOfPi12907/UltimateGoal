@@ -38,8 +38,8 @@ public class ShootingRings {
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
         //distances to tgt zones specified in game manual:
         double alphaDist = 70.75;
-        double betaDistance = 94.625;
-        double charlieDistance = 118.372;
+        double betaDist = 94.625;
+        double charlieDist = 118.372;
 
         //reverse adjustments at tgt zone A, B, or C
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
@@ -75,10 +75,10 @@ public class ShootingRings {
             navigater.navigate(-((alphaDist/4)-4.6875), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             //-34
-            navigater.navigate(-((betaDistance/3)+2.4583), Constants12907.Direction.STRAIGHT, 0, -0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            navigater.navigate(-((betaDist/3)+2.4583), Constants12907.Direction.STRAIGHT, 0, -0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             //-56
-            navigater.navigate(-((charlieDistance/2)-3.186), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            navigater.navigate(-((charlieDist/2)-3.186), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
     }
     //shoot rings

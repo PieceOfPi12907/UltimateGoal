@@ -16,6 +16,8 @@ import static java.lang.Thread.sleep;
 
 public class WobbleGoal {
 
+    //WOBBLE GOAL: RIGHT SIDE OF ROBOT
+
     NavigationHelper navigater = new NavigationHelper();
 
     public void resetTheImu(HashMap<String, Object> variableMap) {
@@ -72,7 +74,7 @@ public class WobbleGoal {
         resetTheImu(variableMap);
 
         //adjust position at tgt zone A, B, or C to drop wobble goal:
-        if (position.equals(Constants2020.TargetZone.ALPHA)) {
+        /*if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
                 //Blue Not Wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -100,6 +102,6 @@ public class WobbleGoal {
                 navigater.navigate(24, Constants12907.Direction.RIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
             //drop wobble goal
-        }
+        }*/
     }
 }

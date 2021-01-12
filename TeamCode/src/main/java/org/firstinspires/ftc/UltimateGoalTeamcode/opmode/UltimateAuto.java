@@ -204,7 +204,6 @@ public class UltimateAuto extends LinearOpMode {
             box = Constants2020.TargetZone.CHARLIE;
         }
 
-        //CHECK FOR SYNTAX ERRORS:
         variableMap.put(Constants2020.POSITION, this.box);
         waitForStart();
 
@@ -216,7 +215,7 @@ public class UltimateAuto extends LinearOpMode {
             sleep(500);
 
             wobbleGoal.moveToTgtZone(variableMap);
-            shootingRings.moveToLaunchLine(variableMap);
+            //shootingRings.moveToLaunchLine(variableMap);
         }
 
         //reset imu

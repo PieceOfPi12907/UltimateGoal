@@ -47,10 +47,10 @@ public class IndividualMotorTest extends LinearOpMode {
         waitForStart();
         if(opModeIsActive()){
             while(opModeIsActive()){
-                backLeft.setTargetPosition(5000);
-                backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                backLeft.setPower(0.3);
-                telemetry.addData("motor encoder val: ", backLeft.getCurrentPosition());
+                frontRight.setTargetPosition(5000);
+                frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                frontRight.setPower(0.3);
+                telemetry.addData("motor encoder val: ", frontRight.getCurrentPosition());
                 telemetry.update();
                 try {
                     Thread.sleep(100);

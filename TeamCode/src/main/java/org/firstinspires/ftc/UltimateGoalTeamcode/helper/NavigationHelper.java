@@ -20,9 +20,9 @@ public class NavigationHelper {
     double globalAngle;
     //LinearOpMode opm = new LinearOpMode() {
 
-
     // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
     public void navigate (double pTgtDistance, Constants2020.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry, boolean isForward ){
+
         if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
             forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry, pImu, isForward );
         }
@@ -86,6 +86,7 @@ public class NavigationHelper {
         final double WHEEL_DIAMETER_INCHES = 3.93701;     // For figuring circumference
         final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_DCMOTOR * DRIVE_GEAR_REDUCTION) /
                 (WHEEL_DIAMETER_INCHES * 3.1415);
+
         // newTargetPosition is the target position after it has been converted
         int newTargetPositionRight;
         int newTargetPositionLeft;
