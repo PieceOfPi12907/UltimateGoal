@@ -47,11 +47,20 @@ public class IndividualMotorTest extends LinearOpMode {
         waitForStart();
         if(opModeIsActive()){
             while(opModeIsActive()){
-                frontRight.setTargetPosition(5000);
-                frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                frontRight.setPower(0.3);
-                telemetry.addData("motor encoder val: ", frontRight.getCurrentPosition());
-                telemetry.update();
+                //frontRight.setTargetPosition(5000);
+                frontLeft.setTargetPosition(5000);
+                //backRight.setTargetPosition(5000);
+                //backLeft.setTargetPosition(5000);
+                //frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //frontRight.setPower(0.2);
+                frontLeft.setPower(0.2);
+                //backRight.setPower(0.2);
+                //backLeft.setPower(0.2);
+                //telemetry.addData("motor encoder val: ", frontLeft.getCurrentPosition());
+                //telemetry.update();
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

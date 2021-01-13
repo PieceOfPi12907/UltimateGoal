@@ -75,8 +75,8 @@ public class NavigationHelper {
         pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         ElapsedTime runtime = new ElapsedTime();
-
-        PIDController pidDrive = new PIDController(.05, 0, 0);
+        //USED TO BE .05, 0, 0 ON 1/11/2021
+        PIDController pidDrive = new PIDController(.03, 0.03, 0.05);
         lastAngles = new Orientation();
 
         //Variables used for converting inches to Encoder dounts
@@ -135,6 +135,8 @@ public class NavigationHelper {
             pBackRight.setPower(pSpeed + correction);
             pFrontLeft.setPower(pSpeed - correction);
             pBackLeft.setPower(pSpeed - correction);
+            telemetry.addData("powers for right, left and imu","%7d : %7d : %7d", (int)((pSpeed + correction)*100), (int)((pSpeed - correction)*100), (int)(getAngle(pImu)));
+            telemetry.update();
         }
 
         //stop motors
