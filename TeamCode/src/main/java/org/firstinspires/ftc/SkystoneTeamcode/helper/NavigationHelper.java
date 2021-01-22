@@ -75,8 +75,7 @@ public class NavigationHelper {
         pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         ElapsedTime runtime = new ElapsedTime();
-        //USED TO BE .05, 0, 0 ON 1/11/2021
-        PIDController pidDrive = new PIDController(.03, 0.03, 0.05);
+        PIDController pidDrive = new PIDController(.05, 0, 0);
         lastAngles = new Orientation();
 
         //Variables used for converting inches to Encoder dounts

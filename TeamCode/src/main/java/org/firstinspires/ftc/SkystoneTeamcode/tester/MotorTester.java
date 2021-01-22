@@ -21,10 +21,24 @@ public class MotorTester extends LinearOpMode {
     public void initializeMotor() {
         //configuring motor
         frontLeft = hardwareMap.get(DcMotor.class,"frontLeft");
+        frontRight = hardwareMap.get(DcMotor.class,"frontRight");
         backLeft = hardwareMap.get(DcMotor.class,"backLeft");
-        backLeft = hardwareMap.get(DcMotor.class,"frontRight");
-        backLeft = hardwareMap.get(DcMotor.class,"backRight");
+        backRight = hardwareMap.get(DcMotor.class,"backRight");
 
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -33,13 +47,40 @@ public class MotorTester extends LinearOpMode {
         initializeMotor();
         waitForStart();
         if(opModeIsActive()){
+            frontLeft.setTargetPosition(5000);
+            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             frontLeft.setPower(0.2);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            frontLeft.setPower(0);
+            backLeft.setTargetPosition(5000);
+            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backLeft.setPower(0.2);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            frontRight.setTargetPosition(5000);
+            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontRight.setPower(0.2);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            backRight.setTargetPosition(5000);
+            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backRight.setPower(0.2);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
