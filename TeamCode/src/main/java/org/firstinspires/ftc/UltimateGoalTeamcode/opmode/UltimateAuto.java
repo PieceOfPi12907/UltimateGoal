@@ -215,7 +215,7 @@ public class UltimateAuto extends LinearOpMode {
                 sleep(500);
 
                 wobbleGoal.moveToTgtZone(variableMap);
-                //shootingRings.moveToLaunchLine(variableMap);
+                shootingRings.moveToLaunchLine(variableMap);
             }
 
             //reset imu

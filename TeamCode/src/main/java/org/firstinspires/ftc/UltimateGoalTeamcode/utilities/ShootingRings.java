@@ -48,38 +48,56 @@ public class ShootingRings {
                 navigater.navigate(0, Constants12907.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isBlue && !isWall) {
                 //Red Not Wall
-                navigater.navigate(27, Constants12907.Direction.LEFT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //navigater.navigate(27-23, Constants12907.Direction.LEFT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
                 //Red and Blue Wall
-                navigater.navigate(0, Constants12907.Direction.TURN, -90, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants12907.Direction.TURN, -85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall) {
                 //for Red wall
-                navigater.navigate(10, Constants12907.Direction.RIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //navigater.navigate(18, Constants12907.Direction.RIGHT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //resetTheImu(variableMap);
+                navigater.navigate(0, Constants12907.Direction.TURN, -175, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
                 //red and blue wall
-                navigater.navigate(0, Constants12907.Direction.TURN, 90, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants12907.Direction.TURN, -85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall) {
                 //red not wall
                 navigater.navigate(24+3, Constants12907.Direction.LEFT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
 
+        resetTheImu(variableMap);
+
         //back up behind the launch line
         if(position.equals(Constants2020.TargetZone.ALPHA)){
-            //-13
-            navigater.navigate(-((alphaDist/4)-4.6875), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            if(isWall){
+                //already behind launch line
+            } else if(!isWall){
+                //-13 needed??
+                //navigater.navigate(-((alphaDist/4)-4.6875), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
-            //-34
-            navigater.navigate(-((betaDist/3)+2.4583), Constants12907.Direction.STRAIGHT, 0, -0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            if(isWall){
+                navigater.navigate(-((betaDist/3)-3), Constants12907.Direction.STRAIGHT, 0, -0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            } else if(!isWall){
+                //??
+            }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
-            //-56
-            navigater.navigate(-((charlieDist/2)-3.186), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            if(isWall){
+                navigater.navigate(-((charlieDist/2)-3.186 - 5 - 5), Constants12907.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            } else if (!isWall){
+                //??
+            }
         }
+        //shoot rings
+
+        resetTheImu(variableMap);
+        //parking (over the launch line)
+        navigater.navigate(9, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
     }
-    //shoot rings
 }
