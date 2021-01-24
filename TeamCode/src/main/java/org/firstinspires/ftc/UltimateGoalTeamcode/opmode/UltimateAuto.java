@@ -103,17 +103,17 @@ public class UltimateAuto extends LinearOpMode {
         telemetry.update();
 
         try{
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
-        pipeline = new DetectionHelper();
-        webcam.setPipeline(pipeline);
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
+            webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
+            pipeline = new DetectionHelper();
+            webcam.setPipeline(pipeline);
+            webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
             {
-                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-            }
-        });
+                @Override
+                public void onOpened()
+                {
+                    webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+                }
+            });
 
         } catch (Exception bad){
             telemetry.addData("EXCEPTION (from try-catch):", bad.getMessage());
@@ -170,17 +170,17 @@ public class UltimateAuto extends LinearOpMode {
 
         try {
 
-        initialize();
+            initialize();
 
-        while(!isStopRequested() && !imu.isGyroCalibrated()){
-            sleep(50);
-            idle();
-        }
+            while(!isStopRequested() && !imu.isGyroCalibrated()){
+                sleep(50);
+                idle();
+            }
 
-        telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
-        telemetry.update();
+            telemetry.addData("imu calib status: ", imu.getCalibrationStatus().toString());
+            telemetry.update();
 
-        createVariableMap();
+            createVariableMap();
 
             DetectionHelper.RingPosition position = null;
 
@@ -194,50 +194,50 @@ public class UltimateAuto extends LinearOpMode {
                 sleep(50);
             }
 
-        if (position.equals(DetectionHelper.RingPosition.NONE)){
-            box = Constants2020.TargetZone.ALPHA;
-        }
-        if (position.equals(DetectionHelper.RingPosition.ONE)){
-            box = Constants2020.TargetZone.BETA;
-        }
-        if (position.equals(DetectionHelper.RingPosition.FOUR)){
-            box = Constants2020.TargetZone.CHARLIE;
-        }
+            if (position.equals(DetectionHelper.RingPosition.NONE)){
+                box = Constants2020.TargetZone.ALPHA;
+            }
+            if (position.equals(DetectionHelper.RingPosition.ONE)){
+                box = Constants2020.TargetZone.BETA;
+            }
+            if (position.equals(DetectionHelper.RingPosition.FOUR)){
+                box = Constants2020.TargetZone.CHARLIE;
+            }
 
-        variableMap.put(Constants2020.POSITION, this.box);
-        waitForStart();
+            variableMap.put(Constants2020.POSITION, this.box);
+            waitForStart();
 
-        if (opModeIsActive()) {
-            runtime.reset();
-            //int num = detectionLoop();
-            telemetry.addData("Number of Rings", position);
+            if (opModeIsActive()) {
+                runtime.reset();
+                //int num = detectionLoop();
+                telemetry.addData("Number of Rings", position);
+                telemetry.update();
+                sleep(500);
+
+                wobbleGoal.moveToTgtZone(variableMap);
+                //shootingRings.moveToLaunchLine(variableMap);
+            }
+
+            //reset imu
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.mode = BNO055IMU.SensorMode.IMU;
+            imu.initialize(parameters);
+
+            backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            backLeft.setPower(0);
+            backRight.setPower(0);
+            frontLeft.setPower(0);
+            frontRight.setPower(0);
+
+            telemetry.addLine("PROGRAM END");
             telemetry.update();
-            sleep(500);
-
-            wobbleGoal.moveToTgtZone(variableMap);
-            //shootingRings.moveToLaunchLine(variableMap);
-        }
-
-        //reset imu
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        imu.initialize(parameters);
-
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-
-        telemetry.addLine("PROGRAM END");
-        telemetry.update();
 
 
         } catch (Exception bad){

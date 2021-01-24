@@ -12,8 +12,8 @@ import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 @TeleOp(name = "FINAL ULTIMATE TELEOP",group = "teleop")
 public class UltimateTeleop extends LinearOpMode {
 
-    DcMotor shooterIntake;
-    Servo shooterIntakeServo;
+    //DcMotor shooterIntake;
+    //Servo shooterIntakeServo;
 
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
@@ -33,10 +33,10 @@ public class UltimateTeleop extends LinearOpMode {
 
     private void initialize() {
 
-        shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
-        shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
-        shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
-        shooterIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        //shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
+        // shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
+        //shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
+        // shooterIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRight");
@@ -50,7 +50,7 @@ public class UltimateTeleop extends LinearOpMode {
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    private class AttachmentsThread extends Thread {
+    /*private class AttachmentsThread extends Thread {
         boolean isIntakeSpinning = false;
         boolean isIntakeServoOpen = true;
 
@@ -94,7 +94,7 @@ public class UltimateTeleop extends LinearOpMode {
             }
         }
     }
-    //end of thread class
+    //end of thread class*/
 
 
     private void mecanumDrive(double scale){
@@ -135,9 +135,9 @@ public class UltimateTeleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         initialize();
-        Thread attachments = new UltimateTeleop.AttachmentsThread();
+        //Thread attachments = new UltimateTeleop.AttachmentsThread();
         waitForStart();
-        attachments.start();
+        // attachments.start();
         while(opModeIsActive()){
             mecanumDrive(scaleFactor);
             if(gamepad1.x){
@@ -148,6 +148,6 @@ public class UltimateTeleop extends LinearOpMode {
             }
             idle();
         }
-        attachments.interrupt();
+        //attachments.interrupt();
     }
 }
