@@ -3,6 +3,7 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.tester;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -15,14 +16,16 @@ import org.firstinspires.ftc.SkystoneTeamcode.tester.WebcamTester;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp(name = "Servo Test 2020", group = "autonomous")
+@Autonomous(name = "Servo Test 2020", group = "autonomous")
 public class ServoTest extends LinearOpMode {
 
-    Servo wobbleServo;
+    Servo hingeServo;
+    Servo clampServo;
 
     private void initialize(){
         //servos
-        wobbleServo = hardwareMap.get(Servo.class,"wobbleservo");
+        hingeServo = hardwareMap.get(Servo.class,"hinge");
+        clampServo = hardwareMap.get(Servo.class,"clamp");
     }
 
     @Override
@@ -31,13 +34,30 @@ public class ServoTest extends LinearOpMode {
 
         waitForStart();
 
-        while(opModeIsActive()) {
-            //wobble servo
-            wobbleServo.setPosition(0.2);
-            sleep(1000);
-            wobbleServo.setPosition(0.8);
-            telemetry.addData("WOBBLE SERVO POSITION: ", wobbleServo.getPosition());
+        if(opModeIsActive()) {
+
+            hingeServo.setPosition(0);
+            sleep(5000);
+            telemetry.addData("HINGE POSITION: ", hingeServo.getPosition());
             telemetry.update();
+
+            //CLAMP IT
+            //clampServo.setPosition(0.2);
+            //sleep(1000);
+            telemetry.addData("CLAMP POSITION: ", clampServo.getPosition());
+            telemetry.update();
+
+            //hingeServo.setPosition(0.5);
+            //sleep(1000);
+            telemetry.addData("HINGE POSITION: ", hingeServo.getPosition());
+            telemetry.update();
+
+            //LET IT GO
+            //clampServo.setPosition(0.5);
+            //sleep(1000);
+            telemetry.addData("CLAMP POSITION: ", clampServo.getPosition());
+            telemetry.update();
+
         }
     }
 }

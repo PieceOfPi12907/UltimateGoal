@@ -118,7 +118,6 @@ public class WobbleGoal {
                 navigater.navigate(0, Constants12907.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall) {
                 //red not wall
-                //navigater.navigate(24, Constants12907.Direction.RIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         resetTheImu(variableMap);
