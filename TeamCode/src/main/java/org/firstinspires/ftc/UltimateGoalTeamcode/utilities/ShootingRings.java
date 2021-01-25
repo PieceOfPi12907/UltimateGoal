@@ -44,19 +44,18 @@ public class ShootingRings {
         //reverse adjustments at tgt zone A, B, or C
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
-                //Blue Not Wall
+                //blue not wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
-                //Red and Blue Wall
+                //red and blue wall
                 navigater.navigate(0, Constants12907.Direction.TURN, -85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall) {
-                //for Red wall
-                //navigater.navigate(18, Constants12907.Direction.RIGHT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                //resetTheImu(variableMap);
+                //red wall
                 navigater.navigate(0, Constants12907.Direction.TURN, -175, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall){
+                //red not wall
                 navigater.navigate(0, Constants12907.Direction.TURN, -82.5, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
@@ -64,8 +63,6 @@ public class ShootingRings {
             if (isWall) {
                 //red and blue wall
                 navigater.navigate(0, Constants12907.Direction.TURN, -85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            } else if (!isWall) {
-                //red not wall
             }
         }
 
@@ -94,6 +91,7 @@ public class ShootingRings {
         //shoot rings
 
         resetTheImu(variableMap);
+
         //parking (over the launch line)
         navigater.navigate(9, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
     }

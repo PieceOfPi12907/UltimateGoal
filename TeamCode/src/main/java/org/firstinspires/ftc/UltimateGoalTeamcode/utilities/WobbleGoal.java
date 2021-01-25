@@ -64,24 +64,20 @@ public class WobbleGoal {
             if(isWall){
                 navigater.navigate(alphaDist - 12.75, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
-                //added this distance for not wall on 1/23
                 navigater.navigate((alphaDist - 12.75) + 15, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             telemetry.addLine("RED - WALL - BETA");
             telemetry.update();
             if(isWall){
-                //changed distance minus 12 inches on 1/21
                 navigater.navigate(betaDistance + 2.25 - 12, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
-                //moved back this distance for not wall on 1/23
                 navigater.navigate(betaDistance + 2.25 - 20, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             telemetry.addLine("RED - WALL - CHARLIE");
             telemetry.update();
             if(isWall){
-                //changed distance minus 5 inches on 1/21
                 navigater.navigate(charlieDistance - 5 - 5 - 5, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
                 navigater.navigate(charlieDistance, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -94,30 +90,25 @@ public class WobbleGoal {
         //adjust position at tgt zone A, B, or C to drop wobble goal:
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
-                //Blue Not Wall
+                //blue not wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
-                //Red and Blue Wall
+                //red and blue wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall && !isBlue) {
-                //for Red wall
-                //changed strafe from 10 to 18 on 1/21
-                //navigater.navigate(18, Constants12907.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                //resetTheImu(variableMap);
+                //red wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 175, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall && !isBlue){
+                //red not wall
                 navigater.navigate(0, Constants12907.Direction.TURN, 82.5, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
                 //red and blue wall
-                //changed turn from -90 to 90 on 1/21
                 navigater.navigate(0, Constants12907.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            } else if (!isWall) {
-                //red not wall
             }
         }
         resetTheImu(variableMap);
