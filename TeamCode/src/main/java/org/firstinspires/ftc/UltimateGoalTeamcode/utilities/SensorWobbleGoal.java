@@ -3,8 +3,7 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.utilities;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
-import org.firstinspires.ftc.SkystoneTeamcode.helper.NavigationHelper;
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -92,24 +91,24 @@ public class SensorWobbleGoal {
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
                 //blue not wall
-                navigater.navigate(0, Constants12907.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
                 //red and blue wall
-                navigater.navigate(0, Constants12907.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall && !isBlue) {
                 //red wall
-                navigater.navigate(0, Constants12907.Direction.TURN, 175, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 175, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall && !isBlue){
                 //red not wall
-                navigater.navigate(0, Constants12907.Direction.TURN, 82.5, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 82.5, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
                 //red and blue wall
-                navigater.navigate(0, Constants12907.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         resetTheImu(variableMap);
