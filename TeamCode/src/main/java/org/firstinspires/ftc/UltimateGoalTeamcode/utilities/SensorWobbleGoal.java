@@ -58,28 +58,33 @@ public class SensorWobbleGoal {
             telemetry.addLine("RED - WALL - ALPHA");
             telemetry.update();
             if(isWall){
-                navigater.navigate(alphaDist - 12.75, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //power to motors until red is detected
+                //else: stop at "alphaDist - 12.75"
             } else if(!isWall){
-                navigater.navigate((alphaDist - 12.75) + 15, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //when white detected, travel "x" more inches
+                //else: stop at "(alphaDist - 12.75) + 15"
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             telemetry.addLine("RED - WALL - BETA");
             telemetry.update();
             if(isWall){
-                navigater.navigate(betaDistance + 2.25 - 12, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //power to motors --> when white detected --> move "x" inches
+                //else: stop at "betaDistance + 2.25 - 12"
             } else if(!isWall){
-                navigater.navigate(betaDistance + 2.25 - 20, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //power to motors --> when red detected --> stop
+                //else: stop at "betaDistance + 2.25 - 20"
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             telemetry.addLine("RED - WALL - CHARLIE");
             telemetry.update();
             if(isWall){
-                navigater.navigate(charlieDistance - 5 - 5 - 5, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //power to motors --> detect white --> move until red --> stop
+                //else: stop at "charlieDistance - 5 - 5 - 5"
             } else if(!isWall){
-                navigater.navigate(charlieDistance, Constants12907.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //power to motors --> when red detected --> travel "x" more inches
+                //else: stop at "charlieDistance"
             }
         }
-
 
         resetTheImu(variableMap);
 

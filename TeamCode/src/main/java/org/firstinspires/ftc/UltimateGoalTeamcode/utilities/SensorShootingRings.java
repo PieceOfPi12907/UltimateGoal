@@ -69,7 +69,10 @@ public class SensorShootingRings {
         resetTheImu(variableMap);
 
         //back up behind the launch line
-        if(position.equals(Constants2020.TargetZone.ALPHA)){
+
+        //reverse until white detected
+        //else: stop at these encoder distances
+        /*if(position.equals(Constants2020.TargetZone.ALPHA)){
             if(isWall){
                 //already behind launch line
             } else if(!isWall){
@@ -87,12 +90,13 @@ public class SensorShootingRings {
             } else if (!isWall){
                 navigater.navigate(-((charlieDist/2)), Constants12907.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
-        }
+        }*/
         //shoot rings
 
         resetTheImu(variableMap);
 
         //parking (over the launch line)
-        navigater.navigate(9, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        //power to motor until white detected
+        //navigater.navigate(9, Constants12907.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
     }
 }

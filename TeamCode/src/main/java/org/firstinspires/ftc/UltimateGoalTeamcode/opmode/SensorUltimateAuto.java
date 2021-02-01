@@ -3,6 +3,7 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.opmode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -11,7 +12,9 @@ import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.DetectionHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.utilities.ShootingRings;
 import org.firstinspires.ftc.UltimateGoalTeamcode.utilities.WobbleGoal;
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.internal.android.dx.rop.cst.Constant;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -30,6 +33,7 @@ public class SensorUltimateAuto extends LinearOpMode {
     DcMotor frontRight;
     DcMotor backRight;
     OpenCvCamera webcam;
+    ColorSensor frontColor;
     WobbleGoal wobbleGoal = new WobbleGoal();
     ShootingRings shootingRings = new ShootingRings();
     DetectionHelper pipeline;
@@ -132,6 +136,8 @@ public class SensorUltimateAuto extends LinearOpMode {
             e.printStackTrace();
         }
 
+        frontColor = hardwareMap.get(ColorSensor.class, "frontColor");
+
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
@@ -148,17 +154,20 @@ public class SensorUltimateAuto extends LinearOpMode {
     private void createVariableMap(){
         variableMap.put(Constants2020.BLUE_FLAG, this.isBlue);
         variableMap.put(Constants2020.WALL_FLAG, this.isWall);
+
         variableMap.put(Constants2020.BACK_LEFT_MOTOR,this.backLeft);
         variableMap.put(Constants2020.FRONT_LEFT_MOTOR,this.frontLeft);
         variableMap.put(Constants2020.BACK_RIGHT_MOTOR,this.backRight);
         variableMap.put(Constants2020.FRONT_RIGHT_MOTOR,this.frontRight);
 
-        variableMap.put(Constants2020.TELEMETRY, this.telemetry);
-        variableMap.put(Constants12907.IMU, this.imu);
-
+        variableMap.put(Constants2020.FRONT_COLOR, this.frontColor);
+        //variableMap.put(Constants12907.IMU, this.imu);
+        //MAKE SURE EDIT FROM 12907 class to 2020 class didn't change anything!!
+        variableMap.put(Constants2020.IMU, this.imu);
         variableMap.put(Constants2020.WEBCAM, this.webcam);
 
         variableMap.put(Constants2020.ELAPSEDTIME, this.runtime);
+        variableMap.put(Constants2020.TELEMETRY, this.telemetry);
     }
 
     @Override
