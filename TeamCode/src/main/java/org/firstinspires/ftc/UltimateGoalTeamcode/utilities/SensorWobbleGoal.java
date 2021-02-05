@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.UltimateGoalTeamcode.utilities;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.SensorHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -14,6 +16,8 @@ public class SensorWobbleGoal {
     //WOBBLE GOAL: RIGHT SIDE OF ROBOT
 
     NavigationHelper navigater = new NavigationHelper();
+    SensorHelper sensorhelp = new SensorHelper();
+
 
     public void resetTheImu(HashMap<String, Object> variableMap) {
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
@@ -36,11 +40,13 @@ public class SensorWobbleGoal {
         DcMotor backRight = (DcMotor) variableMap.get(Constants2020.BACK_RIGHT_MOTOR);
         DcMotor frontLeft = (DcMotor) variableMap.get(Constants2020.FRONT_LEFT_MOTOR);
         DcMotor frontRight = (DcMotor) variableMap.get(Constants2020.FRONT_RIGHT_MOTOR);
+        ColorSensor frontColor = (ColorSensor) variableMap.get(Constants2020.FRONT_COLOR);
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
         //distances to tgt zones specified in game manual:
         double alphaDist = 70.75;
         double betaDistance = 94.625;
         double charlieDistance = 118.372;
+        double launchLineDist = 80;
 
         //If isWall is true, strafe right (red) or left (blue) to the wall
         /*if (isBlue && isWall) {
@@ -54,34 +60,37 @@ public class SensorWobbleGoal {
 
         //move to tgt zone A, B, or C
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
-            telemetry.addLine("RED - WALL - ALPHA");
+            telemetry.addLine("RED ALPHA");
             telemetry.update();
             if(isWall){
-                //power to motors until red is detected
-                //else: stop at "alphaDist - 12.75"
+                sensorhelp.moveUntilColor(0.5, (alphaDist - 12.75), true, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
             } else if(!isWall){
+                sensorhelp.moveUntilColor(0.5, launchLineDist, false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
+                navigater.navigate(10, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 //when white detected, travel "x" more inches
-                //else: stop at "(alphaDist - 12.75) + 15"
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
-            telemetry.addLine("RED - WALL - BETA");
+            telemetry.addLine("RED BETA");
             telemetry.update();
             if(isWall){
-                //power to motors --> when white detected --> move "x" inches
-                //else: stop at "betaDistance + 2.25 - 12"
+                sensorhelp.moveUntilColor(0.5, launchLineDist, false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
+                navigater.navigate(30, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //when white detected --> move "x" inches (OR: move until red detected for full sensor usage)
             } else if(!isWall){
+                sensorhelp.moveUntilColor(0.5, (betaDistance + 2.25 - 20), true, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
                 //power to motors --> when red detected --> stop
-                //else: stop at "betaDistance + 2.25 - 20"
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
-            telemetry.addLine("RED - WALL - CHARLIE");
+            telemetry.addLine("RED CHARLIE");
             telemetry.update();
             if(isWall){
-                //power to motors --> detect white --> move until red --> stop
-                //else: stop at "charlieDistance - 5 - 5 - 5"
+                sensorhelp.moveUntilColor(0.5, launchLineDist, false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
+                navigater.navigate(30, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //detect white --> move "x" inches --> stop
             } else if(!isWall){
-                //power to motors --> when red detected --> travel "x" more inches
-                //else: stop at "charlieDistance"
+                sensorhelp.moveUntilColor(0.5, charlieDistance, true, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
+                navigater.navigate(30, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //when red detected --> travel "x" more inches
             }
         }
 

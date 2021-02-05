@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.UltimateGoalTeamcode.utilities;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.SensorHelper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;
@@ -12,6 +16,8 @@ import java.util.HashMap;
 public class SensorShootingRings {
 
     NavigationHelper navigater = new NavigationHelper();
+    SensorHelper sensorhelp = new SensorHelper();
+
 
     public void resetTheImu(HashMap<String, Object> variableMap) {
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
@@ -34,6 +40,7 @@ public class SensorShootingRings {
         DcMotor backRight = (DcMotor) variableMap.get(Constants2020.BACK_RIGHT_MOTOR);
         DcMotor frontLeft = (DcMotor) variableMap.get(Constants2020.FRONT_LEFT_MOTOR);
         DcMotor frontRight = (DcMotor) variableMap.get(Constants2020.FRONT_RIGHT_MOTOR);
+        ColorSensor frontColor = (ColorSensor) variableMap.get(Constants2020.FRONT_COLOR);
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
         //distances to tgt zones specified in game manual:
         double alphaDist = 70.75;
@@ -67,29 +74,27 @@ public class SensorShootingRings {
 
         resetTheImu(variableMap);
 
-        //back up behind the launch line
-
-        //reverse until white detected
+        //back up behind the launch line (reverse until white detected)
         //else: stop at these encoder distances
-        /*if(position.equals(Constants2020.TargetZone.ALPHA)){
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
             if(isWall){
                 //already behind launch line
             } else if(!isWall){
-                navigater.navigate(-15, Constants12907.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                sensorhelp.moveUntilColor(-0.5, -15, false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if(isWall){
-                navigater.navigate(-((betaDist/3)-3), Constants12907.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                sensorhelp.moveUntilColor(-0.5, -((betaDist/3)-3), false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
             } else if(!isWall){
-                navigater.navigate(-((betaDist/3)-3-11), Constants12907.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                sensorhelp.moveUntilColor(-0.5, -((betaDist/3)-3-11), false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if(isWall){
-                navigater.navigate(-((charlieDist/2)-3.186 - 5 - 5), Constants12907.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                sensorhelp.moveUntilColor(-0.5, -((charlieDist/2)-3.186 - 5 - 5), false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
             } else if (!isWall){
-                navigater.navigate(-((charlieDist/2)), Constants12907.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                sensorhelp.moveUntilColor(-0.5, -((charlieDist/2)), false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
             }
-        }*/
+        }
         //shoot rings
 
         resetTheImu(variableMap);
