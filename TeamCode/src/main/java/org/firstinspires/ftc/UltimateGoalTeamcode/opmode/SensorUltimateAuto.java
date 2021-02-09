@@ -223,6 +223,7 @@ public class SensorUltimateAuto extends LinearOpMode {
                 sleep(500);
 
                 wobbleGoal.moveToTgtZone(variableMap);
+                //wobbleGoal.dropWobbleGoal(variableMap);
                 shootingRings.moveToLaunchLine(variableMap);
             }
 

@@ -177,7 +177,7 @@ public class SensorHelper{
         pidDrive.enable();
         double correction;
 
-        //This while loop will keep the motors running to the target position until one of the motors have reached the final encoder count
+        //This while loop will keep the motors running to the target position until color is detected or pStopDist is reached
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
             correction = pidDrive.performPID(getAngle(pImu));
             pFrontRight.setPower(pSpeed + correction);

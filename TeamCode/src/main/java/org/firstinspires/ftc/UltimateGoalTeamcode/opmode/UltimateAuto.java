@@ -215,6 +215,7 @@ public class UltimateAuto extends LinearOpMode {
                 sleep(500);
 
                 wobbleGoal.moveToTgtZone(variableMap);
+                //wobbleGoal.dropWobbleGoal(variableMap);
                 shootingRings.moveToLaunchLine(variableMap);
             }
 

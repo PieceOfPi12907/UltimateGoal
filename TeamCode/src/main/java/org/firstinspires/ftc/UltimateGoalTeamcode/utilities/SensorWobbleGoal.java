@@ -3,6 +3,7 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.utilities;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.SensorHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
@@ -17,7 +18,6 @@ public class SensorWobbleGoal {
 
     NavigationHelper navigater = new NavigationHelper();
     SensorHelper sensorhelp = new SensorHelper();
-
 
     public void resetTheImu(HashMap<String, Object> variableMap) {
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
@@ -122,5 +122,19 @@ public class SensorWobbleGoal {
         }
         resetTheImu(variableMap);
     }
-    //drop wobble goal
+
+    public void dropWobbleGoal(HashMap<String, Object> variableMap){
+        Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
+        Servo wobbleHingeServo = (Servo) variableMap.get(Constants2020.HINGE_SERVO);
+        Servo wobbleClampServo = (Servo) variableMap.get(Constants2020.CLAMP_SERVO);
+        double hingeServoDown = 0.2;
+        //double hingeServoMid = 0.5;
+        double hingeServoUp = 0.8;
+        double clampServoOut = 0.5;
+        //double clampServoIn = 0.2;
+
+        wobbleHingeServo.setPosition(hingeServoDown);
+        wobbleClampServo.setPosition(clampServoOut);
+        wobbleHingeServo.setPosition(hingeServoUp);
+    }
 }

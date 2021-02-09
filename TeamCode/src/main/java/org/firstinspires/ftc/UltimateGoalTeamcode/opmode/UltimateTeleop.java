@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 
 @TeleOp(name = "FINAL ULTIMATE TELEOP",group = "teleop")
 public class UltimateTeleop extends LinearOpMode {
@@ -20,16 +21,30 @@ public class UltimateTeleop extends LinearOpMode {
     DcMotor backRightMotor;
     DcMotor frontLeftMotor;
 
+    Servo wobbleHingeServo;
+    Servo wobbleClampServo;
+    Constants2020.HingeServoPositions hingeServoPos = Constants2020.HingeServoPositions.UP;
+
+    boolean isClamped = true;
     double scaleFactor = 0.999;
     boolean shooterIntakeSpinning = false;
     boolean shooterIntakeOpen = false;
 
-    public final double SHOOTER_INTAKE_SERVO_INIT = 0.25;
-    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.25;
-    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.6;
+    //public final double SHOOTER_INTAKE_SERVO_INIT = 0.25;
+    //public final double SHOOTER_INTAKE_SERVO_OPEN = 0.25;
+    //public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.6;
+
+    //hinge and clamp values to be tested:
+    final double HINGE_SERVO_DOWN = 0.2;
+    final double HINGE_SERVO_MID = 0.5;
+    final double HINGE_SERVO_UP = 0.8;
+    final double CLAMP_SERVO_OUT = 0.5;
+    final double CLAMP_SERVO_IN = 0.2;
 
     ElapsedTime a_time = new ElapsedTime();
     ElapsedTime rb_time = new ElapsedTime();
+    ElapsedTime right_bumper_time = new ElapsedTime();
+    ElapsedTime left_bumper_time = new ElapsedTime();
 
     private void initialize() {
 
@@ -38,11 +53,14 @@ public class UltimateTeleop extends LinearOpMode {
         //shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
         // shooterIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRight");
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeft");
         backRightMotor = hardwareMap.get(DcMotor.class, "backRight");
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeft");
+
+        wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
+        wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
+        hingeServoPos = Constants2020.HingeServoPositions.UP;
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -96,6 +114,33 @@ public class UltimateTeleop extends LinearOpMode {
     }
     //end of thread class*/
 
+    //left and right bumpers: wobble arm clamp and hinge servo
+    private void wobbleArmControl(){
+        if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
+            right_bumper_time.reset();
+            if(Constants2020.HingeServoPositions.UP.equals(hingeServoPos)){
+                wobbleHingeServo.setPosition(HINGE_SERVO_MID);
+                hingeServoPos = Constants2020.HingeServoPositions.MID;
+            }else if(Constants2020.HingeServoPositions.MID.equals(hingeServoPos)){
+                wobbleHingeServo.setPosition(HINGE_SERVO_DOWN);
+                hingeServoPos = Constants2020.HingeServoPositions.DOWN;
+            }else if(Constants2020.HingeServoPositions.DOWN.equals(hingeServoPos)){
+                wobbleHingeServo.setPosition(HINGE_SERVO_UP);
+                hingeServoPos = Constants2020.HingeServoPositions.UP;
+            }
+        }
+        if(gamepad2.left_bumper && left_bumper_time.seconds()>0.25){
+            left_bumper_time.reset();
+            if(!isClamped){
+                wobbleClampServo.setPosition(CLAMP_SERVO_OUT);
+                isClamped = false;
+            }else if(isClamped){
+                wobbleClampServo.setPosition(CLAMP_SERVO_IN);
+                isClamped = true;
+            }
+        }
+    }
+
 
     private void mecanumDrive(double scale){
         double radius=Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
@@ -146,6 +191,7 @@ public class UltimateTeleop extends LinearOpMode {
             if(gamepad1.y){
                 scaleFactor=0.99;
             }
+            wobbleArmControl();
             idle();
         }
         //attachments.interrupt();
