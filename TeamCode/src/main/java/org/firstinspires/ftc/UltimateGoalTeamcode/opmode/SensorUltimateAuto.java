@@ -21,7 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.HashMap;
 
-@Autonomous(name = "ULTIMATE AUTO", group = "autonomous")
+@Autonomous(name = "ULTIMATE AUTO SENSOR", group = "autonomous")
 public class SensorUltimateAuto extends LinearOpMode {
 
     Boolean isBlue = false;

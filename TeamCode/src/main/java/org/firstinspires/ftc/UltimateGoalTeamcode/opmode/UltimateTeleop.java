@@ -30,15 +30,15 @@ public class UltimateTeleop extends LinearOpMode {
     boolean shooterIntakeSpinning = false;
     boolean shooterIntakeOpen = false;
 
-    //public final double SHOOTER_INTAKE_SERVO_INIT = 0.25;
-    //public final double SHOOTER_INTAKE_SERVO_OPEN = 0.25;
-    //public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.6;
+    public final double SHOOTER_INTAKE_SERVO_INIT = 0.25;
+    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.25;
+    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.6;
 
     //hinge and clamp values to be tested:
-    final double HINGE_SERVO_DOWN = 0.2;
-    final double HINGE_SERVO_MID = 0.5;
-    final double HINGE_SERVO_UP = 0.8;
-    final double CLAMP_SERVO_OUT = 0.5;
+    final double HINGE_SERVO_UP = 0.1; //0.2
+    final double HINGE_SERVO_MID = 0.45; // 0.5
+    final double HINGE_SERVO_DOWN = 0.6; // 0.8
+    final double CLAMP_SERVO_OUT = 0.6;
     final double CLAMP_SERVO_IN = 0.2;
 
     ElapsedTime a_time = new ElapsedTime();
@@ -49,9 +49,9 @@ public class UltimateTeleop extends LinearOpMode {
     private void initialize() {
 
         //shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
-        // shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
+        //shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
         //shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
-        // shooterIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+         //shooterIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRight");
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -68,7 +68,7 @@ public class UltimateTeleop extends LinearOpMode {
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    /*private class AttachmentsThread extends Thread {
+    private class AttachmentsThread extends Thread {
         boolean isIntakeSpinning = false;
         boolean isIntakeServoOpen = true;
 
@@ -80,14 +80,15 @@ public class UltimateTeleop extends LinearOpMode {
         public void run() {
             try {
                 while (!isInterrupted()) {
-                    shooterIntakeControl();
+                    //shooterIntakeControl();
+                    wobbleArmControl();
                     idle();
                 }
             } catch (Exception e) {
 
             }
         }
-        private void shooterIntakeControl(){
+        /*private void shooterIntakeControl(){
             if(gamepad1.a && a_time.seconds()>=0.25){
                 a_time.reset();
                 if(shooterIntakeSpinning){
@@ -110,36 +111,41 @@ public class UltimateTeleop extends LinearOpMode {
                     shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
                 }
             }
+        }*/
+        private void wobbleArmControl(){
+            if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
+                right_bumper_time.reset();
+                if(Constants2020.HingeServoPositions.UP.equals(hingeServoPos)){
+                    wobbleHingeServo.setPosition(HINGE_SERVO_DOWN);
+                    hingeServoPos = Constants2020.HingeServoPositions.MID;
+                }else if(Constants2020.HingeServoPositions.MID.equals(hingeServoPos)){
+                    wobbleHingeServo.setPosition(HINGE_SERVO_MID);
+                    hingeServoPos = Constants2020.HingeServoPositions.DOWN;
+                }else if(Constants2020.HingeServoPositions.DOWN.equals(hingeServoPos)){
+                    wobbleHingeServo.setPosition(HINGE_SERVO_UP);
+                    hingeServoPos = Constants2020.HingeServoPositions.UP;
+                }
+            }
+            if(gamepad1.left_bumper && left_bumper_time.seconds()>0.25){
+                left_bumper_time.reset();
+                if(!isClamped){
+                    wobbleClampServo.setPosition(CLAMP_SERVO_OUT);
+                    isClamped = true;
+                    telemetry.addLine("SERVO IS CLAMPED");
+                    telemetry.update();
+                }else if(isClamped){
+                    wobbleClampServo.setPosition(CLAMP_SERVO_IN);
+                    isClamped = false;
+                    telemetry.addLine("SERVO IS NOT CLAMPED");
+                    telemetry.update();
+                }
+            }
         }
     }
-    //end of thread class*/
+    //end of thread class
 
     //left and right bumpers: wobble arm clamp and hinge servo
-    private void wobbleArmControl(){
-        if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
-            right_bumper_time.reset();
-            if(Constants2020.HingeServoPositions.UP.equals(hingeServoPos)){
-                wobbleHingeServo.setPosition(HINGE_SERVO_MID);
-                hingeServoPos = Constants2020.HingeServoPositions.MID;
-            }else if(Constants2020.HingeServoPositions.MID.equals(hingeServoPos)){
-                wobbleHingeServo.setPosition(HINGE_SERVO_DOWN);
-                hingeServoPos = Constants2020.HingeServoPositions.DOWN;
-            }else if(Constants2020.HingeServoPositions.DOWN.equals(hingeServoPos)){
-                wobbleHingeServo.setPosition(HINGE_SERVO_UP);
-                hingeServoPos = Constants2020.HingeServoPositions.UP;
-            }
-        }
-        if(gamepad2.left_bumper && left_bumper_time.seconds()>0.25){
-            left_bumper_time.reset();
-            if(!isClamped){
-                wobbleClampServo.setPosition(CLAMP_SERVO_OUT);
-                isClamped = false;
-            }else if(isClamped){
-                wobbleClampServo.setPosition(CLAMP_SERVO_IN);
-                isClamped = true;
-            }
-        }
-    }
+
 
 
     private void mecanumDrive(double scale){
@@ -180,9 +186,9 @@ public class UltimateTeleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         initialize();
-        //Thread attachments = new UltimateTeleop.AttachmentsThread();
+        Thread attachments = new UltimateTeleop.AttachmentsThread();
         waitForStart();
-        // attachments.start();
+         attachments.start();
         while(opModeIsActive()){
             mecanumDrive(scaleFactor);
             if(gamepad1.x){
@@ -191,9 +197,8 @@ public class UltimateTeleop extends LinearOpMode {
             if(gamepad1.y){
                 scaleFactor=0.99;
             }
-            wobbleArmControl();
             idle();
         }
-        //attachments.interrupt();
+        attachments.interrupt();
     }
 }

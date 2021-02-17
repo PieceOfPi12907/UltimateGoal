@@ -118,11 +118,11 @@ public class WobbleGoal {
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         Servo wobbleHingeServo = (Servo) variableMap.get(Constants2020.HINGE_SERVO);
         Servo wobbleClampServo = (Servo) variableMap.get(Constants2020.CLAMP_SERVO);
-        double hingeServoDown = 0.2;
-        //double hingeServoMid = 0.5;
-        double hingeServoUp = 0.8;
+        double hingeServoDown = 0.6;
+        double hingeServoMid = 0.45;
+        double hingeServoUp = 0.1;
         double clampServoOut = 0.5;
-        //double clampServoIn = 0.2;
+        double clampServoIn = 0.2;
 
         wobbleHingeServo.setPosition(hingeServoDown);
         wobbleClampServo.setPosition(clampServoOut);
