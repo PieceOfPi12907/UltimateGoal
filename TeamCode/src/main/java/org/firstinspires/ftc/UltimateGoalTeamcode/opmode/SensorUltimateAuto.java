@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
@@ -32,6 +33,8 @@ public class SensorUltimateAuto extends LinearOpMode {
     DcMotor backLeft;
     DcMotor frontRight;
     DcMotor backRight;
+    Servo wobbleHingeServo;
+    Servo wobbleClampServo;
     OpenCvCamera webcam;
     ColorSensor frontColor;
     WobbleGoal wobbleGoal = new WobbleGoal();
@@ -143,6 +146,9 @@ public class SensorUltimateAuto extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
+        wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
+        wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
+
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -159,6 +165,9 @@ public class SensorUltimateAuto extends LinearOpMode {
         variableMap.put(Constants2020.FRONT_LEFT_MOTOR,this.frontLeft);
         variableMap.put(Constants2020.BACK_RIGHT_MOTOR,this.backRight);
         variableMap.put(Constants2020.FRONT_RIGHT_MOTOR,this.frontRight);
+
+        variableMap.put(Constants2020.HINGE_SERVO,this.wobbleHingeServo);
+        variableMap.put(Constants2020.CLAMP_SERVO,this.wobbleClampServo);
 
         variableMap.put(Constants2020.FRONT_COLOR, this.frontColor);
         //variableMap.put(Constants12907.IMU, this.imu);

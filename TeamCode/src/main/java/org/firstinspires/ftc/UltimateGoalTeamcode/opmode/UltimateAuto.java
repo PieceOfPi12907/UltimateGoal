@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
@@ -30,6 +31,8 @@ public class UltimateAuto extends LinearOpMode {
     DcMotor backLeft;
     DcMotor frontRight;
     DcMotor backRight;
+    Servo wobbleHingeServo;
+    Servo wobbleClampServo;
     OpenCvCamera webcam;
     WobbleGoal wobbleGoal = new WobbleGoal();
     ShootingRings shootingRings = new ShootingRings();
@@ -99,6 +102,12 @@ public class UltimateAuto extends LinearOpMode {
         imu.initialize(parameters);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
+
+
+        //INITIALIZE WOBBLE GOAL SERVOS TO GRABBING POSITION SO IT HOLDS THE PRELOADED WOBBLE GOAL!!
+
+
+
         telemetry.addLine("about to initialize webcam");
         telemetry.update();
 
@@ -138,6 +147,9 @@ public class UltimateAuto extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
+        wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
+        wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
+
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -153,6 +165,9 @@ public class UltimateAuto extends LinearOpMode {
         variableMap.put(Constants2020.FRONT_LEFT_MOTOR,this.frontLeft);
         variableMap.put(Constants2020.BACK_RIGHT_MOTOR,this.backRight);
         variableMap.put(Constants2020.FRONT_RIGHT_MOTOR,this.frontRight);
+
+        variableMap.put(Constants2020.HINGE_SERVO,this.wobbleHingeServo);
+        variableMap.put(Constants2020.CLAMP_SERVO,this.wobbleClampServo);
 
         variableMap.put(Constants2020.TELEMETRY, this.telemetry);
         variableMap.put(Constants12907.IMU, this.imu);
@@ -214,9 +229,9 @@ public class UltimateAuto extends LinearOpMode {
                 telemetry.update();
                 sleep(500);
 
-                wobbleGoal.moveToTgtZone(variableMap);
-                //wobbleGoal.dropWobbleGoal(variableMap);
-                shootingRings.moveToLaunchLine(variableMap);
+                //wobbleGoal.moveToTgtZone(variableMap);
+                wobbleGoal.dropWobbleGoal(variableMap);
+                //shootingRings.moveToLaunchLine(variableMap);
             }
 
             //reset imu

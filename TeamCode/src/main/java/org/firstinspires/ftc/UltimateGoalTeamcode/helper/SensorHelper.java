@@ -149,6 +149,7 @@ public class SensorHelper{
         pFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
         // Determine new target position, converts it, and pass to motor controller
         newTargetPositionLeft = pBackLeft.getCurrentPosition() + (int) (pStopDist * COUNTS_PER_INCH);
         newTargetPositionRight = pBackRight.getCurrentPosition() + (int) (pStopDist * COUNTS_PER_INCH);

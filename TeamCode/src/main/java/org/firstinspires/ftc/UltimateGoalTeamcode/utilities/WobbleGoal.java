@@ -32,7 +32,7 @@ public class WobbleGoal {
 
     public void moveToTgtZone(HashMap<String, Object> variableMap) {
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
-        telemetry.addLine("Inside method in Wobble Goal Class");
+        telemetry.addLine("Inside moveToTgtZone");
         telemetry.update();
         boolean isWall = (boolean) (variableMap.get(Constants2020.WALL_FLAG));
         boolean isBlue = (boolean) (variableMap.get(Constants2020.BLUE_FLAG));
@@ -62,6 +62,8 @@ public class WobbleGoal {
             telemetry.addLine("RED - WALL - ALPHA");
             telemetry.update();
             if(isWall){
+                telemetry.addLine("about to move");
+                telemetry.update();
                 navigater.navigate(alphaDist - 12.75, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -123,10 +125,33 @@ public class WobbleGoal {
         double hingeServoUp = 0.1;
         double clampServoOut = 0.5;
         double clampServoIn = 0.2;
+        telemetry.addLine("Inside dropWobbleGoal");
+        telemetry.update();
 
         wobbleHingeServo.setPosition(hingeServoDown);
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         wobbleClampServo.setPosition(clampServoOut);
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        wobbleClampServo.setPosition(clampServoIn);
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         wobbleHingeServo.setPosition(hingeServoUp);
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

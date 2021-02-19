@@ -5,8 +5,8 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.SkystoneTeamcode.utillities.PIDController;
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -23,19 +23,19 @@ public class NavigationHelper {
     // This method tells us - Based on the direction we want to move(STRAIGHT,LEFT,RIGHT,TURN), it will call the needed method with parameters
     public void navigate (double pTgtDistance, Constants2020.Direction pDirection, double pRotation, double pSpeed, DcMotor pBackLeft, DcMotor pBackRight, DcMotor pFrontRight, DcMotor pFrontLeft, BNO055IMU pImu, Telemetry telemetry, boolean isForward ){
 
-        if(pDirection.equals(Constants12907.Direction.STRAIGHT)){
+        if(pDirection.equals(Constants2020.Direction.STRAIGHT)){
             forwardDrive(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, telemetry, pImu, isForward );
         }
 
-        else if(pDirection.equals(Constants12907.Direction.LEFT)){
+        else if(pDirection.equals(Constants2020.Direction.LEFT)){
             leftStrafe(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu,telemetry);
 
         }
-        else if(pDirection.equals(Constants12907.Direction.RIGHT)){
+        else if(pDirection.equals(Constants2020.Direction.RIGHT)){
             rightStrafe(pTgtDistance, pSpeed, pBackLeft, pBackRight, pFrontRight, pFrontLeft, pImu, telemetry);
         }
 
-        else if(pDirection.equals(Constants12907.Direction.TURN)){
+        else if(pDirection.equals(Constants2020.Direction.TURN)){
             this.turnWithEncodersWithCorrection(pFrontRight, pFrontLeft, pBackRight, pBackLeft, pRotation, pSpeed, pImu, telemetry);
 
         }
