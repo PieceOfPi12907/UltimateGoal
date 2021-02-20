@@ -25,6 +25,8 @@ public class UltimateAuto extends LinearOpMode {
 
     Boolean isBlue = false;
     Boolean isWall = false;
+    final double CLAMP_SERVO_IN = 0.2;
+    final double HINGE_SERVO_UP = 0.1;
     ElapsedTime runtime = new ElapsedTime();
     BNO055IMU imu;
     DcMotor frontLeft;
@@ -102,12 +104,6 @@ public class UltimateAuto extends LinearOpMode {
         imu.initialize(parameters);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
-
-
-        //INITIALIZE WOBBLE GOAL SERVOS TO GRABBING POSITION SO IT HOLDS THE PRELOADED WOBBLE GOAL!!
-
-
-
         telemetry.addLine("about to initialize webcam");
         telemetry.update();
 
@@ -137,7 +133,7 @@ public class UltimateAuto extends LinearOpMode {
         telemetry.addLine("FINISHED INITIALIZING WEBCAM");
         telemetry.update();
         try {
-            Thread.sleep(2500);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -156,6 +152,22 @@ public class UltimateAuto extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         createVariableMap();
+
+        telemetry.addLine("about to initialize wobble arm");
+        telemetry.update();
+        //initialize wobble arm
+        wobbleClampServo.setPosition(0.6);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        wobbleHingeServo.setPosition(0.1);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void createVariableMap(){
@@ -229,9 +241,9 @@ public class UltimateAuto extends LinearOpMode {
                 telemetry.update();
                 sleep(500);
 
-                //wobbleGoal.moveToTgtZone(variableMap);
+                wobbleGoal.moveToTgtZone(variableMap);
                 wobbleGoal.dropWobbleGoal(variableMap);
-                //shootingRings.moveToLaunchLine(variableMap);
+                shootingRings.moveToLaunchLine(variableMap);
             }
 
             //reset imu
@@ -266,8 +278,6 @@ public class UltimateAuto extends LinearOpMode {
                 e.printStackTrace();
             }
         }
-
-
     }
     public int detectionLoop(){
         double begin = System.currentTimeMillis()/1000;

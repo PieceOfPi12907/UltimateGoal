@@ -92,6 +92,10 @@ public class ShootingRings {
         resetTheImu(variableMap);
 
         //parking (over the launch line)
-        navigater.navigate(9, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
+            navigater.navigate(1, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        } else{
+            navigater.navigate(9, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
     }
 }

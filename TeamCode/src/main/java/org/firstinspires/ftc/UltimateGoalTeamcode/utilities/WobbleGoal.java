@@ -134,13 +134,15 @@ public class WobbleGoal {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        wobbleClampServo.setPosition(clampServoOut);
+        //let it go
+        wobbleClampServo.setPosition(0.2);
         try {
             sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        wobbleClampServo.setPosition(clampServoIn);
+        //grab it
+        wobbleClampServo.setPosition(0.4);
         try {
             sleep(1000);
         } catch (InterruptedException e) {

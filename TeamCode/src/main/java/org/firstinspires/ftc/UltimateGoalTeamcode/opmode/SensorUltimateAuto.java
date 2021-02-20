@@ -27,6 +27,8 @@ public class SensorUltimateAuto extends LinearOpMode {
 
     Boolean isBlue = false;
     Boolean isWall = false;
+    final double CLAMP_SERVO_IN = 0.2;
+    final double HINGE_SERVO_UP = 0.1;
     ElapsedTime runtime = new ElapsedTime();
     BNO055IMU imu;
     DcMotor frontLeft;
@@ -243,6 +245,10 @@ public class SensorUltimateAuto extends LinearOpMode {
             parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
             parameters.mode = BNO055IMU.SensorMode.IMU;
             imu.initialize(parameters);
+
+            //initialize wobble arm
+            wobbleClampServo.setPosition(CLAMP_SERVO_IN);
+            wobbleHingeServo.setPosition(HINGE_SERVO_UP);
 
             backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
