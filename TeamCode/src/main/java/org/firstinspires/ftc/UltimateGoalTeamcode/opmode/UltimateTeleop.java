@@ -13,8 +13,10 @@ import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 @TeleOp(name = "FINAL ULTIMATE TELEOP",group = "teleop")
 public class UltimateTeleop extends LinearOpMode {
 
-    //DcMotor shooterIntake;
-    //Servo shooterIntakeServo;
+    DcMotor shooterIntake;
+    Servo shooterIntakeServo;
+
+    DcMotor actualIntake;
 
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
@@ -29,10 +31,12 @@ public class UltimateTeleop extends LinearOpMode {
     double scaleFactor = 0.999;
     boolean shooterIntakeSpinning = false;
     boolean shooterIntakeOpen = false;
+    boolean intakeOn = false;
+    boolean intakeBack = false;
 
-    public final double SHOOTER_INTAKE_SERVO_INIT = 0.25;
-    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.25;
-    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.6;
+    public final double SHOOTER_INTAKE_SERVO_INIT = 0.5;
+    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
+    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
 
     //hinge and clamp values to be tested:
     final double HINGE_SERVO_UP = 0.1; //0.2
@@ -40,18 +44,26 @@ public class UltimateTeleop extends LinearOpMode {
     final double HINGE_SERVO_DOWN = 0.6; // 0.8
     final double CLAMP_SERVO_OUT = 0.6;
     final double CLAMP_SERVO_IN = 0.2;
+    double shooterSpeed = 0.8;
 
     ElapsedTime a_time = new ElapsedTime();
     ElapsedTime rb_time = new ElapsedTime();
     ElapsedTime right_bumper_time = new ElapsedTime();
     ElapsedTime left_bumper_time = new ElapsedTime();
+    ElapsedTime b_time = new ElapsedTime();
+    ElapsedTime x_time = new ElapsedTime();
+    ElapsedTime y_time = new ElapsedTime();
+    ElapsedTime dpad_time = new ElapsedTime();
 
     private void initialize() {
 
-        //shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
-        //shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
-        //shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
-         //shooterIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
+        shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
+        shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
+        shooterIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        actualIntake = hardwareMap.get(DcMotor.class, "intake");
+        actualIntake.setDirection(DcMotorSimple.Direction.FORWARD);
 
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRight");
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -62,10 +74,10 @@ public class UltimateTeleop extends LinearOpMode {
         wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
         hingeServoPos = Constants2020.HingeServoPositions.UP;
 
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     private class AttachmentsThread extends Thread {
@@ -80,28 +92,80 @@ public class UltimateTeleop extends LinearOpMode {
         public void run() {
             try {
                 while (!isInterrupted()) {
-                    //shooterIntakeControl();
+                    shooterIntakeControl();
                     wobbleArmControl();
+                    intakeControl();
                     idle();
                 }
             } catch (Exception e) {
 
             }
         }
-        /*private void shooterIntakeControl(){
+
+        private void intakeControl(){
+
+            if(gamepad1.x && x_time.seconds()>=0.25){
+                x_time.reset();
+                if(intakeOn){
+                    actualIntake.setPower(0);
+                    intakeOn = false;
+                }
+                else{
+                    actualIntake.setPower(0.85);
+                    intakeOn = true;
+                }
+            }
+            if(gamepad1.y && y_time.seconds()>=0.25){
+                y_time.reset();
+                if(intakeBack){
+                    actualIntake.setPower(0);
+                    intakeBack = false;
+                }
+                else{
+                    actualIntake.setPower(-0.85);
+                    intakeBack = true;
+                }
+            }
+        }
+
+        private void shooterIntakeControl(){
+            if(gamepad1.dpad_up && dpad_time.seconds()>0.1) {
+                dpad_time.reset();
+                shooterSpeed+=0.01;
+                telemetry.addData("shooter speed is ", shooterSpeed);
+                telemetry.update();
+            }
+            if(gamepad1.dpad_down && dpad_time.seconds()>0.1){
+                dpad_time.reset();
+                shooterSpeed-=0.01;
+                telemetry.addData("shooter speed is", shooterSpeed);
+                telemetry.update();
+            }
+            if(gamepad1.dpad_left && dpad_time.seconds()>0.1) {
+                dpad_time.reset();
+                shooterSpeed = 0.69;
+            }
+            if(gamepad1.dpad_right && dpad_time.seconds()>0.1){
+                dpad_time.reset();
+                shooterSpeed = 0.8;
+            }
             if(gamepad1.a && a_time.seconds()>=0.25){
                 a_time.reset();
                 if(shooterIntakeSpinning){
+                    telemetry.addLine("shooter off");
+                    telemetry.update();
                     shooterIntakeSpinning = false;
                     shooterIntake.setPower(0);
                 }
                 else {
+                    telemetry.addLine("shooter on");
+                    telemetry.update();
                     shooterIntakeSpinning = true;
-                    shooterIntake.setPower(1);
+                    shooterIntake.setPower(shooterSpeed);
                 }
             }
-            if (gamepad1.right_bumper && rb_time.seconds()>=0.25){
-                rb_time.reset();
+            if (gamepad1.b && b_time.seconds()>=0.25){
+                b_time.reset();
                 if(shooterIntakeOpen){
                     shooterIntakeOpen = false;
                     shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
@@ -111,7 +175,7 @@ public class UltimateTeleop extends LinearOpMode {
                     shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
                 }
             }
-        }*/
+        }
         private void wobbleArmControl(){
             if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
                 right_bumper_time.reset();
@@ -149,9 +213,9 @@ public class UltimateTeleop extends LinearOpMode {
 
 
     private void mecanumDrive(double scale){
-        double radius=Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
-        double angle = (Math.atan2(-(gamepad1.left_stick_y),(gamepad1.left_stick_x)))-(Math.PI/4);
-        double rotation = gamepad1.right_stick_x;
+        double radius=Math.hypot(gamepad2.left_stick_x,gamepad2.left_stick_y);
+        double angle = (Math.atan2(-(gamepad2.left_stick_y),(gamepad2.left_stick_x)))-(Math.PI/4);
+        double rotation = gamepad2.right_stick_x * 0.5;
         double fLPower = 0;
         double bLPower = 0;
         double fRPower = 0;
@@ -170,10 +234,10 @@ public class UltimateTeleop extends LinearOpMode {
             bRPower = radius * Math.cos(-3*Math.PI/4) - rotation;
         }
         else {
-            fLPower = radius * Math.cos(angle) + rotation;
-            bLPower = radius * Math.sin(angle) + rotation;
-            fRPower = radius * Math.sin(angle) - rotation;
-            bRPower = radius * Math.cos(angle) - rotation;
+            fLPower = radius * Math.cos(angle) - rotation;
+            bLPower = radius * Math.sin(angle) - rotation;
+            fRPower = radius * Math.sin(angle) + rotation;
+            bRPower = radius * Math.cos(angle) + rotation;
 
         }
         frontLeftMotor.setPower((fLPower) * scale);
@@ -191,11 +255,12 @@ public class UltimateTeleop extends LinearOpMode {
          attachments.start();
         while(opModeIsActive()){
             mecanumDrive(scaleFactor);
-            if(gamepad1.x){
+            if(gamepad2.x){
                 scaleFactor=0.6;
             }
-            if(gamepad1.y){
+            if(gamepad2.y){
                 scaleFactor=0.99;
+
             }
             idle();
         }
