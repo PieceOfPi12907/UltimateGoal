@@ -23,6 +23,9 @@ public class Constants2020 {
     public static String HINGE_SERVO = "hingeServo";
     public static String CLAMP_SERVO = "clampServo";
 
+    public static String SHOOTER = "shooter";
+    public static String SHOOTERSERVO = "shooterservo";
+
     public static String POSITION = "position";
     public static String BLUE_FLAG = "blueFlag";
     public static String WALL_FLAG = "wallFlag";

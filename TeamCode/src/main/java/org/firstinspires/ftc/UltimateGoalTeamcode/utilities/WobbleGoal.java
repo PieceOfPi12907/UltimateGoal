@@ -43,7 +43,7 @@ public class WobbleGoal {
         DcMotor frontRight = (DcMotor) variableMap.get(Constants2020.FRONT_RIGHT_MOTOR);
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
         //distances to tgt zones specified in game manual:
-        double alphaDist = 70.75;
+        double alphaDist = 65.75;
         double betaDistance = 94.625;
         double charlieDistance = 118.372;
 
@@ -102,6 +102,13 @@ public class WobbleGoal {
             if (isWall && !isBlue) {
                 //red wall
                 navigater.navigate(0, Constants2020.Direction.TURN, 175, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                navigater.navigate(5, Constants2020.Direction.RIGHT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+
             } else if (!isWall && !isBlue){
                 //red not wall
                 navigater.navigate(0, Constants2020.Direction.TURN, 82.5, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);

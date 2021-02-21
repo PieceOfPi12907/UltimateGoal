@@ -27,12 +27,16 @@ public class UltimateAuto extends LinearOpMode {
     Boolean isWall = false;
     final double CLAMP_SERVO_IN = 0.2;
     final double HINGE_SERVO_UP = 0.1;
+    public final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
+    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
     ElapsedTime runtime = new ElapsedTime();
     BNO055IMU imu;
     DcMotor frontLeft;
     DcMotor backLeft;
     DcMotor frontRight;
     DcMotor backRight;
+    DcMotor shooter;
+    Servo shooterServo;
     Servo wobbleHingeServo;
     Servo wobbleClampServo;
     OpenCvCamera webcam;
@@ -143,8 +147,13 @@ public class UltimateAuto extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
+        shooter = hardwareMap.get(DcMotor.class, "shooterIntake");
+        shooterServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
+
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
         wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
+
+
 
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -168,6 +177,12 @@ public class UltimateAuto extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void createVariableMap(){
@@ -177,6 +192,9 @@ public class UltimateAuto extends LinearOpMode {
         variableMap.put(Constants2020.FRONT_LEFT_MOTOR,this.frontLeft);
         variableMap.put(Constants2020.BACK_RIGHT_MOTOR,this.backRight);
         variableMap.put(Constants2020.FRONT_RIGHT_MOTOR,this.frontRight);
+
+        variableMap.put(Constants2020.SHOOTER, this.shooter);
+        variableMap.put(Constants2020.SHOOTERSERVO, this.shooterServo);
 
         variableMap.put(Constants2020.HINGE_SERVO,this.wobbleHingeServo);
         variableMap.put(Constants2020.CLAMP_SERVO,this.wobbleClampServo);
@@ -244,6 +262,7 @@ public class UltimateAuto extends LinearOpMode {
                 wobbleGoal.moveToTgtZone(variableMap);
                 wobbleGoal.dropWobbleGoal(variableMap);
                 shootingRings.moveToLaunchLine(variableMap);
+                shootingRings.ringShoot(variableMap);
             }
 
             //reset imu

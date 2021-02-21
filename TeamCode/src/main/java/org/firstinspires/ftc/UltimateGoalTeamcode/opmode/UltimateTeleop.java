@@ -102,102 +102,99 @@ public class UltimateTeleop extends LinearOpMode {
             }
         }
 
-        private void intakeControl(){
+        private void intakeControl() {
 
-            if(gamepad1.x && x_time.seconds()>=0.25){
+            if (gamepad1.x && x_time.seconds() >= 0.25) {
                 x_time.reset();
-                if(intakeOn){
+                if (intakeOn) {
                     actualIntake.setPower(0);
                     intakeOn = false;
-                }
-                else{
+                } else {
                     actualIntake.setPower(0.85);
                     intakeOn = true;
                 }
             }
-            if(gamepad1.y && y_time.seconds()>=0.25){
+            if (gamepad1.y && y_time.seconds() >= 0.25) {
                 y_time.reset();
-                if(intakeBack){
+                if (intakeBack) {
                     actualIntake.setPower(0);
                     intakeBack = false;
-                }
-                else{
+                } else {
                     actualIntake.setPower(-0.85);
                     intakeBack = true;
                 }
             }
         }
 
-        private void shooterIntakeControl(){
-            if(gamepad1.dpad_up && dpad_time.seconds()>0.1) {
+        private void shooterIntakeControl() {
+            if (gamepad1.dpad_up && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed+=0.01;
+                shooterSpeed += 0.01;
                 telemetry.addData("shooter speed is ", shooterSpeed);
                 telemetry.update();
             }
-            if(gamepad1.dpad_down && dpad_time.seconds()>0.1){
+            if (gamepad1.dpad_down && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed-=0.01;
+                shooterSpeed -= 0.01;
                 telemetry.addData("shooter speed is", shooterSpeed);
                 telemetry.update();
             }
-            if(gamepad1.dpad_left && dpad_time.seconds()>0.1) {
+            if (gamepad1.dpad_left && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
                 shooterSpeed = 0.69;
             }
-            if(gamepad1.dpad_right && dpad_time.seconds()>0.1){
+            if (gamepad1.dpad_right && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
                 shooterSpeed = 0.8;
             }
-            if(gamepad1.a && a_time.seconds()>=0.25){
+            if (gamepad1.a && a_time.seconds() >= 0.25) {
                 a_time.reset();
-                if(shooterIntakeSpinning){
+                if (shooterIntakeSpinning) {
                     telemetry.addLine("shooter off");
                     telemetry.update();
                     shooterIntakeSpinning = false;
                     shooterIntake.setPower(0);
-                }
-                else {
+                } else {
                     telemetry.addLine("shooter on");
                     telemetry.update();
                     shooterIntakeSpinning = true;
                     shooterIntake.setPower(shooterSpeed);
                 }
             }
-            if (gamepad1.b && b_time.seconds()>=0.25){
+            if (gamepad1.b && b_time.seconds() >= 0.25) {
                 b_time.reset();
-                if(shooterIntakeOpen){
-                    shooterIntakeOpen = false;
-                    shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                else{
-                    shooterIntakeOpen = true;
-                    shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
-                }
+                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
             }
         }
-        private void wobbleArmControl(){
-            if(gamepad1.right_bumper && right_bumper_time.seconds()>0.25){
+
+        private void wobbleArmControl() {
+            if (gamepad1.right_bumper && right_bumper_time.seconds() > 0.25) {
                 right_bumper_time.reset();
-                if(Constants2020.HingeServoPositions.UP.equals(hingeServoPos)){
+                if (Constants2020.HingeServoPositions.UP.equals(hingeServoPos)) {
                     wobbleHingeServo.setPosition(HINGE_SERVO_DOWN);
                     hingeServoPos = Constants2020.HingeServoPositions.MID;
-                }else if(Constants2020.HingeServoPositions.MID.equals(hingeServoPos)){
+                } else if (Constants2020.HingeServoPositions.MID.equals(hingeServoPos)) {
                     wobbleHingeServo.setPosition(HINGE_SERVO_MID);
                     hingeServoPos = Constants2020.HingeServoPositions.DOWN;
-                }else if(Constants2020.HingeServoPositions.DOWN.equals(hingeServoPos)){
+                } else if (Constants2020.HingeServoPositions.DOWN.equals(hingeServoPos)) {
                     wobbleHingeServo.setPosition(HINGE_SERVO_UP);
                     hingeServoPos = Constants2020.HingeServoPositions.UP;
                 }
             }
-            if(gamepad1.left_bumper && left_bumper_time.seconds()>0.25){
+            if (gamepad1.left_bumper && left_bumper_time.seconds() > 0.25) {
                 left_bumper_time.reset();
-                if(!isClamped){
+                if (!isClamped) {
                     wobbleClampServo.setPosition(CLAMP_SERVO_OUT);
                     isClamped = true;
                     telemetry.addLine("SERVO IS CLAMPED");
                     telemetry.update();
-                }else if(isClamped){
+                } else if (isClamped) {
                     wobbleClampServo.setPosition(CLAMP_SERVO_IN);
                     isClamped = false;
                     telemetry.addLine("SERVO IS NOT CLAMPED");
@@ -206,6 +203,7 @@ public class UltimateTeleop extends LinearOpMode {
             }
         }
     }
+
     //end of thread class
 
     //left and right bumpers: wobble arm clamp and hinge servo
