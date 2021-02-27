@@ -262,7 +262,8 @@ public class UltimateAuto extends LinearOpMode {
                 wobbleGoal.moveToTgtZone(variableMap);
                 wobbleGoal.dropWobbleGoal(variableMap);
                 shootingRings.moveToLaunchLine(variableMap);
-                shootingRings.ringShoot(variableMap);
+                //shootingRings.ringShoot(variableMap);
+                shootingRings.powerShoot(variableMap);
             }
 
             //reset imu
