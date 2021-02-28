@@ -56,7 +56,7 @@ public class ShootingRings {
                 //Move to Shooting Rings Position
                 navigater.navigate(8, Constants2020.Direction.STRAIGHT,0,0.25,backLeft,backRight,frontRight,frontLeft,imu,telemetry,true);
                 //shooter.setPower(0.95);
-                shooter.setPower(0.69);
+                shooter.setPower(0.9);
                 navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 resetTheImu(variableMap);
                 try {
@@ -108,7 +108,7 @@ public class ShootingRings {
                     e.printStackTrace();
                 }
                 navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                shooter.setPower(0.95);
+                shooter.setPower(0.9);
                 resetTheImu(variableMap);
                 try {
                     Thread.sleep(250);
@@ -122,7 +122,7 @@ public class ShootingRings {
             if(isWall){
                 navigater.navigate(-((charlieDist/2)-3.186 - 5 - 5), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                shooter.setPower(0.95);
+                shooter.setPower(0.9);
                 resetTheImu(variableMap);
                 try {
                     Thread.sleep(250);
@@ -213,13 +213,7 @@ public class ShootingRings {
 
 
         // Turn to power shot leftmost
-        resetTheImu(variableMap);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        navigater.navigate(0, Constants2020.Direction.TURN,14 , 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(0, Constants2020.Direction.TURN,14 , 0.7, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         try {
             Thread.sleep(750);
         } catch (InterruptedException e) {
@@ -237,7 +231,7 @@ public class ShootingRings {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        navigater.navigate(0, Constants2020.Direction.TURN,13.5 , 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(0, Constants2020.Direction.TURN,13.5 , 0.7, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         try {
             Thread.sleep(750);
         } catch (InterruptedException e) {
@@ -255,7 +249,7 @@ public class ShootingRings {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        navigater.navigate(0, Constants2020.Direction.TURN,13 , 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(0, Constants2020.Direction.TURN,13 , 0.7, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         try {
             Thread.sleep(750);
         } catch (InterruptedException e) {

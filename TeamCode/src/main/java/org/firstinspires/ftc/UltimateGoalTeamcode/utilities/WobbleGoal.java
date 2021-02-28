@@ -135,7 +135,7 @@ public class WobbleGoal {
         telemetry.addLine("Inside dropWobbleGoal");
         telemetry.update();
 
-        wobbleHingeServo.setPosition(hingeServoDown);
+        /*wobbleHingeServo.setPosition(hingeServoDown);
         try {
             sleep(1000);
         } catch (InterruptedException e) {
@@ -160,7 +160,7 @@ public class WobbleGoal {
             sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 }
