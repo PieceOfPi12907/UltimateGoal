@@ -137,7 +137,7 @@ public class UltimateAuto extends LinearOpMode {
         telemetry.addLine("FINISHED INITIALIZING WEBCAM");
         telemetry.update();
         try {
-            Thread.sleep(250);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -50,42 +50,42 @@ public class ShootingRings {
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
                 //blue not wall
-                navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
                 //red and blue wall
                 //Move to Shooting Rings Position
-                navigater.navigate(8, Constants2020.Direction.STRAIGHT,0,0.25,backLeft,backRight,frontRight,frontLeft,imu,telemetry,true);
+                navigater.navigate(8, Constants2020.Direction.STRAIGHT,0,0.75/*0.25*/,backLeft,backRight,frontRight,frontLeft,imu,telemetry,true);
                 //shooter.setPower(0.95);
                 shooter.setPower(0.9);
-                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 resetTheImu(variableMap);
-                try {
+                /*try {
                     Thread.sleep(250);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
 
 
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall) {
                 //red wall
-                navigater.navigate(5, Constants2020.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                try {
+                navigater.navigate(5, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                navigater.navigate(0, Constants2020.Direction.TURN, -175, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                }*/
+                navigater.navigate(0, Constants2020.Direction.TURN, -175, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall){
                 //red not wall
-                navigater.navigate(0, Constants2020.Direction.TURN, -82.5, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, -82.5, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
                 //red and blue wall
-                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
 
@@ -102,33 +102,33 @@ public class ShootingRings {
             if(isWall){
                 //ADDED -2
                 navigater.navigate(-((betaDist/3)-3)-2, Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                try {
+                /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                }*/
+                navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 shooter.setPower(0.9);
                 resetTheImu(variableMap);
-                try {
+                /*try {
                     Thread.sleep(250);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
             } else if(!isWall){
                 navigater.navigate(-((betaDist/3)-3-11), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if(isWall){
                 navigater.navigate(-((charlieDist/2)-3.186 - 5 - 5), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 shooter.setPower(0.9);
                 resetTheImu(variableMap);
-                try {
+                /*try {
                     Thread.sleep(250);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
             } else if (!isWall){
                 navigater.navigate(-((charlieDist/2)), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
@@ -202,6 +202,7 @@ public class ShootingRings {
     public void powerShoot(HashMap<String, Object> variableMap){
         final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
         final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
+        final int WAIT = 500; //750
         DcMotor shooter = (DcMotor) variableMap.get(Constants2020.SHOOTER);
         Servo shooterServo = (Servo) variableMap.get(Constants2020.SHOOTERSERVO);
         DcMotor backLeft = (DcMotor) variableMap.get(Constants2020.BACK_LEFT_MOTOR);
@@ -212,51 +213,51 @@ public class ShootingRings {
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
 
 
-        // Turn to power shot leftmost
-        navigater.navigate(0, Constants2020.Direction.TURN,14 , 0.7, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        //Turn to power shot leftmost
+        navigater.navigate(0, Constants2020.Direction.TURN,14 , 0.75/*0.7*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        navigater.navigate(0, Constants2020.Direction.TURN,13.5 , 0.7, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(0, Constants2020.Direction.TURN,13.5 , 0.75/*0.7*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        navigater.navigate(0, Constants2020.Direction.TURN,13 , 0.7, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(0, Constants2020.Direction.TURN,13 , 0.75/*0.7*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();}
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -267,8 +268,8 @@ public class ShootingRings {
             e.printStackTrace();
         }*/
         shooter.setPower(0);
-        navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
     }
 }

@@ -86,44 +86,44 @@ public class WobbleGoal {
             }
         }
 
-
         resetTheImu(variableMap);
 
         //adjust position at tgt zone A, B, or C to drop wobble goal:
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
                 //blue not wall
-                navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
                 //red and blue wall
-                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall && !isBlue) {
                 //red wall
-                navigater.navigate(0, Constants2020.Direction.TURN, 175, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                try {
+                navigater.navigate(0, Constants2020.Direction.TURN, 175, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                navigater.navigate(5, Constants2020.Direction.RIGHT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                }*/
+                navigater.navigate(5, Constants2020.Direction.RIGHT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
             } else if (!isWall && !isBlue){
                 //red not wall
-                navigater.navigate(0, Constants2020.Direction.TURN, 82.5, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 82.5, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
                 //red and blue wall
-                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         resetTheImu(variableMap);
     }
 
     public void dropWobbleGoal(HashMap<String, Object> variableMap){
+        final int WAIT = 500; //1000
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         Servo wobbleHingeServo = (Servo) variableMap.get(Constants2020.HINGE_SERVO);
         Servo wobbleClampServo = (Servo) variableMap.get(Constants2020.CLAMP_SERVO);
@@ -135,32 +135,32 @@ public class WobbleGoal {
         telemetry.addLine("Inside dropWobbleGoal");
         telemetry.update();
 
-        /*wobbleHingeServo.setPosition(hingeServoDown);
+        wobbleHingeServo.setPosition(hingeServoDown);
         try {
-            sleep(1000);
+            sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         //let it go
         wobbleClampServo.setPosition(0.2);
         try {
-            sleep(1000);
+            sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         //grab it
         wobbleClampServo.setPosition(0.4);
         try {
-            sleep(1000);
+            sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         wobbleHingeServo.setPosition(hingeServoUp);
         try {
-            sleep(1000);
+            sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
 }
