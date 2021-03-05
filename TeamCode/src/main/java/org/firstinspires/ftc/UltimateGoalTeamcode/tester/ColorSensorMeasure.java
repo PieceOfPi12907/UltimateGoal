@@ -13,19 +13,26 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Disabled
-
 @Autonomous(name = "ColorSensorMeasurer", group = "autonomous")
 
 public class ColorSensorMeasure extends LinearOpMode{
+    ColorSensor pFrontColor;
 
     //RUN OP MODE TO BE STILL IMPLEMENTED WITH CODE BELOW
     //create initialize method with hardware map
     //call methods below in "while op mode is active"
     public void runOpMode() throws InterruptedException {
-        //initialize();
+        pFrontColor = hardwareMap.get(ColorSensor.class, "colorsensor");
         waitForStart();
         while (opModeIsActive()) {
+            if (pFrontColor.red() > 59) {
+                telemetry.addLine("RED DETECTED STOP");
+                telemetry.update();
+            }
+            else if (pFrontColor.red() > 30) {
+                telemetry.addLine("WHITE DETECTED STOP");
+                telemetry.update();
+            }
         }
     }
     public void redOrBlue(ColorSensor pFrontColor, boolean isRed, Telemetry telemetry){

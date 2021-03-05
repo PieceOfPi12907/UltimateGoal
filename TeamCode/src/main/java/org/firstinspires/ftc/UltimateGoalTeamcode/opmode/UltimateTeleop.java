@@ -258,6 +258,43 @@ public class UltimateTeleop extends LinearOpMode {
             }
             if(gamepad2.y){
                 scaleFactor=0.99;
+            }
+            if(gamepad2.a){
+                shooterIntake.setPower(shooterSpeed);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
+                frontLeftMotor.setPower(0.3);
+                frontRightMotor.setPower(-0.3);
+                backLeftMotor.setPower(-0.3);
+                backRightMotor.setPower(0.3);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
+                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
+                shooterIntake.setPower(0);
 
             }
             idle();

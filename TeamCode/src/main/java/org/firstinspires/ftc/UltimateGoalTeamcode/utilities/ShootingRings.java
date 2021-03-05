@@ -56,7 +56,11 @@ public class ShootingRings {
                 //Move to Shooting Rings Position
                 navigater.navigate(8, Constants2020.Direction.STRAIGHT,0,0.75/*0.25*/,backLeft,backRight,frontRight,frontLeft,imu,telemetry,true);
                 //shooter.setPower(0.95);
-                shooter.setPower(0.9);
+                //was 0.9 but was too fast, changed it to 0.7
+                //still too fast, changed to 0.6
+                shooter.setPower(0.6);
+                telemetry.addLine("shot at 0.7");
+                telemetry.update();
                 navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 resetTheImu(variableMap);
                 /*try {
@@ -158,6 +162,7 @@ public class ShootingRings {
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
 
+
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
         try {
             Thread.sleep(750);
@@ -211,10 +216,17 @@ public class ShootingRings {
         DcMotor frontRight = (DcMotor) variableMap.get(Constants2020.FRONT_RIGHT_MOTOR);
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
+        Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
 
 
         //Turn to power shot leftmost
-        navigater.navigate(0, Constants2020.Direction.TURN,14 , 0.75/*0.7*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        //changed rotation from 14 to 13 to 11 to 5 WILL CHANGE BACK
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
+            navigater.navigate(0, Constants2020.Direction.TURN,5 , 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
+        else {
+            navigater.navigate(0, Constants2020.Direction.TURN, 14, 0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
         try {
             Thread.sleep(WAIT);
         } catch (InterruptedException e) {
@@ -232,7 +244,12 @@ public class ShootingRings {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        navigater.navigate(0, Constants2020.Direction.TURN,13.5 , 0.75/*0.7*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
+            navigater.navigate(0, Constants2020.Direction.TURN,4 , 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
+        else {
+            navigater.navigate(0, Constants2020.Direction.TURN,13.5 , 0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
         try {
             Thread.sleep(WAIT);
         } catch (InterruptedException e) {
@@ -250,7 +267,12 @@ public class ShootingRings {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        navigater.navigate(0, Constants2020.Direction.TURN,13 , 0.75/*0.7*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
+            navigater.navigate(0, Constants2020.Direction.TURN,3 , 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
+        else {
+            navigater.navigate(0, Constants2020.Direction.TURN,13 , 0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
         try {
             Thread.sleep(WAIT);
         } catch (InterruptedException e) {
@@ -261,6 +283,7 @@ public class ShootingRings {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         /*shooterServo.setPosition(0.8);
         try {
             Thread.sleep(750);
