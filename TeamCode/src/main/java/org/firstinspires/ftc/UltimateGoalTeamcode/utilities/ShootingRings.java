@@ -105,14 +105,14 @@ public class ShootingRings {
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if(isWall){
                 //ADDED -2
-                navigater.navigate(-((betaDist/3)-3)-2, Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(-((betaDist/3)), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
                 navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                shooter.setPower(0.9);
+                shooter.setPower(0.9 - 0.2);
                 resetTheImu(variableMap);
                 /*try {
                     Thread.sleep(250);
@@ -124,7 +124,7 @@ public class ShootingRings {
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if(isWall){
-                navigater.navigate(-((charlieDist/2)-3.186 - 5 - 5), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(-((charlieDist/2)-3.186 - 5), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 shooter.setPower(0.9);
                 resetTheImu(variableMap);
@@ -223,8 +223,9 @@ public class ShootingRings {
         //changed rotation from 14 to 13 to 11 to 5 WILL CHANGE BACK
         if(position.equals(Constants2020.TargetZone.ALPHA)){
             navigater.navigate(0, Constants2020.Direction.TURN,5 , 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        }
-        else {
+        } else if (position.equals(Constants2020.TargetZone.BETA)){
+            navigater.navigate(0, Constants2020.Direction.TURN,15, 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        } else {
             navigater.navigate(0, Constants2020.Direction.TURN, 14, 0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
         try {
@@ -246,9 +247,10 @@ public class ShootingRings {
         }
         if(position.equals(Constants2020.TargetZone.ALPHA)){
             navigater.navigate(0, Constants2020.Direction.TURN,4 , 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        }
-        else {
-            navigater.navigate(0, Constants2020.Direction.TURN,13.5 , 0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        } else if (position.equals(Constants2020.TargetZone.BETA)){
+            navigater.navigate(0, Constants2020.Direction.TURN, 14.5, 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        } else {
+            navigater.navigate(0, Constants2020.Direction.TURN, 13.5, 0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
         try {
             Thread.sleep(WAIT);
@@ -267,17 +269,21 @@ public class ShootingRings {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         if(position.equals(Constants2020.TargetZone.ALPHA)){
             navigater.navigate(0, Constants2020.Direction.TURN,3 , 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        }
-        else {
-            navigater.navigate(0, Constants2020.Direction.TURN,13 , 0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        } else if (position.equals(Constants2020.TargetZone.BETA)){
+            navigater.navigate(0, Constants2020.Direction.TURN,14, 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        } else {
+            navigater.navigate(0, Constants2020.Direction.TURN, 13, 0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
         try {
-            Thread.sleep(WAIT);
+            Thread.sleep(WAIT*2);
         } catch (InterruptedException e) {
             e.printStackTrace();}
+
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+
         try {
             Thread.sleep(WAIT);
         } catch (InterruptedException e) {
@@ -291,7 +297,7 @@ public class ShootingRings {
             e.printStackTrace();
         }*/
         shooter.setPower(0);
-        navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        //navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
     }

@@ -101,11 +101,11 @@ public class WobbleGoal {
             if (isWall && !isBlue) {
                 //red wall
                 navigater.navigate(0, Constants2020.Direction.TURN, 175, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                /*try {
+                try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }*/
+                }
                 navigater.navigate(5, Constants2020.Direction.RIGHT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
             } else if (!isWall && !isBlue){
