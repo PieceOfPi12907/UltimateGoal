@@ -3,10 +3,12 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.utilities;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.UltimateGoalTeamcode.tester.ColorSensorMeasure;
 
 import java.util.HashMap;
 
@@ -297,6 +299,9 @@ public class ShootingRings {
             e.printStackTrace();
         }*/
         shooter.setPower(0);
+
+        //new parking sequence
+
         //navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);

@@ -6,11 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
-import org.firstinspires.ftc.SkystoneTeamcode.utillities.SkystoneDetection;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.DetectionHelper;
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.utilities.ShootingRings;
 import org.firstinspires.ftc.UltimateGoalTeamcode.utilities.WobbleGoal;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -36,15 +37,26 @@ public class UltimateAuto extends LinearOpMode {
     DcMotor frontRight;
     DcMotor backRight;
     DcMotor shooter;
+
+    ColorSensor pFrontColor;
+
+    DcMotor shooterIntake;
+    double shooterSpeed = 0.8;
+
     Servo shooterServo;
     Servo wobbleHingeServo;
     Servo wobbleClampServo;
     OpenCvCamera webcam;
     WobbleGoal wobbleGoal = new WobbleGoal();
     ShootingRings shootingRings = new ShootingRings();
+
+    NavigationHelper navigater = new NavigationHelper();
+
     DetectionHelper pipeline;
     Constants2020.TargetZone box;
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
+
+
 
     public void initialize() {
 
@@ -83,11 +95,28 @@ public class UltimateAuto extends LinearOpMode {
                 telemetry.update();
             }
 
+          //NEW POWER ADJUSTER THINGYMAJIG
+            // up dpad on gamepad 1 increases intake speed
+            if (gamepad1.dpad_up) {
+                shooterSpeed += 0.01;
+                telemetry.addData("shooter speed is ", shooterSpeed);
+                telemetry.update();
+            }
+
+            //down dpad on gamepad 1 decreases intake speed
+            if (gamepad1.dpad_down){
+                shooterSpeed -= 0.01;
+                telemetry.addData("shooter speed is ", shooterSpeed);
+                telemetry.update();
+
+            }
+
             //y on gamepad 1 CONFIRMS decisions
             if (gamepad1.a){
                 telemetry.addData("COLOR: ", (isBlue == true)? "blue" : "red");
                 telemetry.addData("ROUTE: ", (isWall == true)? "wall" : "not wall");
-                telemetry.addLine("press 'y' to confirm!");
+                telemetry.addData("FINAL SHOOTER SPEED: ", shooterSpeed);
+                telemetry.addLine("Press 'y' To Confirm!");
                 telemetry.update();
             }
 
@@ -111,7 +140,7 @@ public class UltimateAuto extends LinearOpMode {
         telemetry.addLine("about to initialize webcam");
         telemetry.update();
 
-        try{
+        try {
             webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
             pipeline = new DetectionHelper();
             webcam.setPipeline(pipeline);
@@ -153,6 +182,7 @@ public class UltimateAuto extends LinearOpMode {
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
         wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
 
+        pFrontColor=hardwareMap.get(ColorSensor.class,"colorsensor");
 
 
         //Setting the direction of the motors
@@ -205,6 +235,8 @@ public class UltimateAuto extends LinearOpMode {
         variableMap.put(Constants2020.WEBCAM, this.webcam);
 
         variableMap.put(Constants2020.ELAPSEDTIME, this.runtime);
+
+        variableMap.put(Constants2020.FRONT_COLOR, this.pFrontColor);
     }
 
     @Override
@@ -264,6 +296,7 @@ public class UltimateAuto extends LinearOpMode {
                 shootingRings.moveToLaunchLine(variableMap);
                 //shootingRings.ringShoot(variableMap);
                 shootingRings.powerShoot(variableMap);
+
             }
 
             //reset imu
@@ -324,4 +357,10 @@ public class UltimateAuto extends LinearOpMode {
         }
         return 3;
     }
+
+
 }
+
+
+
+

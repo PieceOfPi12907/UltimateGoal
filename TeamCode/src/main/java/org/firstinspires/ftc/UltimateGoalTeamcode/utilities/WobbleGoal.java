@@ -61,26 +61,34 @@ public class WobbleGoal {
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             telemetry.addLine("RED - WALL - ALPHA");
             telemetry.update();
+            //red wall alpha
             if(isWall){
                 telemetry.addLine("about to move");
                 telemetry.update();
                 navigater.navigate(alphaDist - 12.75, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+           //red not wall alpha
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
+
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             telemetry.addLine("RED - WALL - BETA");
             telemetry.update();
+            //red wall beta
             if(isWall){
                 navigater.navigate(betaDistance + 2.25 - 12, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+          //red not wall beta
             } else if(!isWall){
                 navigater.navigate(betaDistance + 2.25 - 20, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
+
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             telemetry.addLine("RED - WALL - CHARLIE");
             telemetry.update();
+            //red wall charlie
             if(isWall){
                 navigater.navigate(charlieDistance - 5 - 5 - 5, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+           //red not wall charlie
             } else if(!isWall){
                 navigater.navigate(charlieDistance, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
@@ -91,15 +99,16 @@ public class WobbleGoal {
         //adjust position at tgt zone A, B, or C to drop wobble goal:
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
-                //blue not wall
+                //blue not wall alpha
                 navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
-                //red and blue wall
+                //red and blue wall alpha
                 navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
+
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall && !isBlue) {
-                //red wall
+                //red wall beta
                 navigater.navigate(0, Constants2020.Direction.TURN, 175, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 try {
                     Thread.sleep(500);
@@ -109,17 +118,19 @@ public class WobbleGoal {
                 navigater.navigate(5, Constants2020.Direction.RIGHT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
             } else if (!isWall && !isBlue){
-                //red not wall
+                //red not wall beta
                 navigater.navigate(0, Constants2020.Direction.TURN, 82.5, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
-                //red and blue wall
+                //red and blue wall charlie
                 navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
+
         resetTheImu(variableMap);
+
     }
 
     public void dropWobbleGoal(HashMap<String, Object> variableMap){
