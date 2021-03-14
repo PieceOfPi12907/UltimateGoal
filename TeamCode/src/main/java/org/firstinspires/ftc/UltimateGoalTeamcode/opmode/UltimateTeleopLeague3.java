@@ -38,11 +38,11 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.05;
 
     //hinge and clamp values to be tested:
-    final double HINGE_SERVO_UP = 0.1; //0.2
-    final double HINGE_SERVO_MID = 0.45; // 0.5
-    final double HINGE_SERVO_DOWN = 0.6; // 0.8
-    final double CLAMP_SERVO_OUT = 0.6;
-    final double CLAMP_SERVO_IN = 0.2;
+    final double HINGE_SERVO_UP = 0.05; //outside to grab wobble goal
+    final double HINGE_SERVO_MID = 0.45;
+    final double HINGE_SERVO_DOWN = 0.95; //inside the robot
+    final double CLAMP_SERVO_IN = 0.7; //0.6 clamp
+    final double CLAMP_SERVO_OUT = 0.2;
     double shooterSpeed = 0.8;
     double currentPos = 0.5;
 
@@ -71,6 +71,9 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeft");
 
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
+        wobbleClampServo.setPosition(0.5);
+        telemetry.addData("wobble clamp servo at: ", wobbleClampServo.getPosition());
+        telemetry.update();
         wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
         hingeServoPos = Constants2020.HingeServoPositions.UP;
 
@@ -94,7 +97,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             try {
                 while (!isInterrupted()) {
                     shooterIntakeControl();
-                    //wobbleArmControl();
+                    wobbleArmControl();
                     intakeControl();
                     idle();
                 }

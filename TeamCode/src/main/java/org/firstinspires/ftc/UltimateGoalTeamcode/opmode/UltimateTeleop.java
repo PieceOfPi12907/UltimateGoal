@@ -36,7 +36,7 @@ public class UltimateTeleop extends LinearOpMode {
 
     public final double SHOOTER_INTAKE_SERVO_INIT = 0.5;
     public final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
-    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
+    public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85; //0.85
 
     //hinge and clamp values to be tested:
     final double HINGE_SERVO_UP = 0.1; //0.2
@@ -191,6 +191,11 @@ public class UltimateTeleop extends LinearOpMode {
                 left_bumper_time.reset();
                 if (!isClamped) {
                     wobbleClampServo.setPosition(CLAMP_SERVO_OUT);
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     isClamped = true;
                     telemetry.addLine("SERVO IS CLAMPED");
                     telemetry.update();

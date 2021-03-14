@@ -23,7 +23,7 @@ public class SensorHelper{
     Orientation lastAngles = new Orientation();
     double globalAngle;
 
-    public void redOrBlue(boolean isRed, ColorSensor pFrontColor, Telemetry telemetry){
+    public boolean isRed(ColorSensor pFrontColor, Telemetry telemetry){
         //special scale factor for Red so that Red can be recognized via the "value" value.
         //NOTE: THIS AFFECTS ALL VALUE READINGS
         final float RED_SCALE_FACTOR = 2;
@@ -50,7 +50,6 @@ public class SensorHelper{
         // if Statements - These Should Be Tested and Adjusted Accordingly
         //you could also make an additional class for this but I just put it in one
         if (pFrontColor.red() > 59) {
-            isRed = true;
             telemetry.addLine("LINE COLOR: RED");
             telemetry.update();
             try {
@@ -58,8 +57,8 @@ public class SensorHelper{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            return true;
         } else if (pFrontColor.red() < 59) {
-            isRed = false;
             telemetry.addLine("LINE COLOR: BLUE");
             telemetry.update();
             try {
@@ -67,10 +66,13 @@ public class SensorHelper{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            return false;
+        } else {
+            return false;
         }
     }
 
-    public void whiteOrBlack(boolean isWhite, ColorSensor pFrontColor, Telemetry telemetry){
+    public boolean isWhite(ColorSensor pFrontColor, Telemetry telemetry){
         //special scale factor for Red so that Red can be recognized via the "value" value.
         //NOTE: THIS AFFECTS ALL VALUE READINGS
         final float RED_SCALE_FACTOR = 2;
@@ -97,7 +99,6 @@ public class SensorHelper{
         // if Statements - These Should Be Tested and Adjusted Accordingly
         //you could also make an additional class for this but I just put it in one
         if (pFrontColor.red() > 30) {
-            isWhite = true;
             telemetry.addLine("LINE COLOR: WHITE");
             telemetry.update();
             try {
@@ -105,8 +106,8 @@ public class SensorHelper{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            return true;
         } else if (pFrontColor.red() < 30) {
-            isWhite = false;
             telemetry.addLine("LINE COLOR: BLACK");
             telemetry.update();
             try {
@@ -114,6 +115,9 @@ public class SensorHelper{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            return false;
+        } else {
+            return false;
         }
     }
 

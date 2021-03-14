@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.SensorHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.UltimateGoalTeamcode.tester.ColorSensorMeasure;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 public class ShootingRings {
 
     NavigationHelper navigater = new NavigationHelper();
+    SensorHelper sensorhelp = new SensorHelper();
 
     public void resetTheImu(HashMap<String, Object> variableMap) {
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
@@ -143,7 +145,7 @@ public class ShootingRings {
 
         resetTheImu(variableMap);
 
-        //parking (over the launch line)
+        //parking (over the launch line) - NEW PARKING BELOW IN SHOOTING METHOD
         if(position.equals(Constants2020.TargetZone.ALPHA)){
             //UNCOMMENT BELOW LINES
            // navigater.navigate(1, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -152,58 +154,48 @@ public class ShootingRings {
         }
     }
 
-    public void ringShoot(HashMap<String, Object> variableMap){
-        final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
-        final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
+    public void newPowerShoot(HashMap<String, Object> variableMap){
+        final double SHOOTER_INTAKE_SERVO_UP = 0.14;
+        final int WAIT = 500; //750
         DcMotor shooter = (DcMotor) variableMap.get(Constants2020.SHOOTER);
         Servo shooterServo = (Servo) variableMap.get(Constants2020.SHOOTERSERVO);
         DcMotor backLeft = (DcMotor) variableMap.get(Constants2020.BACK_LEFT_MOTOR);
         DcMotor backRight = (DcMotor) variableMap.get(Constants2020.BACK_RIGHT_MOTOR);
         DcMotor frontLeft = (DcMotor) variableMap.get(Constants2020.FRONT_LEFT_MOTOR);
         DcMotor frontRight = (DcMotor) variableMap.get(Constants2020.FRONT_RIGHT_MOTOR);
+        ColorSensor frontColor = (ColorSensor) variableMap.get(Constants2020.FRONT_COLOR);
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
+        Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
 
 
-        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+        //turn left
+        navigater.navigate(0, Constants2020.Direction.TURN,15, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        /*try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        //shoot servo up
+        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_UP);
         try {
-            Thread.sleep(750);
+            Thread.sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        shooterServo.setPosition(0.8);
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         shooter.setPower(0);
-        navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+
+        //SENSOR PARKING
+        //sensorhelp.moveUntilColor(0.5, 5, false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
+
+        //NOW USED PARKING
+        //navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
+            navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
+        navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
     }
 
     public void powerShoot(HashMap<String, Object> variableMap){
@@ -305,5 +297,58 @@ public class ShootingRings {
         //navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+    }
+    public void ringShoot(HashMap<String, Object> variableMap){
+        final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
+        final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
+        DcMotor shooter = (DcMotor) variableMap.get(Constants2020.SHOOTER);
+        Servo shooterServo = (Servo) variableMap.get(Constants2020.SHOOTERSERVO);
+        DcMotor backLeft = (DcMotor) variableMap.get(Constants2020.BACK_LEFT_MOTOR);
+        DcMotor backRight = (DcMotor) variableMap.get(Constants2020.BACK_RIGHT_MOTOR);
+        DcMotor frontLeft = (DcMotor) variableMap.get(Constants2020.FRONT_LEFT_MOTOR);
+        DcMotor frontRight = (DcMotor) variableMap.get(Constants2020.FRONT_RIGHT_MOTOR);
+        Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
+        BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
+
+
+        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        shooterServo.setPosition(0.8);
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        shooter.setPower(0);
+        navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
     }
 }
