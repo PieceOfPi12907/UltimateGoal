@@ -20,8 +20,8 @@ public class IndividualMotorTest extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class,"backRight");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -47,25 +47,26 @@ public class IndividualMotorTest extends LinearOpMode {
         waitForStart();
         if(opModeIsActive()){
             while(opModeIsActive()){
+                //back left encoder not working
+                //front left encoder not working
+
                 //frontRight.setTargetPosition(5000);
-                backLeft.setTargetPosition(5000);
+                frontLeft.setTargetPosition(5000);
                 //backRight.setTargetPosition(5000);
                 //backLeft.setTargetPosition(5000);
+
                 //frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 //backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 //backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
                 //frontRight.setPower(0.2);
-                backLeft.setPower(0.2);
+                frontLeft.setPower(0.2);
                 //backRight.setPower(0.2);
                 //backLeft.setPower(0.2);
-                //telemetry.addData("motor encoder val: ", frontLeft.getCurrentPosition());
-                //telemetry.update();
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
+                telemetry.addData("motor encoder val: ", frontLeft.getCurrentPosition());
+                telemetry.update();
             }
         }
     }

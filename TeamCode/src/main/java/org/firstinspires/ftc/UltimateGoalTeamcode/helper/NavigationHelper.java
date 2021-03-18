@@ -37,7 +37,6 @@ public class NavigationHelper {
 
         else if(pDirection.equals(Constants2020.Direction.TURN)){
             this.turnWithEncodersWithCorrection(pFrontRight, pFrontLeft, pBackRight, pBackLeft, pRotation, pSpeed, pImu, telemetry);
-
         }
 
     }
@@ -341,7 +340,6 @@ public class NavigationHelper {
 
 
     }
-
 
     public void turnWithEncoders(DcMotor pFrontRight, DcMotor pFrontLeft, DcMotor pBackRight,
                                  DcMotor pBackLeft, double pRotation, double pSpeed, BNO055IMU pImu, Telemetry pTelemetry) {

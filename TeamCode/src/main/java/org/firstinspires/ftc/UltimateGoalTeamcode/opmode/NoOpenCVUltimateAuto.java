@@ -3,10 +3,11 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.opmode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
@@ -21,8 +22,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.HashMap;
 
-@Autonomous(name = "ULTIMATE AUTO", group = "autonomous")
-public class UltimateAuto extends LinearOpMode {
+@Autonomous(name = "NO OPEN CV ULTIMATE AUTO", group = "autonomous")
+public class NoOpenCVUltimateAuto extends LinearOpMode {
 
     Boolean isBlue = false;
     Boolean isWall = false;
@@ -136,6 +137,7 @@ public class UltimateAuto extends LinearOpMode {
         imu.initialize(parameters);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
+        /*
         telemetry.addLine("about to initialize webcam");
         telemetry.update();
 
@@ -169,6 +171,7 @@ public class UltimateAuto extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+         */
 
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -181,14 +184,21 @@ public class UltimateAuto extends LinearOpMode {
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
         wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
 
-        pFrontColor=hardwareMap.get(ColorSensor.class,"colorsensor");
+        //pFrontColor=hardwareMap.get(ColorSensor.class,"colorsensor");
 
 
         //Setting the direction of the motors
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        /*frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+         */
+
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
         createVariableMap();
 
         telemetry.addLine("about to initialize wobble arm");
@@ -258,19 +268,19 @@ public class UltimateAuto extends LinearOpMode {
 
             createVariableMap();
 
-            DetectionHelper.RingPosition position = null;
+            //DetectionHelper.RingPosition position = null;
 
             while(!opModeIsActive()) {
 
-                telemetry.addData("Analysis", pipeline.getAnalysis());
-                telemetry.addData("Position", pipeline.getPosition());
-                position = pipeline.getPosition();
-                telemetry.update();
+                //telemetry.addData("Analysis", pipeline.getAnalysis());
+                //telemetry.addData("Position", pipeline.getPosition());
+                //position = pipeline.getPosition();
+                //telemetry.update();
                 // Don't burn CPU cycles busy-looping in this sample
                 sleep(50);
             }
 
-            if (position.equals(DetectionHelper.RingPosition.NONE)){
+            /*if (position.equals(DetectionHelper.RingPosition.NONE)){
                 box = Constants2020.TargetZone.ALPHA;
             }
             if (position.equals(DetectionHelper.RingPosition.ONE)){
@@ -279,14 +289,20 @@ public class UltimateAuto extends LinearOpMode {
             if (position.equals(DetectionHelper.RingPosition.FOUR)){
                 box = Constants2020.TargetZone.CHARLIE;
             }
+             */
 
-            variableMap.put(Constants2020.POSITION, this.box);
+            //CHANGE BASED ON TARGET ZONE A, B, OR C!
+            //String position = "NONE";
+            //box = Constants2020.TargetZone.ALPHA;
+
+
+            //variableMap.put(Constants2020.POSITION, this.box);
             waitForStart();
 
             if (opModeIsActive()) {
                 runtime.reset();
                 //int num = detectionLoop();
-                telemetry.addData("Number of Rings", position);
+                //telemetry.addData("Number of Rings", position);
                 telemetry.update();
                 sleep(500);
 

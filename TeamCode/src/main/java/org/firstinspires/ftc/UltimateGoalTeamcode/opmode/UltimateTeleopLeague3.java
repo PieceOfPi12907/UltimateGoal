@@ -71,9 +71,6 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeft");
 
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
-        wobbleClampServo.setPosition(0.5);
-        telemetry.addData("wobble clamp servo at: ", wobbleClampServo.getPosition());
-        telemetry.update();
         wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
         hingeServoPos = Constants2020.HingeServoPositions.UP;
 

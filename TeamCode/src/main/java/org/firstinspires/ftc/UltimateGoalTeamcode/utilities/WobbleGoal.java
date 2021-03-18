@@ -138,35 +138,35 @@ public class WobbleGoal {
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         Servo wobbleHingeServo = (Servo) variableMap.get(Constants2020.HINGE_SERVO);
         Servo wobbleClampServo = (Servo) variableMap.get(Constants2020.CLAMP_SERVO);
-        double hingeServoDown = 0.6;
-        double hingeServoMid = 0.45;
-        double hingeServoUp = 0.1;
-        double clampServoOut = 0.5;
-        double clampServoIn = 0.2;
+        double clampServoOut = 0.2;
+        double hingeServoOut = 0.05;
+        double clampServoMid = 0.45;
+        double hingeServoIn = 0.95;
         telemetry.addLine("Inside dropWobbleGoal");
         telemetry.update();
 
-        wobbleHingeServo.setPosition(hingeServoDown);
+        //put arm out
+        wobbleHingeServo.setPosition(hingeServoOut);
         try {
             sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         //let it go
-        wobbleClampServo.setPosition(0.2);
+        wobbleClampServo.setPosition(clampServoOut);
         try {
             sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         //grab it
-        wobbleClampServo.setPosition(0.4);
+        wobbleClampServo.setPosition(clampServoMid);
         try {
             sleep(WAIT);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        wobbleHingeServo.setPosition(hingeServoUp);
+        wobbleHingeServo.setPosition(hingeServoIn);
         try {
             sleep(WAIT);
         } catch (InterruptedException e) {

@@ -168,14 +168,14 @@ public class ShootingRings {
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
 
+        telemetry.addLine("TURN:");
+        telemetry.update();
 
         //turn left
-        navigater.navigate(0, Constants2020.Direction.TURN,15, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        /*try {
-            Thread.sleep(WAIT);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
+        navigater.navigate(0, Constants2020.Direction.TURN,15, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+
+        telemetry.addLine("SHOOT:");
+        telemetry.update();
 
         //shoot servo up
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_UP);
@@ -187,15 +187,18 @@ public class ShootingRings {
 
         shooter.setPower(0);
 
+        telemetry.addLine("PARK:");
+        telemetry.update();
+
         //SENSOR PARKING
         //sensorhelp.moveUntilColor(0.5, 5, false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
 
         //NOW USED PARKING
-        //navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        ////navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         if(position.equals(Constants2020.TargetZone.ALPHA)){
-            navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            //navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
-        navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        //navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
     }
 
     public void powerShoot(HashMap<String, Object> variableMap){
