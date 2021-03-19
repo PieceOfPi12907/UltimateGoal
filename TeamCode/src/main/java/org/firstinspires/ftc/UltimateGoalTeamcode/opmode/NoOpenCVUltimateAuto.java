@@ -268,7 +268,7 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
 
             createVariableMap();
 
-            //DetectionHelper.RingPosition position = null;
+            DetectionHelper.RingPosition position = null;
 
             while(!opModeIsActive()) {
 
@@ -293,10 +293,10 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
 
             //CHANGE BASED ON TARGET ZONE A, B, OR C!
             //String position = "NONE";
-            //box = Constants2020.TargetZone.ALPHA;
+            box = Constants2020.TargetZone.ALPHA;
 
 
-            //variableMap.put(Constants2020.POSITION, this.box);
+            variableMap.put(Constants2020.POSITION, this.box);
             waitForStart();
 
             if (opModeIsActive()) {
@@ -308,8 +308,11 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
 
                 wobbleGoal.moveToTgtZone(variableMap);
                 wobbleGoal.dropWobbleGoal(variableMap);
+                telemetry.addLine("Done w this part");
+                telemetry.update();
+                sleep(500);
                 shootingRings.moveToLaunchLine(variableMap);
-                shootingRings.newPowerShoot(variableMap);
+                //shootingRings.newPowerShoot(variableMap);
                 //shootingRings.ringShoot(variableMap);
                 //shootingRings.powerShoot(variableMap);
             }

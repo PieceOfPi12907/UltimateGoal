@@ -59,19 +59,25 @@ public class ShootingRings {
                 //red and blue wall
                 //Move to Shooting Rings Position
                 navigater.navigate(8, Constants2020.Direction.STRAIGHT,0,0.75/*0.25*/,backLeft,backRight,frontRight,frontLeft,imu,telemetry,true);
-                //shooter.setPower(0.95);
-                //was 0.9 but was too fast, changed it to 0.7
                 //still too fast, changed to 0.6
-                shooter.setPower(0.6);
+                //shooter.setPower(0.6);
                 telemetry.addLine("shot at 0.7");
                 telemetry.update();
-                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                resetTheImu(variableMap);
-                /*try {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.25/*0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                telemetry.addLine("done w that turn");
+                telemetry.update();
+                try {
                     Thread.sleep(250);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }*/
+                }
+                resetTheImu(variableMap);
+
 
 
             }

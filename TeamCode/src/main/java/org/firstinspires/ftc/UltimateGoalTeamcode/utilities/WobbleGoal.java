@@ -65,7 +65,8 @@ public class WobbleGoal {
             if(isWall){
                 telemetry.addLine("about to move");
                 telemetry.update();
-                navigater.navigate(alphaDist - 12.75, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //with new wobble goal attachment, made -12.75 -30
+                navigater.navigate(alphaDist - 30, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
            //red not wall alpha
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
