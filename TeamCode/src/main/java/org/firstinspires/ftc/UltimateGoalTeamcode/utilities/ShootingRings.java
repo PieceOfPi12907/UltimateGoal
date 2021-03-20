@@ -84,13 +84,13 @@ public class ShootingRings {
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall) {
                 //red wall
-                navigater.navigate(5, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(5, Constants2020.Direction.LEFT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
-                navigater.navigate(0, Constants2020.Direction.TURN, -175, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, -175, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall){
                 //red not wall
                 navigater.navigate(0, Constants2020.Direction.TURN, -82.5, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -115,13 +115,13 @@ public class ShootingRings {
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if(isWall){
                 //ADDED -2
-                navigater.navigate(-((betaDist/3)), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(-((betaDist/3)), Constants2020.Direction.STRAIGHT, 0, -0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
-                navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 shooter.setPower(0.9 - 0.2);
                 resetTheImu(variableMap);
                 /*try {

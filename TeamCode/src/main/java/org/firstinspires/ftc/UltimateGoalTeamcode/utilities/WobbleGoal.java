@@ -104,7 +104,7 @@ public class WobbleGoal {
                 navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
                 //red and blue wall alpha
-                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.25/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
 
         } else if (position.equals(Constants2020.TargetZone.BETA)) {

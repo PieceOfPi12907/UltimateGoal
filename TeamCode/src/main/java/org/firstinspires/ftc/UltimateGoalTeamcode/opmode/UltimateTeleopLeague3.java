@@ -12,10 +12,10 @@ import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 @TeleOp(name = "FINAL ULTIMATE TELEOP LEAGUE 3",group = "teleop")
 public class UltimateTeleopLeague3 extends LinearOpMode {
 
-    DcMotor shooterIntake;
+    DcMotor intake;
     Servo shooterIntakeServo;
 
-    DcMotor actualIntake;
+    DcMotor shooter;
 
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
@@ -32,8 +32,9 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     boolean shooterIntakeInit = true;
     boolean intakeOn = false;
     boolean intakeBack = false;
+    boolean outtakeBack = false;
 
-    public final double SHOOTER_INTAKE_SERVO_INIT = 0.50;
+    public final double SHOOTER_INTAKE_SERVO_INIT = 0.62;
     public final double SHOOTER_INTAKE_SERVO_OPEN = 0.50;
     public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.05;
 
@@ -43,7 +44,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     final double HINGE_SERVO_DOWN = 0.95; //inside the robot
     final double CLAMP_SERVO_IN = 0.7; //0.6 clamp
     final double CLAMP_SERVO_OUT = 0.2;
-    double shooterSpeed = 0.8;
+    double intakeSpeed = 0.8;
     double currentPos = 0.5;
 
     ElapsedTime a_time = new ElapsedTime();
@@ -57,13 +58,13 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
 
     private void initialize() {
 
-        shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
+        intake = hardwareMap.get(DcMotor.class, "intake");
         shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
         shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
-        shooterIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        actualIntake = hardwareMap.get(DcMotor.class, "intake");
-        actualIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        shooter = hardwareMap.get(DcMotor.class, "shooter");
+        shooter.setDirection(DcMotorSimple.Direction.FORWARD);
 
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRight");
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -104,79 +105,113 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
         }
 
         private void intakeControl() {
-
-            /*
             if (gamepad1.x && x_time.seconds() >= 0.25) {
                 x_time.reset();
-                if (intakeOn) {
-                    actualIntake.setPower(0);
-                    intakeOn = false;
+                if (shooterIntakeSpinning) {
+                    telemetry.addLine("shooter off");
+                    telemetry.update();
+                    shooterIntakeSpinning = false;
+                    intake.setPower(0);
                 } else {
-                    actualIntake.setPower(0.85);
-                    intakeOn = true;
+                    telemetry.addLine("shooter on");
+                    telemetry.update();
+                    shooterIntakeSpinning = true;
+                    intake.setPower(intakeSpeed);
                 }
             }
 
-             */
+
             if (gamepad1.y && y_time.seconds() >= 0.25) {
                 y_time.reset();
-                if (intakeBack) {
-                    actualIntake.setPower(0);
-                    intakeBack = false;
+                if (outtakeBack) {
+                    intake.setPower(0);
+                    outtakeBack = false;
                 } else {
-                    actualIntake.setPower(-0.85);
-                    intakeBack = true;
+                    intake.setPower(-0.85);
+                    outtakeBack = true;
                 }
             }
+
         }
 
         private void shooterIntakeControl() {
 
             if (gamepad1.dpad_up && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed += 0.01;
-                telemetry.addData("shooter speed is ", shooterSpeed);
+                intakeSpeed += 0.01;
+                telemetry.addData("shooter speed is ", intakeSpeed);
                 telemetry.update();
             }
             if (gamepad1.dpad_down && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed -= 0.01;
-                telemetry.addData("shooter speed is", shooterSpeed);
+                intakeSpeed -= 0.01;
+                telemetry.addData("shooter speed is", intakeSpeed);
                 telemetry.update();
             }
             if (gamepad1.dpad_left && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed = 0.69;
+                intakeSpeed = 0.69;
             }
             if (gamepad1.dpad_right && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed = 0.8;
+                intakeSpeed = 0.8;
             }
+
 
             if (gamepad1.a && a_time.seconds() >= 0.25) {
                 a_time.reset();
-                if (shooterIntakeSpinning) {
-                    telemetry.addLine("shooter off");
-                    telemetry.update();
-                    shooterIntakeSpinning = false;
-                    shooterIntake.setPower(0);
+                if (intakeBack) {
+                    shooter.setPower(0);
+                    intakeBack = false;
                 } else {
-                    telemetry.addLine("shooter on");
-                    telemetry.update();
-                    shooterIntakeSpinning = true;
-                    shooterIntake.setPower(shooterSpeed);
+                    shooter.setPower(-0.85);
+                    intakeBack = true;
                 }
             }
 
 
-            if(gamepad1.x && x_time.seconds() >= 0.25){
-                x_time.reset();
-                currentPos+=0.03;
+            if(gamepad1.b && b_time.seconds() >= 0.25){
+                b_time.reset();
+                currentPos = 0.62;
                 shooterIntakeServo.setPosition(currentPos);
                 telemetry.addData("position", currentPos);
                 telemetry.update();
+                try {
+                    sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                currentPos-=0.2;
+                shooterIntakeServo.setPosition(currentPos);
+                telemetry.addData("position",currentPos);
+                try {
+                    sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                currentPos-=0.2;
+                shooterIntakeServo.setPosition(currentPos);
+                try {
+                    sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                currentPos-=0.2;
+                shooterIntakeServo.setPosition(currentPos);
+                try {
+                    sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                currentPos = 0.62;
+                shooterIntakeServo.setPosition(currentPos);
+                try {
+                    sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            if (gamepad1.b && b_time.seconds() >= 0.25) {
+            /*if (gamepad1.b && b_time.seconds() >= 0.25) {
                 b_time.reset();
                 currentPos-=0.03;
                 shooterIntakeServo.setPosition(currentPos);
@@ -191,8 +226,8 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 }
                 shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
 
-                 */
-            }
+
+            }*/
         }
 
         private void wobbleArmControl() {
