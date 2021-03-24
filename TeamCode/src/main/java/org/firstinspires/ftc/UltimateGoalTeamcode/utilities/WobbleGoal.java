@@ -65,8 +65,8 @@ public class WobbleGoal {
             if(isWall){
                 telemetry.addLine("about to move");
                 telemetry.update();
-                //with new wobble goal attachment, made -12.75 -30
-                navigater.navigate(alphaDist - 30, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //with new wobble goal attachment, made -12.75 to -30 to -35
+                navigater.navigate(alphaDist - 38, Constants2020.Direction.STRAIGHT, 0, 0.45, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
            //red not wall alpha
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -77,7 +77,8 @@ public class WobbleGoal {
             telemetry.update();
             //red wall beta
             if(isWall){
-                navigater.navigate(betaDistance + 2.25 - 12, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //-12 to -50
+                navigater.navigate(betaDistance + 2.25 - 40, Constants2020.Direction.STRAIGHT, 0, 0.45/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
           //red not wall beta
             } else if(!isWall){
                 navigater.navigate(betaDistance + 2.25 - 20, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -88,7 +89,8 @@ public class WobbleGoal {
             telemetry.update();
             //red wall charlie
             if(isWall){
-                navigater.navigate(charlieDistance - 5 - 5 - 5, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //shortened distance
+                navigater.navigate(charlieDistance - 45, Constants2020.Direction.STRAIGHT, 0, 0.45/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
            //red not wall charlie
             } else if(!isWall){
                 navigater.navigate(charlieDistance, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -101,22 +103,26 @@ public class WobbleGoal {
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
                 //blue not wall alpha
-                navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+
+                //doesn't need to turn with new wobble goal attachment
+                //navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
                 //red and blue wall alpha
-                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.25/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //doesn't need to turn with new wobble goal attachment
+                //navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.25/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
 
-        } else if (position.equals(Constants2020.TargetZone.BETA)) {
+        }
+        else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall && !isBlue) {
                 //red wall beta
-                navigater.navigate(0, Constants2020.Direction.TURN, 175, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, 85/*175*/, 0.3/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                navigater.navigate(5, Constants2020.Direction.RIGHT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //navigater.navigate(5, Constants2020.Direction.RIGHT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
             } else if (!isWall && !isBlue){
                 //red not wall beta
@@ -126,7 +132,8 @@ public class WobbleGoal {
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
                 //red and blue wall charlie
-                navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //doesn't need to turn with new wobble goal attachment
+                //navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
 

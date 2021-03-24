@@ -54,43 +54,30 @@ public class ShootingRings {
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             if (isBlue && !isWall) {
                 //blue not wall
-                navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (isWall) {
                 //red and blue wall
-                //Move to Shooting Rings Position
-                navigater.navigate(8, Constants2020.Direction.STRAIGHT,0,0.75/*0.25*/,backLeft,backRight,frontRight,frontLeft,imu,telemetry,true);
                 //still too fast, changed to 0.6
                 //shooter.setPower(0.6);
                 telemetry.addLine("shot at 0.7");
                 telemetry.update();
-                try {
+                /*try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.25/*0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                telemetry.addLine("done w that turn");
-                telemetry.update();
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                }*/
                 resetTheImu(variableMap);
-
-
-
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall) {
                 //red wall
-                navigater.navigate(5, Constants2020.Direction.LEFT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //navigater.navigate(5, Constants2020.Direction.LEFT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
-                navigater.navigate(0, Constants2020.Direction.TURN, -175, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.3/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall){
                 //red not wall
                 navigater.navigate(0, Constants2020.Direction.TURN, -82.5, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -99,7 +86,8 @@ public class ShootingRings {
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if (isWall) {
                 //red and blue wall
-                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //doesn't need to turn because of new wobble arm design
+                //navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
 
@@ -115,14 +103,14 @@ public class ShootingRings {
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if(isWall){
                 //ADDED -2
-                navigater.navigate(-((betaDist/3)), Constants2020.Direction.STRAIGHT, 0, -0.75, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(-((betaDist/3)-20), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
-                navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                shooter.setPower(0.9 - 0.2);
+                //navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //shooter.setPower(0.9 - 0.2);
                 resetTheImu(variableMap);
                 /*try {
                     Thread.sleep(250);
@@ -134,9 +122,9 @@ public class ShootingRings {
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if(isWall){
-                navigater.navigate(-((charlieDist/2)-3.186 - 5), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                shooter.setPower(0.9);
+                navigater.navigate(-((charlieDist/2)-40), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //shooter.setPower(0.9);
                 resetTheImu(variableMap);
                 /*try {
                     Thread.sleep(250);
@@ -150,14 +138,6 @@ public class ShootingRings {
         //shoot rings
 
         resetTheImu(variableMap);
-
-        //parking (over the launch line) - NEW PARKING BELOW IN SHOOTING METHOD
-        if(position.equals(Constants2020.TargetZone.ALPHA)){
-            //UNCOMMENT BELOW LINES
-           // navigater.navigate(1, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        } else{
-            //navigater.navigate(9, Constants2020.Direction.STRAIGHT, 0, 0.4, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        }
     }
 
     public void newPowerShoot(HashMap<String, Object> variableMap){

@@ -178,7 +178,7 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        shooter = hardwareMap.get(DcMotor.class, "shooterIntake");
+        shooter = hardwareMap.get(DcMotor.class, "shooter");
         shooterServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
 
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
@@ -293,7 +293,7 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
 
             //CHANGE BASED ON TARGET ZONE A, B, OR C!
             //String position = "NONE";
-            box = Constants2020.TargetZone.ALPHA;
+            box = Constants2020.TargetZone.CHARLIE;
 
 
             variableMap.put(Constants2020.POSITION, this.box);
