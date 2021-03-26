@@ -44,7 +44,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     final double HINGE_SERVO_DOWN = 0.95; //inside the robot
     final double CLAMP_SERVO_IN = 0.7; //0.6 clamp
     final double CLAMP_SERVO_OUT = 0.2;
-    double intakeSpeed = 0.8;
+    double shooterSpeed = 0.8;
     double currentPos = 0.5;
 
     ElapsedTime a_time = new ElapsedTime();
@@ -116,7 +116,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                     telemetry.addLine("shooter on");
                     telemetry.update();
                     shooterIntakeSpinning = true;
-                    intake.setPower(intakeSpeed);
+                    intake.setPower(0.99);
                 }
             }
 
@@ -138,23 +138,23 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
 
             if (gamepad1.dpad_up && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                intakeSpeed += 0.01;
-                telemetry.addData("shooter speed is ", intakeSpeed);
+                shooterSpeed += 0.01;
+                telemetry.addData("shooter speed is ", shooterSpeed);
                 telemetry.update();
             }
             if (gamepad1.dpad_down && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                intakeSpeed -= 0.01;
-                telemetry.addData("shooter speed is", intakeSpeed);
+                shooterSpeed -= 0.01;
+                telemetry.addData("shooter speed is", shooterSpeed);
                 telemetry.update();
             }
             if (gamepad1.dpad_left && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                intakeSpeed = 0.69;
+                shooterSpeed = 0.69;
             }
             if (gamepad1.dpad_right && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                intakeSpeed = 0.8;
+                shooterSpeed = 0.8;
             }
 
 

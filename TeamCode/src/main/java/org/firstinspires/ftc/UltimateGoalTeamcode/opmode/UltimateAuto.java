@@ -28,7 +28,7 @@ public class UltimateAuto extends LinearOpMode {
     Boolean isWall = false;
     final double CLAMP_SERVO_IN = 0.7;
     final double HINGE_SERVO_IN = 0.95;
-    public final double SHOOTER_INTAKE_SERVO_DOWN = 0.43;
+    public final double SHOOTER_INTAKE_SERVO_DOWN = 0.62;
     ElapsedTime runtime = new ElapsedTime();
     BNO055IMU imu;
     DcMotor frontLeft;

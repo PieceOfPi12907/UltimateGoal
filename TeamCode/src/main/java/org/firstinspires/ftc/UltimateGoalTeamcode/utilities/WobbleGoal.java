@@ -65,7 +65,7 @@ public class WobbleGoal {
             if(isWall){
                 telemetry.addLine("about to move");
                 telemetry.update();
-                //with new wobble goal attachment, made -12.75 to -30 to -35
+                //with new wobble goal attachment, made -12.75 to -30 to -38
                 navigater.navigate(alphaDist - 38, Constants2020.Direction.STRAIGHT, 0, 0.45, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
            //red not wall alpha
             } else if(!isWall){
@@ -101,17 +101,7 @@ public class WobbleGoal {
 
         //adjust position at tgt zone A, B, or C to drop wobble goal:
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
-            if (isBlue && !isWall) {
-                //blue not wall alpha
-
-                //doesn't need to turn with new wobble goal attachment
-                //navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            } else if (isWall) {
-                //red and blue wall alpha
-                //doesn't need to turn with new wobble goal attachment
-                //navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.25/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            }
-
+            //no movements needed
         }
         else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall && !isBlue) {
@@ -122,23 +112,15 @@ public class WobbleGoal {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //navigater.navigate(5, Constants2020.Direction.RIGHT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-
             } else if (!isWall && !isBlue){
                 //red not wall beta
                 navigater.navigate(0, Constants2020.Direction.TURN, 82.5, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
         else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
-            if (isWall) {
-                //red and blue wall charlie
-                //doesn't need to turn with new wobble goal attachment
-                //navigater.navigate(0, Constants2020.Direction.TURN, 85, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            }
+           //no movements needed
         }
-
         resetTheImu(variableMap);
-
     }
 
     public void dropWobbleGoal(HashMap<String, Object> variableMap){

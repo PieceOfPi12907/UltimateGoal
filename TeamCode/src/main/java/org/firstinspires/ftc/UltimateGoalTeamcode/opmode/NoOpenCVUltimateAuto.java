@@ -29,7 +29,8 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
     Boolean isWall = false;
     final double CLAMP_SERVO_IN = 0.7;
     final double HINGE_SERVO_IN = 0.95;
-    public final double SHOOTER_INTAKE_SERVO_DOWN = 0.43;
+    public final double SHOOTER_INTAKE_SERVO_DOWN = 0.62;
+
     ElapsedTime runtime = new ElapsedTime();
     BNO055IMU imu;
     DcMotor frontLeft;
@@ -293,7 +294,7 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
 
             //CHANGE BASED ON TARGET ZONE A, B, OR C!
             //String position = "NONE";
-            box = Constants2020.TargetZone.CHARLIE;
+            box = Constants2020.TargetZone.ALPHA;
 
 
             variableMap.put(Constants2020.POSITION, this.box);
@@ -306,15 +307,14 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
                 telemetry.update();
                 sleep(500);
 
-                wobbleGoal.moveToTgtZone(variableMap);
-                wobbleGoal.dropWobbleGoal(variableMap);
-                telemetry.addLine("Done w this part");
-                telemetry.update();
-                sleep(500);
-                shootingRings.moveToLaunchLine(variableMap);
+                //1) wobbleGoal.moveToTgtZone(variableMap);
+                //2) wobbleGoal.dropWobbleGoal(variableMap);
+                //3) shootingRings.moveToLaunchLine(variableMap);
+                shootingRings.newRingShoot(variableMap);
+
                 //shootingRings.newPowerShoot(variableMap);
-                //shootingRings.ringShoot(variableMap);
-                //shootingRings.powerShoot(variableMap);
+                //OLD) shootingRings.ringShoot(variableMap);
+                //OLD) shootingRings.powerShoot(variableMap);
             }
 
             //reset imu

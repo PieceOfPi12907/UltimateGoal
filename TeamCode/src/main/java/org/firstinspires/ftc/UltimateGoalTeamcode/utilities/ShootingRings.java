@@ -2,6 +2,7 @@ package org.firstinspires.ftc.UltimateGoalTeamcode.utilities;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -50,44 +51,13 @@ public class ShootingRings {
          final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
          final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
 
-        //reverse adjustments at tgt zone A, B, or C
-        if (position.equals(Constants2020.TargetZone.ALPHA)) {
-            if (isBlue && !isWall) {
-                //blue not wall
-                //navigater.navigate(0, Constants2020.Direction.TURN, 180, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            } else if (isWall) {
-                //red and blue wall
-                //still too fast, changed to 0.6
-                //shooter.setPower(0.6);
-                telemetry.addLine("shot at 0.7");
-                telemetry.update();
-                /*try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
-                resetTheImu(variableMap);
-            }
-        } else if (position.equals(Constants2020.TargetZone.BETA)) {
+        //reverse adjustments at tgt zone B bc that's the only one needed
+        if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall) {
-                //red wall
-                //navigater.navigate(5, Constants2020.Direction.LEFT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                /*try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
                 navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.3/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall){
                 //red not wall
                 navigater.navigate(0, Constants2020.Direction.TURN, -82.5, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            }
-        }
-        else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
-            if (isWall) {
-                //red and blue wall
-                //doesn't need to turn because of new wobble arm design
-                //navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
 
@@ -102,47 +72,27 @@ public class ShootingRings {
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if(isWall){
-                //ADDED -2
                 navigater.navigate(-((betaDist/3)-20), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                /*try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
-                //navigater.navigate(14, Constants2020.Direction.LEFT, 0, 0.5/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                //shooter.setPower(0.9 - 0.2);
-                resetTheImu(variableMap);
-                /*try {
-                    Thread.sleep(250);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
             } else if(!isWall){
                 navigater.navigate(-((betaDist/3)-3-11), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if(isWall){
                 navigater.navigate(-((charlieDist/2)-40), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                //navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-                //shooter.setPower(0.9);
-                resetTheImu(variableMap);
-                /*try {
-                    Thread.sleep(250);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
             } else if (!isWall){
                 navigater.navigate(-((charlieDist/2)), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
-        //shoot rings
+
+        //strafe to be in front of the tower
+        navigater.navigate(10, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
         resetTheImu(variableMap);
     }
 
-    public void newPowerShoot(HashMap<String, Object> variableMap){
+    public void newRingShoot(HashMap<String, Object> variableMap){
         final double SHOOTER_INTAKE_SERVO_UP = 0.14;
-        final int WAIT = 500; //750
+        final int WAIT = 300; //750
         DcMotor shooter = (DcMotor) variableMap.get(Constants2020.SHOOTER);
         Servo shooterServo = (Servo) variableMap.get(Constants2020.SHOOTERSERVO);
         DcMotor backLeft = (DcMotor) variableMap.get(Constants2020.BACK_LEFT_MOTOR);
@@ -153,18 +103,31 @@ public class ShootingRings {
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
         BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        telemetry.addLine("TURN:");
-        telemetry.update();
+        shooter.setPower(0.9);
 
-        //turn left
-        navigater.navigate(0, Constants2020.Direction.TURN,15, 0.25, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        telemetry.addLine("SHOOT:");
-        telemetry.update();
+        shooterServo.setPosition(0.42);
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        //shoot servo up
-        shooterServo.setPosition(SHOOTER_INTAKE_SERVO_UP);
+        shooterServo.setPosition(0.22);
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        shooterServo.setPosition(0.02);
         try {
             Thread.sleep(WAIT);
         } catch (InterruptedException e) {
@@ -185,8 +148,95 @@ public class ShootingRings {
             //navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
         //navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+
     }
 
+    public void newPowerShoot(HashMap<String, Object> variableMap){
+        final double SHOOTER_INTAKE_SERVO_UP = 0.14;
+        final int WAIT = 300; //750
+        DcMotor shooter = (DcMotor) variableMap.get(Constants2020.SHOOTER);
+        Servo shooterServo = (Servo) variableMap.get(Constants2020.SHOOTERSERVO);
+        DcMotor backLeft = (DcMotor) variableMap.get(Constants2020.BACK_LEFT_MOTOR);
+        DcMotor backRight = (DcMotor) variableMap.get(Constants2020.BACK_RIGHT_MOTOR);
+        DcMotor frontLeft = (DcMotor) variableMap.get(Constants2020.FRONT_LEFT_MOTOR);
+        DcMotor frontRight = (DcMotor) variableMap.get(Constants2020.FRONT_RIGHT_MOTOR);
+        ColorSensor frontColor = (ColorSensor) variableMap.get(Constants2020.FRONT_COLOR);
+        Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
+        BNO055IMU imu = (BNO055IMU) variableMap.get(Constants2020.IMU);
+        Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        shooter.setPower(0.9);
+
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //Turn to RIGHT power shot
+        //navigater.navigate(0, Constants2020.Direction.TURN,20, 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        /*try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+         */
+        shooterServo.setPosition(0.42);
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //Turn to MIDDLE power shot
+        //navigater.navigate(0, Constants2020.Direction.TURN,20, 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(5, Constants2020.Direction.LEFT,0, 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        shooterServo.setPosition(0.22);
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //Turn to LEFT power shot
+        //navigater.navigate(0, Constants2020.Direction.TURN,20, 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(5, Constants2020.Direction.LEFT,0, 0.3, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        shooterServo.setPosition(0.02);
+        try {
+            Thread.sleep(WAIT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        shooter.setPower(0);
+
+        telemetry.addLine("PARK:");
+        telemetry.update();
+
+        //SENSOR PARKING
+        //sensorhelp.moveUntilColor(0.5, 5, false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
+
+        //NOW USED PARKING
+        ////navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        if(position.equals(Constants2020.TargetZone.ALPHA)){
+            //navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
+        //navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+
+    }
     public void powerShoot(HashMap<String, Object> variableMap){
         final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
         final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
