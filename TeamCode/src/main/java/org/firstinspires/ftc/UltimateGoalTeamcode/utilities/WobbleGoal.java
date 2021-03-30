@@ -66,7 +66,7 @@ public class WobbleGoal {
                 telemetry.addLine("about to move");
                 telemetry.update();
                 //with new wobble goal attachment, made -12.75 to -30 to -38
-                navigater.navigate(alphaDist - 38, Constants2020.Direction.STRAIGHT, 0, 0.45, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(alphaDist - 33, Constants2020.Direction.STRAIGHT, 0, 0.45, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
            //red not wall alpha
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -78,7 +78,7 @@ public class WobbleGoal {
             //red wall beta
             if(isWall){
                 //-12 to -50
-                navigater.navigate(betaDistance + 2.25 - 40, Constants2020.Direction.STRAIGHT, 0, 0.45/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(betaDistance + 2.25 - 40 - 10 - 5 - 5, Constants2020.Direction.STRAIGHT, 0, 0.5/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
           //red not wall beta
             } else if(!isWall){
                 navigater.navigate(betaDistance + 2.25 - 20, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -106,7 +106,8 @@ public class WobbleGoal {
         else if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall && !isBlue) {
                 //red wall beta
-                navigater.navigate(0, Constants2020.Direction.TURN, 85/*175*/, 0.3/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //navigater.navigate(0, Constants2020.Direction.TURN, 85/*175*/, 0.3/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.3/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {

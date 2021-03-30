@@ -294,7 +294,7 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
 
             //CHANGE BASED ON TARGET ZONE A, B, OR C!
             //String position = "NONE";
-            box = Constants2020.TargetZone.ALPHA;
+            box = Constants2020.TargetZone.CHARLIE;
 
 
             variableMap.put(Constants2020.POSITION, this.box);
@@ -307,9 +307,9 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
                 telemetry.update();
                 sleep(500);
 
-                //1) wobbleGoal.moveToTgtZone(variableMap);
-                //2) wobbleGoal.dropWobbleGoal(variableMap);
-                //3) shootingRings.moveToLaunchLine(variableMap);
+                wobbleGoal.moveToTgtZone(variableMap);
+                wobbleGoal.dropWobbleGoal(variableMap);
+                shootingRings.moveToLaunchLine(variableMap);
                 shootingRings.newRingShoot(variableMap);
 
                 //shootingRings.newPowerShoot(variableMap);
@@ -318,7 +318,7 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
             }
 
             //reset imu
-            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            BNO055IMU.Parameters parameters = new   BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
             parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
             parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;

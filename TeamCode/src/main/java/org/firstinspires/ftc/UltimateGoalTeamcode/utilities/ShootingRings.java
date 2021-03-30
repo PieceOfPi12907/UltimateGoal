@@ -54,7 +54,7 @@ public class ShootingRings {
         //reverse adjustments at tgt zone B bc that's the only one needed
         if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall) {
-                navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.3/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.3/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall){
                 //red not wall
                 navigater.navigate(0, Constants2020.Direction.TURN, -82.5, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -72,21 +72,22 @@ public class ShootingRings {
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if(isWall){
-                navigater.navigate(-((betaDist/3)-20), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(-((betaDist/3)-20-5), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
                 navigater.navigate(-((betaDist/3)-3-11), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if(isWall){
-                navigater.navigate(-((charlieDist/2)-40), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(-((charlieDist/2)-40+5), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall){
                 navigater.navigate(-((charlieDist/2)), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
 
         //strafe to be in front of the tower
-        navigater.navigate(10, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-
+        if(!position.equals(Constants2020.TargetZone.BETA)){
+            navigater.navigate(12, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
         resetTheImu(variableMap);
     }
 
@@ -143,11 +144,7 @@ public class ShootingRings {
         //sensorhelp.moveUntilColor(0.5, 5, false, backLeft, backRight, frontRight, frontLeft, telemetry, imu, true, frontColor);
 
         //NOW USED PARKING
-        ////navigater.navigate(0, Constants2020.Direction.TURN,0 , 0.75/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        if(position.equals(Constants2020.TargetZone.ALPHA)){
-            //navigater.navigate(10, Constants2020.Direction.LEFT, 0, 0.75/*0.6*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        }
-        //navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        navigater.navigate(5, Constants2020.Direction.STRAIGHT, 0, 0.75/*0.4*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
     }
 
