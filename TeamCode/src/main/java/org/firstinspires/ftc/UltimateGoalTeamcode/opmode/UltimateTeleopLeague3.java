@@ -39,9 +39,9 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.05;
 
     //hinge and clamp values to be tested:
-    final double HINGE_SERVO_UP = 0.05; //outside to grab wobble goal
-    final double HINGE_SERVO_MID = 0.45;
-    final double HINGE_SERVO_DOWN = 0.95; //inside the robot
+    final double HINGE_SERVO_UP = 0.95; //outside to grab wobble goal
+    final double HINGE_SERVO_MID = 0.65;
+    final double HINGE_SERVO_DOWN = 0.01; //inside the robot
     final double CLAMP_SERVO_IN = 0.7; //0.6 clamp
     final double CLAMP_SERVO_OUT = 0.2;
     double shooterSpeed = 0.8;
@@ -161,10 +161,10 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             if (gamepad1.a && a_time.seconds() >= 0.25) {
                 a_time.reset();
                 if (intakeBack) {
-                    shooter.setPower(0);
+                    shooter.setPower(0.1);
                     intakeBack = false;
                 } else {
-                    shooter.setPower(-0.85);
+                    shooter.setPower(-shooterSpeed);
                     intakeBack = true;
                 }
             }
@@ -177,7 +177,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 telemetry.addData("position", currentPos);
                 telemetry.update();
                 try {
-                    sleep(400);
+                    sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -185,14 +185,14 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 shooterIntakeServo.setPosition(currentPos);
                 telemetry.addData("position",currentPos);
                 try {
-                    sleep(400);
+                    sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 currentPos-=0.2;
                 shooterIntakeServo.setPosition(currentPos);
                 try {
-                    sleep(400);
+                    sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
