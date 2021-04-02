@@ -14,7 +14,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
 
     DcMotor intake;
     Servo shooterIntakeServo;
-
+    Servo wing;
     DcMotor shooter;
 
     DcMotor backLeftMotor;
@@ -33,6 +33,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     boolean intakeOn = false;
     boolean intakeBack = false;
     boolean outtakeBack = false;
+    boolean wingUp = false;
 
     public final double SHOOTER_INTAKE_SERVO_INIT = 0.62;
     public final double SHOOTER_INTAKE_SERVO_OPEN = 0.50;
@@ -44,6 +45,8 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     final double HINGE_SERVO_DOWN = 0.01; //inside the robot
     final double CLAMP_SERVO_IN = 0.7; //0.6 clamp
     final double CLAMP_SERVO_OUT = 0.2;
+    final double WING_INIT = 0.99;
+    final double WING_DOWN = 0.6;
     double shooterSpeed = 0.8;
     double currentPos = 0.5;
 
@@ -61,6 +64,8 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         shooterIntakeServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
         shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_INIT);
+        wing = hardwareMap.get(Servo.class,"wing");
+        wing.setPosition(WING_INIT);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
         shooter = hardwareMap.get(DcMotor.class, "shooter");
@@ -130,6 +135,17 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                     intake.setPower(-0.85);
                     outtakeBack = true;
                 }
+            }
+            if (gamepad2.right_bumper && right_bumper_time.seconds()>=0.25) {
+                right_bumper_time.reset();
+                if (wingUp) {
+                    wing.setPosition(WING_DOWN);
+                    wingUp = false;
+                } else {
+                    wing.setPosition(WING_INIT);
+                    wingUp = true;
+                }
+
             }
 
         }
