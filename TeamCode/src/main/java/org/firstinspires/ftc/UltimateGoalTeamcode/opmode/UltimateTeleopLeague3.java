@@ -318,27 +318,27 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             if(gamepad2.y){
                 scaleFactor=0.99;
             }
-            /*
+
             if(gamepad2.a){
-                shooterIntake.setPower(shooterSpeed);
+                shooter.setPower(-0.6);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+                shooterIntakeServo.setPosition(0.42);
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
+
                 frontLeftMotor.setPower(0.3);
                 frontRightMotor.setPower(-0.3);
                 backLeftMotor.setPower(-0.3);
                 backRightMotor.setPower(0.3);
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -347,18 +347,25 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 frontRightMotor.setPower(0);
                 backLeftMotor.setPower(0);
                 backRightMotor.setPower(0);
-                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
+                shooterIntakeServo.setPosition(0.22);
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                shooterIntakeServo.setPosition(0.02);
+                try {
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
-                shooterIntake.setPower(0);
+                shooter.setPower(0);
 
             }
 
-             */
+
             idle();
         }
         attachments.interrupt();

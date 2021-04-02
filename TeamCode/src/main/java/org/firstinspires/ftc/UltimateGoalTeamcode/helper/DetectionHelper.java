@@ -30,7 +30,7 @@ public class DetectionHelper extends OpenCvPipeline {
      * The core values which define the location and size of the sample regions
      */
     //CHANGED 181 TO 131 TO 101 to 115
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(115,98);
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(97,125);
 
     static final int REGION_WIDTH = 35;
     static final int REGION_HEIGHT = 25;

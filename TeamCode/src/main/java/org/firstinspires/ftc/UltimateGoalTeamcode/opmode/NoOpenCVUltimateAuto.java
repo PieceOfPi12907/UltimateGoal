@@ -294,7 +294,7 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
 
             //CHANGE BASED ON TARGET ZONE A, B, OR C!
             //String position = "NONE";
-            box = Constants2020.TargetZone.CHARLIE;
+            box = Constants2020.TargetZone.ALPHA;
 
 
             variableMap.put(Constants2020.POSITION, this.box);

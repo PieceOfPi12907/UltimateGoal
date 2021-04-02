@@ -91,6 +91,22 @@ public class WobbleGoal {
             if(isWall){
                 //shortened distance
                 navigater.navigate(charlieDistance - 45, Constants2020.Direction.STRAIGHT, 0, 0.45/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //dhruvs idea on how to stop, maybe implement later?
+                /*backLeft.setPower(-0.01);
+                backRight.setPower(-0.01);
+                frontLeft.setPower(-0.01);
+                frontRight.setPower(-0.01);
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                backLeft.setPower(0);
+                backRight.setPower(0);
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+
+                 */
            //red not wall charlie
             } else if(!isWall){
                 navigater.navigate(charlieDistance, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);

@@ -175,19 +175,19 @@ public class UltimateAuto extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        shooter = hardwareMap.get(DcMotor.class, "shooterIntake");
+        shooter = hardwareMap.get(DcMotor.class, "shooter");
         shooterServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
 
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
         wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
 
-        pFrontColor=hardwareMap.get(ColorSensor.class,"colorsensor");
+        //pFrontColor=hardwareMap.get(ColorSensor.class,"colorsensor");
 
 
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         createVariableMap();
 
@@ -293,7 +293,8 @@ public class UltimateAuto extends LinearOpMode {
                 wobbleGoal.moveToTgtZone(variableMap);
                 wobbleGoal.dropWobbleGoal(variableMap);
                 shootingRings.moveToLaunchLine(variableMap);
-                shootingRings.newPowerShoot(variableMap);
+                shootingRings.newRingShoot(variableMap);
+                //shootingRings.newPowerShoot(variableMap);
                 //shootingRings.ringShoot(variableMap);
                 //shootingRings.powerShoot(variableMap);
             }
