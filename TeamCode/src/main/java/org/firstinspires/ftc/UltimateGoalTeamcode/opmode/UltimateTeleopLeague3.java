@@ -81,7 +81,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
         hingeServoPos = Constants2020.HingeServoPositions.UP;
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }

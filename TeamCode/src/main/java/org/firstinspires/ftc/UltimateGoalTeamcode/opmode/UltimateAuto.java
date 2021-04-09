@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.DetectionHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
@@ -54,8 +53,6 @@ public class UltimateAuto extends LinearOpMode {
     DetectionHelper pipeline;
     Constants2020.TargetZone box;
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
-
-
 
     public void initialize() {
 
@@ -186,7 +183,7 @@ public class UltimateAuto extends LinearOpMode {
 
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         createVariableMap();
@@ -229,7 +226,7 @@ public class UltimateAuto extends LinearOpMode {
         variableMap.put(Constants2020.CLAMP_SERVO,this.wobbleClampServo);
 
         variableMap.put(Constants2020.TELEMETRY, this.telemetry);
-        variableMap.put(Constants12907.IMU, this.imu);
+        variableMap.put(Constants2020.IMU, this.imu);
 
         variableMap.put(Constants2020.WEBCAM, this.webcam);
 

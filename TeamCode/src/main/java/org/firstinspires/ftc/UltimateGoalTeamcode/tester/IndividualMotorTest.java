@@ -20,7 +20,7 @@ public class IndividualMotorTest extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class,"backRight");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE); //FORWARD
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -40,44 +40,74 @@ public class IndividualMotorTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initializeMotors();
         waitForStart();
+        double speed = 0.45;
+        int tgtPos = 100;
         if(opModeIsActive()){
             while(opModeIsActive()){
                 //back left encoder not working
                 //front left encoder not working
 
-
                 /*
-                frontLeft.setPower(0.8);
+                frontLeft.setPower(speed);
+                frontRight.setPower(speed);
+                backRight.setPower(speed);
+                backLeft.setPower(speed);
+
+                frontLeft.setTargetPosition(tgtPos);
+                frontRight.setTargetPosition(tgtPos);
+                backRight.setTargetPosition(tgtPos);
+                backLeft.setTargetPosition(tgtPos);
+
+                frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+                backRight.setPower(0);
+                backLeft.setPower(0);
+
+                 */
+
+
+/*
+                frontLeft.setPower(0.9);
                 frontLeft.setTargetPosition(2000);
                 frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 frontLeft.setPower(0);
 
-                 */
 
-                /*
+ */
+
+/*
                 frontRight.setPower(0.8);
                  frontRight.setTargetPosition(2000);
                 frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 frontRight.setPower(0);
-                 */
+*/
 
-
-
-
+/*
                 backRight.setPower(0.8);
                 backRight.setTargetPosition(2000);
                 backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 backRight.setPower(0);
+ */
 
 
-                /*
+
+
                 backLeft.setPower(0.8);
                 backLeft.setTargetPosition(2000);
                 backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 backLeft.setPower(0);
-                 */
 
-                telemetry.addData("motor encoder val: ", backRight.getCurrentPosition());
+
+                //telemetry.addData("FRONT RIGHT: ", frontRight.getCurrentPosition());
+                //telemetry.addData("FRONT LEFT: ", frontLeft.getCurrentPosition());
+                //telemetry.addData("BACK RIGHT: ", backRight.getCurrentPosition());
+                telemetry.addData("BACK LEFT: ", backLeft.getCurrentPosition());
+
                 telemetry.update();
             }
         }

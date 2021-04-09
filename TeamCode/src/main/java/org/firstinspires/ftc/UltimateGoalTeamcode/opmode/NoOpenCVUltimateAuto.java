@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.SkystoneTeamcode.helper.Constants12907;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.DetectionHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
@@ -56,8 +55,6 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
     DetectionHelper pipeline;
     Constants2020.TargetZone box;
     HashMap<String, Object> variableMap = new HashMap<String, Object>();
-
-
 
     public void initialize() {
 
@@ -240,7 +237,7 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
         variableMap.put(Constants2020.CLAMP_SERVO,this.wobbleClampServo);
 
         variableMap.put(Constants2020.TELEMETRY, this.telemetry);
-        variableMap.put(Constants12907.IMU, this.imu);
+        variableMap.put(Constants2020.IMU, this.imu);
 
         variableMap.put(Constants2020.WEBCAM, this.webcam);
 
@@ -375,8 +372,6 @@ public class NoOpenCVUltimateAuto extends LinearOpMode {
         }
         return 3;
     }
-
-
 }
 
 
