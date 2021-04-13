@@ -69,10 +69,14 @@ public class NavigationHelper {
             pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }*/
 
-        pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //left = float
+        //right = brake
+
+        //pFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         pFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //pBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         pBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         ElapsedTime runtime = new ElapsedTime();
 

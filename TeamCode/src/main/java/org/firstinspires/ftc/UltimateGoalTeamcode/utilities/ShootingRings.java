@@ -51,18 +51,6 @@ public class ShootingRings {
          final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
          final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
 
-        //reverse adjustments at tgt zone B bc that's the only one needed
-        if (position.equals(Constants2020.TargetZone.BETA)) {
-            if (isWall) {
-                //navigater.navigate(0, Constants2020.Direction.TURN, -85, 0.3/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            } else if (!isWall){
-                //red not wall
-                navigater.navigate(0, Constants2020.Direction.TURN, -82.5, 0.75/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-            }
-        }
-
-        resetTheImu(variableMap);
-
         //back up behind the launch line
         if(position.equals(Constants2020.TargetZone.ALPHA)){
             if(isWall){
@@ -72,12 +60,14 @@ public class ShootingRings {
             }
         } else if (position.equals(Constants2020.TargetZone.BETA)) {
             if(isWall){
+                //CHANGE NEEDED (speed and distance)
                 navigater.navigate(-((betaDist/3)-20-5), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
                 navigater.navigate(-((betaDist/3)-3-11), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if(isWall){
+                //CHANGE NEEDED (speed and distance)
                 navigater.navigate(-((charlieDist/2)-40+5), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if (!isWall){
                 navigater.navigate(-((charlieDist/2)), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -86,6 +76,7 @@ public class ShootingRings {
 
         //strafe to be in front of the tower
         if(!position.equals(Constants2020.TargetZone.BETA)){
+            //CHANGE NEEDED (speed and distance)
             navigater.navigate(12, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
         resetTheImu(variableMap);

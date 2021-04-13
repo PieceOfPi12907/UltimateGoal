@@ -47,27 +47,15 @@ public class WobbleGoal {
         double betaDistance = 94.625;
         double charlieDistance = 118.372;
 
-        //If isWall is true, strafe right (red) or left (blue) to the wall
-        /*if (isBlue && isWall) {
-            navigater.navigate(6, Constants12907.Direction.LEFT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        } else if (!isBlue && isWall) {
-            //changed six inches to three because it was going way to much right
-            navigater.navigate(3.5, Constants12907.Direction.RIGHT, 0, 0.6, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-        }*/
-
         resetTheImu(variableMap);
 
         //move to tgt zone A, B, or C
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
             telemetry.addLine("RED - WALL - ALPHA");
             telemetry.update();
-            //red wall alpha
             if(isWall){
-                telemetry.addLine("about to move");
-                telemetry.update();
-                //with new wobble goal attachment, made -12.75 to -33 to -38
-                navigater.navigate(alphaDist - 38, Constants2020.Direction.STRAIGHT, 0, 0.45, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
-           //red not wall alpha
+                //CHANGE NEEDED (speed and distance): -38 to -28 and 0.45 to 0.9
+                navigater.navigate(alphaDist - 28, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
@@ -77,7 +65,7 @@ public class WobbleGoal {
             telemetry.update();
             //red wall beta
             if(isWall){
-                //-12 to -50
+                //CHANGE NEEDED (speed and distance)
                 navigater.navigate(betaDistance + 2.25 - 40 - 10 - 5 - 5, Constants2020.Direction.STRAIGHT, 0, 0.5/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
           //red not wall beta
             } else if(!isWall){
@@ -89,7 +77,7 @@ public class WobbleGoal {
             telemetry.update();
             //red wall charlie
             if(isWall){
-                //shortened distance
+                //CHANGE NEEDED (speed and distance)
                 navigater.navigate(charlieDistance - 45, Constants2020.Direction.STRAIGHT, 0, 0.45/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 //dhruvs idea on how to stop, maybe implement later?
                 /*backLeft.setPower(-0.01);
@@ -115,14 +103,10 @@ public class WobbleGoal {
 
         resetTheImu(variableMap);
 
-        //adjust position at tgt zone A, B, or C to drop wobble goal:
-        if (position.equals(Constants2020.TargetZone.ALPHA)) {
-            //no movements needed
-        }
-        else if (position.equals(Constants2020.TargetZone.BETA)) {
+        //adjust position at tgt zone  B  to drop wobble goal:
+        if (position.equals(Constants2020.TargetZone.BETA)) {
             if (isWall && !isBlue) {
-                //red wall beta
-                //navigater.navigate(0, Constants2020.Direction.TURN, 85/*175*/, 0.3/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //CHANGE NEEDED (speed and distance)
                 navigater.navigate(12, Constants2020.Direction.LEFT, 0, 0.3/*0.5*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 try {
                     Thread.sleep(500);
@@ -133,9 +117,6 @@ public class WobbleGoal {
                 //red not wall beta
                 navigater.navigate(0, Constants2020.Direction.TURN, 82.5, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
-        }
-        else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
-           //no movements needed
         }
         resetTheImu(variableMap);
     }

@@ -19,8 +19,9 @@ public class IntakeMotorTest extends LinearOpMode {
 
     public void initializeMotors(){
 
-        intakeMotor = hardwareMap.get(DcMotor.class,"backRight");
+        intakeMotor = hardwareMap.get(DcMotor.class,"wobbleHingeMotor");
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
@@ -36,7 +37,9 @@ public class IntakeMotorTest extends LinearOpMode {
                         intakeMotor.setPower(0);
                         intakeOn = false;
                     } else {
-                        intakeMotor.setPower(0.85);
+                        telemetry.addLine("Positive Power");
+                        telemetry.update();
+                        intakeMotor.setPower(0.35);
                         intakeOn = true;
                     }
                 }
@@ -46,7 +49,9 @@ public class IntakeMotorTest extends LinearOpMode {
                         intakeMotor.setPower(0);
                         intakeBack = false;
                     } else {
-                        intakeMotor.setPower(-0.85);
+                        telemetry.addLine("Negative Power");
+                        telemetry.update();
+                        intakeMotor.setPower(-0.35);
                         intakeBack = true;
                     }
                 }
