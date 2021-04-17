@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.UltimateGoalTeamcode.opmode;
 
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,7 +22,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
     DcMotor frontLeftMotor;
-
+    DcMotor wobbleHingeMotor;
     Servo wobbleHingeServo;
     Servo wobbleClampServo;
     Constants2020.HingeServoPositions hingeServoPos = Constants2020.HingeServoPositions.UP;
@@ -34,12 +35,13 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     boolean intakeBack = false;
     boolean outtakeBack = false;
     boolean wingUp = false;
-
+    boolean hingeMotorDown = false;
     public final double SHOOTER_INTAKE_SERVO_INIT = 0.62;
     public final double SHOOTER_INTAKE_SERVO_OPEN = 0.50;
     public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.05;
 
     //hinge and clamp values to be tested:
+    double currentpos = 0;
     final double HINGE_SERVO_UP = 0.95; //outside to grab wobble goal
     final double HINGE_SERVO_MID = 0.65;
     final double HINGE_SERVO_DOWN = 0.01; //inside the robot
@@ -58,6 +60,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     ElapsedTime x_time = new ElapsedTime();
     ElapsedTime y_time = new ElapsedTime();
     ElapsedTime dpad_time = new ElapsedTime();
+    ElapsedTime right_stick_time = new ElapsedTime();
 
     private void initialize() {
 
@@ -77,7 +80,9 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeft");
 
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
-        wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
+        wobbleHingeMotor = hardwareMap.get(DcMotor.class,"wobbleHingeMotor");
+        wobbleHingeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
         hingeServoPos = Constants2020.HingeServoPositions.UP;
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -166,11 +171,17 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             }
             if (gamepad1.dpad_left && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed = 0.69;
+                currentPos-=0.2;
+                shooterIntakeServo.setPosition(currentPos);
+                try {
+                    sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             if (gamepad1.dpad_right && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed = 0.8;
+                shooterSpeed = 0.55;
             }
 
 
@@ -201,7 +212,14 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 shooterIntakeServo.setPosition(currentPos);
                 telemetry.addData("position",currentPos);
                 try {
-                    sleep(500);
+                    sleep(600);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                currentPos-=0.2;
+                shooterIntakeServo.setPosition(currentPos);
+                try {
+                    sleep(600);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -209,13 +227,6 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 shooterIntakeServo.setPosition(currentPos);
                 try {
                     sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                currentPos-=0.2;
-                shooterIntakeServo.setPosition(currentPos);
-                try {
-                    sleep(400);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -227,29 +238,31 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                     e.printStackTrace();
                 }
             }
-            /*if (gamepad1.b && b_time.seconds() >= 0.25) {
-                b_time.reset();
-                currentPos-=0.03;
-                shooterIntakeServo.setPosition(currentPos);
-                telemetry.addData("position", currentPos);
-                telemetry.update();
-                /*b_time.reset();
-                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_CLOSE);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
-
-
-            }*/
         }
 
         private void wobbleArmControl() {
-            if (gamepad1.right_bumper && right_bumper_time.seconds() > 0.25) {
+            /*if (gamepad1.right_bumper && right_bumper_time.seconds() > 0.25) {
                 right_bumper_time.reset();
-                if (Constants2020.HingeServoPositions.UP.equals(hingeServoPos)) {
+                if (hingeMotorDown) {
+                    wobbleHingeMotor.setPower(-0.3);
+                    hingeMotorDown = false;
+                } else {
+                    wobbleHingeMotor.setPower(0.3);
+                    hingeMotorDown = true;
+                }*/
+            if (gamepad1.right_stick_y > 0 && right_stick_time.seconds() > 0.25) {
+                right_stick_time.reset();
+                wobbleHingeMotor.setPower(-0.99);
+            } else if (gamepad1.right_stick_y < 0 && right_stick_time.seconds() > 0.25){
+                right_stick_time.reset();
+                wobbleHingeMotor.setPower(0.45);
+            }
+            else if (gamepad1.right_stick_y == 0 && right_stick_time.seconds() > 0.25){
+                right_stick_time.reset();
+                wobbleHingeMotor.setPower(0);
+            }
+
+                /*if (Constants2020.HingeServoPositions.UP.equals(hingeServoPos)) {
                     wobbleHingeServo.setPosition(HINGE_SERVO_DOWN);
                     hingeServoPos = Constants2020.HingeServoPositions.MID;
                 } else if (Constants2020.HingeServoPositions.MID.equals(hingeServoPos)) {
@@ -258,19 +271,19 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 } else if (Constants2020.HingeServoPositions.DOWN.equals(hingeServoPos)) {
                     wobbleHingeServo.setPosition(HINGE_SERVO_UP);
                     hingeServoPos = Constants2020.HingeServoPositions.UP;
-                }
-            }
+                }*/
+
             if (gamepad1.left_bumper && left_bumper_time.seconds() > 0.25) {
                 left_bumper_time.reset();
                 if (!isClamped) {
                     wobbleClampServo.setPosition(CLAMP_SERVO_OUT);
                     isClamped = true;
-                    telemetry.addLine("SERVO IS CLAMPED");
+                    telemetry.addLine("SERVO IS NOT CLAMPED");
                     telemetry.update();
                 } else if (isClamped) {
                     wobbleClampServo.setPosition(CLAMP_SERVO_IN);
                     isClamped = false;
-                    telemetry.addLine("SERVO IS NOT CLAMPED");
+                    telemetry.addLine("SERVO IS CLAMPED");
                     telemetry.update();
                 }
             }
