@@ -9,6 +9,7 @@ import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.DetectionHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.opmode.UltimateAuto;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.HashMap;
 
@@ -48,6 +49,9 @@ public class WobbleGoal {
         double charlieDistance = 118.372;
 
         resetTheImu(variableMap);
+        Orientation beginning = imu.getAngularOrientation();
+        float correct = beginning.firstAngle;
+
 
         //move to tgt zone A, B, or C
         if (position.equals(Constants2020.TargetZone.ALPHA)) {
@@ -99,8 +103,36 @@ public class WobbleGoal {
             } else if(!isWall){
                 navigater.navigate(charlieDistance, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
+
+
+
+
+
+
         }
 
+        //attempt at correcting left because of extreme veering
+        //feel free to comment out at any time
+        Orientation boo = imu.getAngularOrientation();
+        float needsHelp = boo.firstAngle;
+        float diff = needsHelp-correct;
+        telemetry.addData("imu is off by" , diff);
+        telemetry.update();
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(diff>10){
+            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
+        else if(diff<-10){
+            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
         resetTheImu(variableMap);
 
         //adjust position at tgt zone  B  to drop wobble goal:
@@ -124,7 +156,8 @@ public class WobbleGoal {
     public void dropWobbleGoal(HashMap<String, Object> variableMap){
         final int WAIT = 500; //1000
         Telemetry telemetry = (Telemetry) variableMap.get(Constants2020.TELEMETRY);
-        Servo wobbleHingeServo = (Servo) variableMap.get(Constants2020.HINGE_SERVO);
+        DcMotor wobbleHingeServo = (DcMotor) variableMap.get(Constants2020.HINGE_SERVO);
+        wobbleHingeServo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Servo wobbleClampServo = (Servo) variableMap.get(Constants2020.CLAMP_SERVO);
         double clampServoOut = 0.2;
         double hingeServoOut = 0.05;
@@ -134,12 +167,13 @@ public class WobbleGoal {
         telemetry.update();
 
         //put arm out
-        wobbleHingeServo.setPosition(hingeServoOut);
+        wobbleHingeServo.setPower(0.45);
         try {
-            sleep(WAIT);
+            sleep(600);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        wobbleHingeServo.setPower(0);
         //let it go
         wobbleClampServo.setPosition(clampServoOut);
         try {
@@ -154,12 +188,21 @@ public class WobbleGoal {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        wobbleHingeServo.setPosition(hingeServoIn);
+
+
         try {
-            sleep(WAIT);
+            sleep(750);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        wobbleHingeServo.setPower(-0.5);
+        try {
+            sleep(750);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        wobbleHingeServo.setPower(0);
+
     }
 
 }

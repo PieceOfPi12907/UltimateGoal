@@ -77,14 +77,15 @@ public class ShootingRings {
         //strafe to be in front of the tower
         if(!position.equals(Constants2020.TargetZone.BETA)){
             //CHANGE NEEDED (speed and distance)
-            navigater.navigate(12, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            //changed 12 to 8 on 4/17
+            navigater.navigate(8, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
         resetTheImu(variableMap);
     }
 
     public void newRingShoot(HashMap<String, Object> variableMap){
         final double SHOOTER_INTAKE_SERVO_UP = 0.14;
-        final int WAIT = 300; //750
+        final int WAIT = 750; //300
         DcMotor shooter = (DcMotor) variableMap.get(Constants2020.SHOOTER);
         Servo shooterServo = (Servo) variableMap.get(Constants2020.SHOOTERSERVO);
         DcMotor backLeft = (DcMotor) variableMap.get(Constants2020.BACK_LEFT_MOTOR);
@@ -97,10 +98,10 @@ public class ShootingRings {
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooter.setPower(0.9);
+        shooter.setPower(0.75);
 
         try {
-            Thread.sleep(WAIT);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

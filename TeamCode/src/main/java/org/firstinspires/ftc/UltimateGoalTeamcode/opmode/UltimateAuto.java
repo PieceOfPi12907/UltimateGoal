@@ -42,7 +42,9 @@ public class UltimateAuto extends LinearOpMode {
     double shooterSpeed = 0.8;
 
     Servo shooterServo;
-    Servo wobbleHingeServo;
+    //changed to hex motor
+    //Servo wobbleHingeServo;
+    DcMotor wobbleHingeServo;
     Servo wobbleClampServo;
     OpenCvCamera webcam;
     WobbleGoal wobbleGoal = new WobbleGoal();
@@ -176,7 +178,8 @@ public class UltimateAuto extends LinearOpMode {
         shooterServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
 
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
-        wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
+        //wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
+        wobbleHingeServo = hardwareMap.get(DcMotor.class, "wobbleHingeMotor");
 
         //pFrontColor=hardwareMap.get(ColorSensor.class,"colorsensor");
 
@@ -197,12 +200,7 @@ public class UltimateAuto extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        wobbleHingeServo.setPosition(HINGE_SERVO_IN);
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         shooterServo.setPosition(SHOOTER_INTAKE_SERVO_DOWN);
         try {
             Thread.sleep(250);
@@ -291,6 +289,7 @@ public class UltimateAuto extends LinearOpMode {
                 wobbleGoal.dropWobbleGoal(variableMap);
                 shootingRings.moveToLaunchLine(variableMap);
                 shootingRings.newRingShoot(variableMap);
+
                 //shootingRings.newPowerShoot(variableMap);
                 //shootingRings.ringShoot(variableMap);
                 //shootingRings.powerShoot(variableMap);
