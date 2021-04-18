@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.UltimateGoalTeamcode.opmode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,9 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
+import org.firstinspires.ftc.UltimateGoalTeamcode.helper.NavigationHelper;
 
 @TeleOp(name = "FINAL ULTIMATE TELEOP LEAGUE 3",group = "teleop")
 public class UltimateTeleopLeague3 extends LinearOpMode {
+
+    BNO055IMU imu;
 
     DcMotor intake;
     Servo shooterIntakeServo;
@@ -36,7 +40,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     boolean outtakeBack = false;
     boolean wingUp = false;
     boolean hingeMotorDown = false;
-    public final double SHOOTER_INTAKE_SERVO_INIT = 0.62;
+    public final double SHOOTER_INTAKE_SERVO_INIT = 0.57;
     public final double SHOOTER_INTAKE_SERVO_OPEN = 0.50;
     public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.05;
 
@@ -86,9 +90,18 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
         hingeServoPos = Constants2020.HingeServoPositions.UP;
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
     }
 
 
@@ -107,6 +120,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                     shooterIntakeControl();
                     wobbleArmControl();
                     intakeControl();
+                    powershotControl();
                     idle();
                 }
             } catch (Exception e) {
@@ -114,6 +128,75 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             }
         }
 
+        private void powershotControl(){
+            if(gamepad2.a){
+                shooter.setPower(-shooterSpeed);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                shooterIntakeServo.setPosition(0.42);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                frontLeftMotor.setPower(0.5);
+                frontRightMotor.setPower(-0.5);
+                backLeftMotor.setPower(-0.5);
+                backRightMotor.setPower(0.5);
+
+                 */
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
+                shooterIntakeServo.setPosition(0.27);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                frontLeftMotor.setPower(0.5);
+                frontRightMotor.setPower(-0.5);
+                backLeftMotor.setPower(-0.5);
+                backRightMotor.setPower(0.5);
+
+                 */
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
+
+                shooterIntakeServo.setPosition(0.07);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
+                shooter.setPower(0);
+
+            }
+        }
         private void intakeControl() {
             if (gamepad1.x && x_time.seconds() >= 0.25) {
                 x_time.reset();
@@ -171,7 +254,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             }
             if (gamepad1.dpad_left && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                currentPos-=0.2;
+                currentPos-=0.18;
                 shooterIntakeServo.setPosition(currentPos);
                 try {
                     sleep(200);
@@ -181,7 +264,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             }
             if (gamepad1.dpad_right && dpad_time.seconds() > 0.1) {
                 dpad_time.reset();
-                shooterSpeed = 0.55;
+                shooterSpeed = 0.63;
             }
 
 
@@ -216,7 +299,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                currentPos-=0.2;
+                currentPos-=0.15;
                 shooterIntakeServo.setPosition(currentPos);
                 try {
                     sleep(600);
@@ -230,7 +313,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                currentPos = 0.62;
+                currentPos = 0.57;
                 shooterIntakeServo.setPosition(currentPos);
                 try {
                     sleep(400);
@@ -346,52 +429,6 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             }
             if(gamepad2.y){
                 scaleFactor=0.99;
-            }
-
-            if(gamepad2.a){
-                shooter.setPower(-0.6);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                shooterIntakeServo.setPosition(0.42);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                frontLeftMotor.setPower(0.3);
-                frontRightMotor.setPower(-0.3);
-                backLeftMotor.setPower(-0.3);
-                backRightMotor.setPower(0.3);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                frontLeftMotor.setPower(0);
-                frontRightMotor.setPower(0);
-                backLeftMotor.setPower(0);
-                backRightMotor.setPower(0);
-                shooterIntakeServo.setPosition(0.22);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                shooterIntakeServo.setPosition(0.02);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                shooterIntakeServo.setPosition(SHOOTER_INTAKE_SERVO_OPEN);
-                shooter.setPower(0);
-
             }
 
 
