@@ -20,6 +20,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     DcMotor intake;
     Servo shooterIntakeServo;
     Servo wing;
+    Servo umbrella;
     DcMotor shooter;
 
     DcMotor backLeftMotor;
@@ -32,6 +33,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     Constants2020.HingeServoPositions hingeServoPos = Constants2020.HingeServoPositions.UP;
 
     boolean isClamped = true;
+    boolean isDown = true;
     double scaleFactor = 0.999;
     boolean shooterIntakeSpinning = false;
     boolean shooterIntakeInit = true;
@@ -60,6 +62,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     ElapsedTime rb_time = new ElapsedTime();
     ElapsedTime right_bumper_time = new ElapsedTime();
     ElapsedTime left_bumper_time = new ElapsedTime();
+    ElapsedTime g1_a_time = new ElapsedTime();
     ElapsedTime b_time = new ElapsedTime();
     ElapsedTime x_time = new ElapsedTime();
     ElapsedTime y_time = new ElapsedTime();
@@ -83,6 +86,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
         backRightMotor = hardwareMap.get(DcMotor.class, "backRight");
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeft");
 
+        umbrella = hardwareMap.get(Servo.class, "umbrella");
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
         wobbleHingeMotor = hardwareMap.get(DcMotor.class,"wobbleHingeMotor");
         wobbleHingeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -367,6 +371,21 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                     wobbleClampServo.setPosition(CLAMP_SERVO_IN);
                     isClamped = false;
                     telemetry.addLine("SERVO IS CLAMPED");
+                    telemetry.update();
+                }
+            }
+
+            if (gamepad2.left_bumper && g1_a_time.seconds() > 0.25) {
+                g1_a_time.reset();
+                if (!isDown) {
+                    umbrella.setPosition(0);
+                    isDown = true;
+                    telemetry.addLine("position: " + umbrella.getPosition());
+                    telemetry.update();
+                } else if (isDown) {
+                    umbrella.setPosition(0.5);
+                    isDown = false;
+                    telemetry.addLine("position: " + umbrella.getPosition());
                     telemetry.update();
                 }
             }
