@@ -27,6 +27,7 @@ public class UltimateAuto extends LinearOpMode {
     Boolean isWall = false;
     final double CLAMP_SERVO_IN = 0.7;
     final double HINGE_SERVO_IN = 0.95;
+    final double WING_DOWN = 0.6;
     public final double SHOOTER_INTAKE_SERVO_DOWN = 0.62;
     ElapsedTime runtime = new ElapsedTime();
     BNO055IMU imu;
@@ -42,6 +43,7 @@ public class UltimateAuto extends LinearOpMode {
     double shooterSpeed = 0.8;
 
     Servo shooterServo;
+    Servo wing;
     //changed to hex motor
     //Servo wobbleHingeServo;
     DcMotor wobbleHingeServo;
@@ -180,9 +182,10 @@ public class UltimateAuto extends LinearOpMode {
         wobbleClampServo = hardwareMap.get(Servo.class, "clamp");
         //wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
         wobbleHingeServo = hardwareMap.get(DcMotor.class, "wobbleHingeMotor");
+        wing = hardwareMap.get(Servo.class,"wing");
+        wing.setPosition(WING_DOWN);
 
         //pFrontColor=hardwareMap.get(ColorSensor.class,"colorsensor");
-
 
         //Setting the direction of the motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
