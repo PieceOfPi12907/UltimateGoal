@@ -42,7 +42,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
     boolean outtakeBack = false;
     boolean wingUp = false;
     boolean hingeMotorDown = false;
-    public final double SHOOTER_INTAKE_SERVO_INIT = 0.57;
+    public final double SHOOTER_INTAKE_SERVO_INIT = 0.54;
     public final double SHOOTER_INTAKE_SERVO_OPEN = 0.50;
     public final double SHOOTER_INTAKE_SERVO_CLOSE = 0.05;
 
@@ -287,7 +287,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
 
             if(gamepad1.b && b_time.seconds() >= 0.25){
                 b_time.reset();
-                currentPos = 0.62;
+                currentPos = 0.54;
                 shooterIntakeServo.setPosition(currentPos);
                 telemetry.addData("position", currentPos);
                 telemetry.update();
@@ -296,7 +296,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                currentPos-=0.2;
+                currentPos-=0.17;
                 shooterIntakeServo.setPosition(currentPos);
                 telemetry.addData("position",currentPos);
                 try {
@@ -318,7 +318,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                currentPos = 0.57;
+                currentPos = 0.54;
                 shooterIntakeServo.setPosition(currentPos);
                 try {
                     sleep(400);
@@ -340,7 +340,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 }*/
             if (gamepad1.right_stick_y > 0 && right_stick_time.seconds() > 0.25) {
                 right_stick_time.reset();
-                wobbleHingeMotor.setPower(-0.99);
+                wobbleHingeMotor.setPower(-0.85);
             } else if (gamepad1.right_stick_y < 0 && right_stick_time.seconds() > 0.25){
                 right_stick_time.reset();
                 wobbleHingeMotor.setPower(0.45);

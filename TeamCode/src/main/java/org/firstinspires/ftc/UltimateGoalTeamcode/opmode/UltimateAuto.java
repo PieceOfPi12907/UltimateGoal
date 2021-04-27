@@ -183,6 +183,7 @@ public class UltimateAuto extends LinearOpMode {
         //wobbleHingeServo = hardwareMap.get(Servo.class, "hinge");
         wobbleHingeServo = hardwareMap.get(DcMotor.class, "wobbleHingeMotor");
         wing = hardwareMap.get(Servo.class,"wing");
+
         wing.setPosition(WING_DOWN);
 
         //pFrontColor=hardwareMap.get(ColorSensor.class,"colorsensor");
