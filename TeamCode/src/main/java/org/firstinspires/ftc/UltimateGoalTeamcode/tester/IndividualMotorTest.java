@@ -76,26 +76,26 @@ public class IndividualMotorTest extends LinearOpMode {
                 frontLeft.setTargetPosition(2000);
                 frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 frontLeft.setPower(0);
+*/
 
- */
-
+/*
 
 
                 frontRight.setPower(0.8);
-                 frontRight.setTargetPosition(2000);
+                frontRight.setTargetPosition(2000);
                 frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 frontRight.setPower(0);
 
-
+*/
 /*
                 backRight.setPower(0.8);
                 backRight.setTargetPosition(2000);
                 backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 backRight.setPower(0);
 
- */
+*/
 
-/*
+
 
 
 
@@ -104,14 +104,14 @@ public class IndividualMotorTest extends LinearOpMode {
                 backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 backLeft.setPower(0);
 
- */
 
 
 
-                telemetry.addData("FRONT RIGHT: ", frontRight.getCurrentPosition());
+
+                //telemetry.addData("FRONT RIGHT: ", frontRight.getCurrentPosition());
                 //telemetry.addData("FRONT LEFT: ", frontLeft.getCurrentPosition());
                 //telemetry.addData("BACK RIGHT: ", backRight.getCurrentPosition());
-                //telemetry.addData("BACK LEFT: ", backLeft.getCurrentPosition());
+                telemetry.addData("BACK LEFT: ", backLeft.getCurrentPosition());
 
                 telemetry.update();
             }

@@ -59,7 +59,7 @@ public class WobbleGoal {
             telemetry.update();
             if(isWall){
                 //CHANGE NEEDED (speed and distance): -38 to -28 and 0.45 to 0.9
-                navigater.navigate(alphaDist - 28, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(alphaDist - 28, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
@@ -70,7 +70,7 @@ public class WobbleGoal {
             //red wall beta
             if(isWall){
                 //CHANGE NEEDED (speed and distance)
-                navigater.navigate(betaDistance + 2.25 - 40 - 10 - 5 - 5, Constants2020.Direction.STRAIGHT, 0, 0.5/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(betaDistance + 2.25 - 40 /*- 10 - 5 - 5*/, Constants2020.Direction.STRAIGHT, 0, 0.5/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
           //red not wall beta
             } else if(!isWall){
                 navigater.navigate(betaDistance + 2.25 - 20, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
@@ -82,7 +82,8 @@ public class WobbleGoal {
             //red wall charlie
             if(isWall){
                 //CHANGE NEEDED (speed and distance)
-                navigater.navigate(charlieDistance - 45, Constants2020.Direction.STRAIGHT, 0, 0.45/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //-45
+                navigater.navigate(charlieDistance - 35, Constants2020.Direction.STRAIGHT, 0, 0.45/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 //dhruvs idea on how to stop, maybe implement later?
                 /*backLeft.setPower(-0.01);
                 backRight.setPower(-0.01);
@@ -103,18 +104,13 @@ public class WobbleGoal {
             } else if(!isWall){
                 navigater.navigate(charlieDistance, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
-
-
-
-
-
-
         }
 
         //attempt at correcting left because of extreme veering
         //feel free to comment out at any time
         Orientation boo = imu.getAngularOrientation();
         float needsHelp = boo.firstAngle;
+
         float diff = needsHelp-correct;
         telemetry.addData("imu is off by" , diff);
         telemetry.update();
@@ -123,12 +119,18 @@ public class WobbleGoal {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+
         if(diff>10){
             navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
+
         else if(diff<-10){
             navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
+
+
+
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
