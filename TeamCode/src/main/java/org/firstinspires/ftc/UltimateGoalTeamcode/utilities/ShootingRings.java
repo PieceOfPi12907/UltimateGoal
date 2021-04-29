@@ -11,8 +11,11 @@ import org.firstinspires.ftc.UltimateGoalTeamcode.helper.SensorHelper;
 import org.firstinspires.ftc.UltimateGoalTeamcode.helper.Constants2020;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.UltimateGoalTeamcode.tester.ColorSensorMeasure;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.HashMap;
+
+import static java.lang.Thread.sleep;
 
 public class ShootingRings {
 
@@ -48,6 +51,9 @@ public class ShootingRings {
         double betaDist = 94.625;
         double charlieDist = 118.372;
 
+        Orientation beginning = imu.getAngularOrientation();
+        float correct = beginning.firstAngle;
+
          final double SHOOTER_INTAKE_SERVO_OPEN = 0.5;
          final double SHOOTER_INTAKE_SERVO_CLOSE = 0.85;
 
@@ -69,6 +75,56 @@ public class ShootingRings {
             if(isWall){
                 //CHANGE NEEDED (speed and distance)
                 navigater.navigate(-((charlieDist/2)-43), Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Orientation boo = imu.getAngularOrientation();
+                float needsHelp = boo.firstAngle;
+
+                float diff = needsHelp-correct;
+                telemetry.addData("imu is off by" , diff);
+                telemetry.update();
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+                if(diff>2){
+                    navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
+                }
+
+                else if(diff<-2){
+                    navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                }
+
+                telemetry.addData("imu: ", "done with correct");
+                telemetry.update();
+
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+                backLeft.setPower(0);
+                backRight.setPower(0);
+
+                needsHelp = imu.getAngularOrientation().firstAngle;
+                diff = needsHelp-correct;
+                if(diff>3){
+                    navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
+                }
+
+                else if(diff<-3){
+                    navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                }
+
+
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+                backLeft.setPower(0);
+                backRight.setPower(0);
+
             } else if (!isWall){
                 navigater.navigate(-((charlieDist/2)), Constants2020.Direction.STRAIGHT, 0, -0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
@@ -79,6 +135,61 @@ public class ShootingRings {
             //CHANGE NEEDED (speed and distance)
             //changed 12 to 8 on 4/17
             navigater.navigate(8, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if(position.equals(Constants2020.TargetZone.CHARLIE)){
+            if(isWall){
+                navigater.navigate(-10, Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                Orientation boo = imu.getAngularOrientation();
+                float needsHelp = boo.firstAngle;
+
+                float diff = needsHelp-correct;
+                telemetry.addData("imu is off by" , diff);
+                telemetry.update();
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+                if(diff>2){
+                    navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
+                }
+
+                else if(diff<-2){
+                    navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                }
+
+                telemetry.addData("imu: ", "done with correct");
+                telemetry.update();
+
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+                backLeft.setPower(0);
+                backRight.setPower(0);
+
+                needsHelp = imu.getAngularOrientation().firstAngle;
+                diff = needsHelp-correct;
+                if(diff>3){
+                    navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
+                }
+
+                else if(diff<-3){
+                    navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                }
+
+
+                frontLeft.setPower(0);
+                frontRight.setPower(0);
+                backLeft.setPower(0);
+                backRight.setPower(0);
+
+            }
         }
         resetTheImu(variableMap);
     }
@@ -98,7 +209,7 @@ public class ShootingRings {
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooter.setPower(0.9);
+        shooter.setPower(0.87);
 
         try {
             Thread.sleep(1000);
@@ -106,7 +217,7 @@ public class ShootingRings {
             e.printStackTrace();
         }
 
-        double currentPos = 0.62;
+        double currentPos = 0.57;
         shooterServo.setPosition(currentPos);
         telemetry.addData("position", currentPos);
         telemetry.update();
@@ -115,7 +226,7 @@ public class ShootingRings {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        currentPos-=0.2;
+        currentPos-=0.17;
         shooterServo.setPosition(currentPos);
         telemetry.addData("position",currentPos);
         try {
@@ -176,7 +287,7 @@ public class ShootingRings {
         if (position.equals(Constants2020.TargetZone.BETA) || position.equals(Constants2020.TargetZone.CHARLIE)) {
             navigater.navigate(-10, Constants2020.Direction.STRAIGHT, 0, -0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
 
-            shooter.setPower(0.75);
+            shooter.setPower(0.73);
 
             try {
                 Thread.sleep(1000);
@@ -197,7 +308,12 @@ public class ShootingRings {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+            shooter.setPower(0.68);
+            try {
+                Thread.sleep(WAIT);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             shooterServo.setPosition(0.02);
             try {
                 Thread.sleep(WAIT);

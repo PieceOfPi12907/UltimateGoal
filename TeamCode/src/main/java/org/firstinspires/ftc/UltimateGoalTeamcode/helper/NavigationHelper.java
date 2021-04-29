@@ -14,6 +14,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.internal.android.dx.rop.code.ConservativeTranslationAdvice;
 
+import static java.lang.Thread.sleep;
+
 public class NavigationHelper {
 
     Orientation lastAngles = new Orientation();
@@ -80,7 +82,7 @@ public class NavigationHelper {
 
         ElapsedTime runtime = new ElapsedTime();
 
-        PIDController pidDrive = new PIDController(.05, 0, 0);
+        PIDController pidDrive = new PIDController(0.05, 0.01, 0.01);
         lastAngles = new Orientation();
 
         //Variables used for converting inches to Encoder dounts
@@ -135,7 +137,8 @@ public class NavigationHelper {
 
         //This while loop will keep the motors running to the target position until one of the motors have reached the final encoder count
         while ((pBackLeft.isBusy() && pBackRight.isBusy() && pFrontLeft.isBusy() && pFrontRight.isBusy())) {
-            correction = pidDrive.performPID(getAngle(pImu));
+            //set to 0 NO PID
+            correction = pidDrive.performPID(getAngle(pImu))/2;
             pFrontRight.setPower(pSpeed + correction);
             pBackRight.setPower(pSpeed + correction);
             pFrontLeft.setPower(pSpeed - correction);
@@ -404,13 +407,20 @@ public class NavigationHelper {
         turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, pRotation,pSpeed,pImu,pTelemetry);
         double currentAngle = pImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                 AngleUnit.DEGREES).firstAngle;
-        double correction = pRotation-currentAngle;
-        if(Math.abs(correction)>=5){
+        /*
+        if(Math.abs(correction)>=10){
             pTelemetry.addData("Correction value: ",correction);
             pTelemetry.update();
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-            turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, correction,0.15,pImu,pTelemetry);
+            turnWithEncoders(pFrontRight,pFrontLeft,pBackRight,pBackLeft, correction,0.35,pImu,pTelemetry);
 
         }
+
+         */
     }
 }

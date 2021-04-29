@@ -58,8 +58,8 @@ public class WobbleGoal {
             telemetry.addLine("RED - WALL - ALPHA");
             telemetry.update();
             if(isWall){
-                //CHANGE NEEDED (speed and distance): -38 to -28 and 0.45 to 0.9
-                navigater.navigate(alphaDist - 28, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //CHANGE NEEDED (speed and distance): -38 to -28 to 27 and 0.45 to 0.9
+                navigater.navigate(alphaDist - 23, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
@@ -121,21 +121,38 @@ public class WobbleGoal {
         }
 
 
-        if(diff>10){
+        if(diff>2){
+            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
+        }
+
+        else if(diff<-2){
             navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
 
-        else if(diff<-10){
-            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        telemetry.addData("imu: ", "done with correct");
+        telemetry.update();
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        needsHelp = imu.getAngularOrientation().firstAngle;
+        diff = needsHelp-correct;
+        if(diff>3){
+            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
         }
 
+        else if(diff<-3){
+            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+        }
 
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        resetTheImu(variableMap);
+
 
         //adjust position at tgt zone  B  to drop wobble goal:
         if (position.equals(Constants2020.TargetZone.BETA)) {
@@ -152,7 +169,6 @@ public class WobbleGoal {
                 navigater.navigate(0, Constants2020.Direction.TURN, 82.5, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
         }
-        resetTheImu(variableMap);
     }
 
     public void dropWobbleGoal(HashMap<String, Object> variableMap){
