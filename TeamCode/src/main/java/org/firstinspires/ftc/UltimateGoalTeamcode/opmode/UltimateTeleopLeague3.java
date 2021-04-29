@@ -296,7 +296,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                currentPos-=0.17;
+                currentPos-=0.15;
                 shooterIntakeServo.setPosition(currentPos);
                 telemetry.addData("position",currentPos);
                 try {

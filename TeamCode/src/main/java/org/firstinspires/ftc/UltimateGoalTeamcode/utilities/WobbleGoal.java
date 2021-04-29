@@ -122,11 +122,11 @@ public class WobbleGoal {
 
 
         if(diff>2){
-            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
+            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
         }
 
         else if(diff<-2){
-            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.5/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
 
         telemetry.addData("imu: ", "done with correct");
@@ -137,13 +137,19 @@ public class WobbleGoal {
         backLeft.setPower(0);
         backRight.setPower(0);
 
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         needsHelp = imu.getAngularOrientation().firstAngle;
         diff = needsHelp-correct;
-        if(diff>3){
+        if(diff>2){
             navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry,  true);
         }
 
-        else if(diff<-3){
+        else if(diff<-2){
             navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
         }
 
