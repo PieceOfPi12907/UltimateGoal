@@ -83,7 +83,8 @@ public class WobbleGoal {
             if(isWall){
                 //CHANGE NEEDED (speed and distance)
                 //-45
-                navigater.navigate(charlieDistance - 35, Constants2020.Direction.STRAIGHT, 0, 0.45/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                //-35
+                navigater.navigate(charlieDistance - 30, Constants2020.Direction.STRAIGHT, 0, 0.6/*0.9*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 //dhruvs idea on how to stop, maybe implement later?
                 /*backLeft.setPower(-0.01);
                 backRight.setPower(-0.01);

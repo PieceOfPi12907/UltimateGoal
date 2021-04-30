@@ -36,6 +36,7 @@ public class UltimateAuto extends LinearOpMode {
     DcMotor frontRight;
     DcMotor backRight;
     DcMotor shooter;
+    DcMotor intake;
 
     ColorSensor pFrontColor;
 
@@ -176,6 +177,7 @@ public class UltimateAuto extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
+        intake = hardwareMap.get(DcMotor.class, "intake");
         shooter = hardwareMap.get(DcMotor.class, "shooter");
         shooterServo = hardwareMap.get(Servo.class, "shooterIntakeServo");
 
@@ -220,6 +222,8 @@ public class UltimateAuto extends LinearOpMode {
         variableMap.put(Constants2020.FRONT_LEFT_MOTOR,this.frontLeft);
         variableMap.put(Constants2020.BACK_RIGHT_MOTOR,this.backRight);
         variableMap.put(Constants2020.FRONT_RIGHT_MOTOR,this.frontRight);
+
+        variableMap.put(Constants2020.INTAKE, this.intake);
 
         variableMap.put(Constants2020.SHOOTER, this.shooter);
         variableMap.put(Constants2020.SHOOTERSERVO, this.shooterServo);

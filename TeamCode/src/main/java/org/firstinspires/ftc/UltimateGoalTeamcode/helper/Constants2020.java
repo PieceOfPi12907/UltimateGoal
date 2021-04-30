@@ -23,6 +23,7 @@ public class Constants2020 {
     public static String HINGE_SERVO = "hingeServo";
     public static String CLAMP_SERVO = "clampServo";
 
+    public static String INTAKE = "intake";
     public static String SHOOTER = "shooter";
     public static String SHOOTERSERVO = "shooterservo";
 
