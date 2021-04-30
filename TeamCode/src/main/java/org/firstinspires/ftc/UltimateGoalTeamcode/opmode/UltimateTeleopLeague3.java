@@ -48,6 +48,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
 
     //hinge and clamp values to be tested:
     double currentpos = 0;
+    double h=0;
     final double HINGE_SERVO_UP = 0.95; //outside to grab wobble goal
     final double HINGE_SERVO_MID = 0.65;
     final double HINGE_SERVO_DOWN = 0.01; //inside the robot
@@ -285,7 +286,7 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
             }
 
 
-            if(gamepad1.b && b_time.seconds() >= 0.25){
+            /*if(gamepad1.b && b_time.seconds() >= 0.25){
                 b_time.reset();
                 currentPos = 0.54;
                 shooterIntakeServo.setPosition(currentPos);
@@ -317,6 +318,27 @@ public class UltimateTeleopLeague3 extends LinearOpMode {
                     sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+                currentPos = 0.54;
+                shooterIntakeServo.setPosition(currentPos);
+                try {
+                    sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }*/
+            if(gamepad1.b && b_time.seconds() >= 0.25){
+                b_time.reset();
+                currentPos = 0.62;
+                shooterIntakeServo.setPosition(currentPos);
+                for(h=0;h<50;h++){
+                    currentPos -= 0.01;
+                    shooterIntakeServo.setPosition(currentPos);
+                    try {
+                        sleep(28);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 currentPos = 0.54;
                 shooterIntakeServo.setPosition(currentPos);

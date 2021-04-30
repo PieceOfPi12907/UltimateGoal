@@ -269,16 +269,38 @@ public class ShootingRings {
         Constants2020.TargetZone position = (Constants2020.TargetZone) variableMap.get(Constants2020.POSITION);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
         float correct = imu.getAngularOrientation().firstAngle;
+        double currentPos = 0;
+        double h = 0;
 
         shooter.setPower(0.72);
-
         try {
             Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        double currentPos = 0.62;
+        currentPos = 0.62;
+        shooterServo.setPosition(currentPos);
+        for(h=0;h<50;h++){
+            currentPos -= 0.01;
+            shooterServo.setPosition(currentPos);
+            try {
+                sleep(28);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        currentPos = 0.54;
+        shooterServo.setPosition(currentPos);
+        try {
+            sleep(400);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        shooter.setPower(0);
+
+        /*double currentPos = 0.62;
         shooterServo.setPosition(currentPos);
         telemetry.addData("position", currentPos);
         telemetry.update();
@@ -315,9 +337,8 @@ public class ShootingRings {
             Thread.sleep(400);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
-        shooter.setPower(0);
 
         telemetry.addLine("PARK:");
         telemetry.update();
