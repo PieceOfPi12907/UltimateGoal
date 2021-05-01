@@ -59,7 +59,7 @@ public class WobbleGoal {
             telemetry.update();
             if(isWall){
                 //CHANGE NEEDED (speed and distance): -38 to -28 to 27 and 0.45 to 0.9
-                navigater.navigate(alphaDist - 23, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(alphaDist - 18, Constants2020.Direction.STRAIGHT, 0, 0.5, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             } else if(!isWall){
                 navigater.navigate((alphaDist - 12.75) + 15, Constants2020.Direction.STRAIGHT, 0, 0.9, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }

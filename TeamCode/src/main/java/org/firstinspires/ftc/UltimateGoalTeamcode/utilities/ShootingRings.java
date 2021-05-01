@@ -73,7 +73,7 @@ public class ShootingRings {
             }
         } else if (position.equals(Constants2020.TargetZone.CHARLIE)) {
             if(isWall){
-                navigater.navigate(8, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+                navigater.navigate(20, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
                 try {
                     sleep(1000);
                 } catch (InterruptedException e) {
@@ -190,7 +190,7 @@ public class ShootingRings {
         if(position.equals(Constants2020.TargetZone.ALPHA)){
             //CHANGE NEEDED (speed and distance)
             //changed 12 to 8 on 4/17
-            navigater.navigate(8, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            navigater.navigate(14, Constants2020.Direction.LEFT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
@@ -270,7 +270,8 @@ public class ShootingRings {
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
         float correct = imu.getAngularOrientation().firstAngle;
 
-        shooter.setPower(0.72);
+        //used to be 0.72
+        shooter.setPower(0.95);
 
         try {
             Thread.sleep(1500);
@@ -327,9 +328,9 @@ public class ShootingRings {
 
         //NOW USED PARKING - COMMENT THIS OUT WHEN USING DO EXTRA RINGS
         if(position.equals(Constants2020.TargetZone.CHARLIE)){
-            shooter.setPower(0);
+            shooter.setPower(-1);
             intake.setPower(0.99);
-            navigater.navigate(-20, Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
+            navigater.navigate(-12, Constants2020.Direction.STRAIGHT, 0, -0.45/*-0.75*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             try {
                 Thread.sleep(700);
             } catch (InterruptedException e) {
@@ -356,7 +357,8 @@ public class ShootingRings {
             else if(diff<-4){
                 navigater.navigate(0, Constants2020.Direction.TURN, -diff, 0.35/*0.25*/, backLeft, backRight, frontRight, frontLeft, imu, telemetry, true);
             }
-            shooter.setPower(0.72);
+            //was 0.72, only 0.9 for low battery
+            shooter.setPower(0.9);
             telemetry.addData("imu: ", "done with correct");
             telemetry.update();
 
